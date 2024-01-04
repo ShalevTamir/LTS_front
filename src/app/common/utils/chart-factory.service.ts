@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Chart, ChartConfiguration, ChartType, ChartTypeRegistry } from 'chart.js/auto';
+import { ConfigChartType } from '../../components/live-parameters/components/card/chartjs-chart/models/config-chart-type.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class ChartFactoryService {
     return [xAxisData, yAxisData];
   }
 
-  generateChartConfig(chartType: string, xAxisData: string[], yAxisData: string[]){
+  generateChartConfig(chartType: ConfigChartType, xAxisData: string[], yAxisData: string[]){
     let options = {
       aspectRatio:2.5,
       plugins:{
@@ -33,8 +34,9 @@ export class ChartFactoryService {
         }
       }
     }
+
     switch(chartType){
-      case 'stepped':
+      case ConfigChartType.Stepped:
         return  {
           type:'line' as ChartType,
           data: {
@@ -48,7 +50,7 @@ export class ChartFactoryService {
           },
           options: options
         }
-      case 'bar':
+      case ConfigChartType.Bar:
         return {
           type:'bar' as ChartType,
           data: {
@@ -62,7 +64,7 @@ export class ChartFactoryService {
           options: options
         }
         default:
-        case 'line':
+        case ConfigChartType.Line:
           return  {
             type:'line' as ChartType,
             data: {
@@ -81,7 +83,7 @@ export class ChartFactoryService {
     
   }
 
-  buildChart(elementName: string, chartType: string, xAxisData: string[], yAxisData: string[]){
+  buildChart(elementName: string, chartType: ConfigChartType, xAxisData: string[], yAxisData: string[]){
     
     return new Chart(
       elementName,
