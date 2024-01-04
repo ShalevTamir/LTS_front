@@ -1,3 +1,5 @@
+$menu-size: 30px;
+
 @font-face{
     font-family: 'OpenSans';
     src: url('../../../../../assets/fonts/OpenSans-Regular.ttf');
@@ -77,5 +79,14 @@
         font-family: "OpenSans", sans-serif;
         text-align: center;
         font-size: 20px;
+    }
+    #btn-menu-container{
+        position: absolute;
+        display: flex;
+        width: 90%;
+        justify-content: flex-end;
+        #btn-menu{
+            bottom:12px;
+        }
     }
    }
