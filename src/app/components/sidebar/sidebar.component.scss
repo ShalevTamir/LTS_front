@@ -1,0 +1,36 @@
+
+@keyframes left {
+ 0% {
+  transform: translateX(-30px);
+  opacity: 0;
+ }
+ 
+ 100% {
+  opacity: 1;
+  transform: none;
+ }
+}
+
+.left-side {
+    width: 6rem;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    align-items: center;
+    padding: 117px 0 40px;
+    animation: left 1s var(--delay) both;
+    svg {
+     width: 24px;
+     cursor: pointer;
+     & + svg {
+      margin-top: 34px;
+     }
+     &:last-child {
+      margin-top: auto;
+     }
+     &.active,
+     &:hover {
+      color: #4255d4;
+     }
+    }
+   }

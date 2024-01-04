@@ -1,0 +1,84 @@
+.card {
+    background: rgb(26, 32, 73);
+    background: radial-gradient(
+     circle,
+     rgba(26, 32, 73, 1) 0%,
+     rgba(19, 22, 47, 1) 100%
+    );
+    padding: 40px 30px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-height: 430px;
+    width: 100%;
+    .title {
+     font-size: 16px;
+     font-weight: 500;
+    }
+    .subtitle {
+     font-size: 13px;
+     line-height: 1.6em;
+    }
+    & + & {
+     margin-left: 20px;
+    }
+   }
+
+   .activity {
+    max-width: 480px;
+    .title {
+     margin-bottom: 20px;
+    }
+    &-links {
+     display: flex;
+     align-items: center;
+     margin-top: auto;
+     font-size: 15px;
+    }
+    &-link {
+     padding-bottom: 10px;
+     position: relative;
+     cursor: pointer;
+     transition: 0.3s;
+     + .activity-link {
+      margin-left: 25px;
+      &:before {
+       content: "";
+       position: absolute;
+       width: 5px;
+       height: 5px;
+       background-color: #ef415c;
+       top: -2px;
+       right: -8px;
+       border-radius: 50%;
+      }
+      &:hover:after {
+       content: "";
+       position: absolute;
+       width: 22px;
+       height: 2px;
+       background: #4255d4;
+       left: 0;
+       bottom: 0;
+      }
+      &:hover {
+       color: #bebec4;
+       -webkit-text-stroke: 0.3px;
+      }
+     }
+     &.active {
+      color: #bebec4;
+      font-weight: 500;
+      &:before {
+       content: "";
+       position: absolute;
+       width: 22px;
+       height: 2px;
+       background: #4255d4;
+       left: 0;
+       bottom: 0;
+      }
+     }
+    }
+   }

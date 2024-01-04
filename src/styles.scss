@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap");
+
+@import "styles/variables.scss";
+
+:root {
+    --delay: 0s;
+   }
+   
+* {
+outline: none;
+box-sizing: border-box;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+html {
+box-sizing: border-box;
+-webkit-font-smoothing: antialiased;
+}
+
+img {
+max-width: 100%;
+}
+
+body {
+    font-family: $font-family;
+    background-color: $bg-color;
+    color: $body-color;
+}
