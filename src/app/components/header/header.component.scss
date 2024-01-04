@@ -29,25 +29,12 @@
      left: 0;
      background-color: $main-bg;
     }
-    &-link {
-        color: $body-color;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        padding: 20px;
-        transition: 0.3s;
-        border-bottom: 3px solid transparent;
-        transition: 0.3s;
-        svg {
-         width: 20px;
-         margin-right: 14px;
-        }
-        &.active,
-        &:hover {
-         background: #11132c;
-         border-bottom: 3px solid #4255d4;
-        }
-       }
+
+    .title{
+        font-size: 33px;
+        margin: 0 auto;
+    }
+    
 }
 
 
@@ -65,83 +52,3 @@
     }
 }
 
-
-.user-info {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    svg {
-     width: 20px;
-    }
-    .profile {
-     margin: 0 20px 0 12px;
-     width: 18px;
-    }
-   }
-   .button {
-    display: flex;
-    align-items: center;
-    color: $body-color;
-    background: #1a1b3c;
-    border: none;
-    padding: 2px 12px;
-    border-radius: 4px;
-    margin-right: 20px;
-    svg {
-     margin-left: 10px;
-     width: 16px;
-    }
-   }
-   
-   .user-box {
-    margin-top: 25px;
-    display: flex;
-    & + & {
-     margin-top: 20px;
-     .cards-wrapper {
-      margin-left: 0;
-      flex-grow: 1;
-      max-width: none;
-     }
-     .today {
-      margin-left: 30px;
-     }
-     .cards-header {
-      padding: 20px 30px;
-      justify-content: space-between;
-     }
-    }
-    .cards-header,
-    .cards-view {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     svg {
-      width: 24px;
-     }
-     .title {
-      margin: 0 16px;
-      font-size: 15px;
-     }
-     &-date svg {
-      width: 30px;
-     }
-     .cards-button {
-      background: #15193c;
-      padding: 10px 16px;
-      margin-right: 0;
-      svg {
-       width: 16px;
-       margin: 0 2px 0 0;
-      }
-     }
-     .date-wrapper {
-      display: flex;
-      align-items: center;
-      margin: auto;
-      .title {
-       margin: 0 16px;
-      }
-     }
-    }
-   }
