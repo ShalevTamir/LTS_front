@@ -1,4 +1,5 @@
 $menu-size: 30px;
+$chart-logo-size: $menu-size;
 
 @font-face{
     font-family: 'OpenSans';
@@ -89,4 +90,24 @@ $menu-size: 30px;
             bottom:12px;
         }
     }
-   }
+}
+mat-icon{
+    background-size: cover;
+}
+
+.chart-logo{
+    width: $chart-logo-size; height: $chart-logo-size;
+}
+
+::ng-deep .menu-panel{
+    background: linear-gradient(
+        to bottom right,
+        rgb(88, 160, 229), 
+        rgb(63, 94, 252),
+         rgb(140 0 254));
+}
+
+span.chart-description{
+    font-family: "OpenSans", sans-serif;
+    font-weight: bold;
+}

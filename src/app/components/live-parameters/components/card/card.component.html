@@ -3,8 +3,11 @@
         <button id="btn-menu" mat-icon-button color="primary" [matMenuTriggerFor]="menu">
             <mat-icon>menu</mat-icon>
         </button>
-        <mat-menu #menu="matMenu">
-            <button (click)="changeChartType(chartType)" *ngFor="let chartType of chartTypes" mat-menu-item>{{chartType}}</button>
+        <mat-menu #menu="matMenu" class="menu-panel">
+            <button (click)="changeChartType(chartType)" *ngFor="let chartType of chartTypes" mat-menu-item>
+                <mat-icon style="background-image:url('../../../../../assets/images/{{chartType.toLowerCase()}}-chart.png')"></mat-icon>
+                <span class="chart-description">{{chartType}}</span>
+            </button>
           </mat-menu>
     </div>
     <span>{{parameterName}}</span>
