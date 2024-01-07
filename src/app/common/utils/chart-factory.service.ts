@@ -37,6 +37,7 @@ export class ChartFactoryService {
 
     switch(chartType){
       case ConfigChartType.Stepped:
+
         return  {
           type:'line' as ChartType,
           data: {
@@ -84,7 +85,6 @@ export class ChartFactoryService {
   }
 
   buildChart(elementName: string, chartType: ConfigChartType, xAxisData: string[], yAxisData: string[]){
-    
     return new Chart(
       elementName,
       this.generateChartConfig(chartType, xAxisData, yAxisData)

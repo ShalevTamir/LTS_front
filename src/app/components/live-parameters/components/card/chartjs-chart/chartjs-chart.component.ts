@@ -13,10 +13,10 @@ import { isNullOrUndef } from 'chart.js/dist/helpers/helpers.core';
   providers: [ChartFactoryService]
 })
 export class ChartjsChartComponent implements OnInit{
-  public static defaultChartType: ConfigChartType = ConfigChartType.Bar;
+  public static defaultChartType: ConfigChartType = ConfigChartType.Line;
 
   chart: any;
-  @Input() chartType: string = ChartjsChartComponent.defaultChartType.toString();
+  @Input() chartType: ConfigChartType = ChartjsChartComponent.defaultChartType;
 
   constructor(private _chartFactoryService: ChartFactoryService){}
 
@@ -34,10 +34,11 @@ export class ChartjsChartComponent implements OnInit{
   }	
 
   createChart(){
+
     let [xAxisData, yAxisData] = this._chartFactoryService.generateChartData();
     return this._chartFactoryService.buildChart(
       "chart-element", 
-      ConfigChartType[this.chartType as keyof typeof ConfigChartType],
+      this.chartType,
       xAxisData,
       yAxisData
       );

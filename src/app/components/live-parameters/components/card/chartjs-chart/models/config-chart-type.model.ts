@@ -1,5 +1,6 @@
 export enum ConfigChartType{
     Line,
     Bar,
-    Stepped
+    Stepped,
+    Guage
 }

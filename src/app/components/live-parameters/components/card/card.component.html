@@ -11,5 +11,6 @@
           </mat-menu>
     </div>
     <span>{{parameterName}}</span>
-    <app-chartjs-chart [chartType]="selectedChartType"></app-chartjs-chart>
+    <app-chartjs-chart *ngIf="!selectedGaugeChart" [chartType]="selectedChartType"></app-chartjs-chart>
+    <app-gauge-chart *ngIf="selectedGaugeChart"></app-gauge-chart>
 </div>
