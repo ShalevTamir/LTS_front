@@ -1,5 +1,7 @@
 @import "../../../styles/variables.scss";
 
+$logo-size: 50px;
+
 .header {
     background: rgb(20, 24, 52);
     background: radial-gradient(
@@ -31,7 +33,7 @@
     }
 
     .title{
-        font-size: 33px;
+        font-size: 28px;
         margin: 0 auto;
     }
     
@@ -39,16 +41,20 @@
 
 
 
-.logo {
-    padding: 20px 50px 20px 0;
-    font-size: 16px;
-    color: #e7e8ea;
-    &-det {
-        background: #4255d4;
-        padding: 8px;
-        margin-left: -2px;
-        border-radius: 50%;
-        font-size: 15px;
-    }
-}
+// .logo {
+//     padding: 20px 50px 20px 0;
+//     font-size: 16px;
+//     color: #e7e8ea;
+//     &-det {
+//         background: #4255d4;
+//         padding: 8px;
+//         margin-left: -2px;
+//         border-radius: 50%;
+//         font-size: 15px;
+//     }
+// }
 
+.logo{
+    width: 53px;
+    margin: 5px 5px 5px 0;
+}

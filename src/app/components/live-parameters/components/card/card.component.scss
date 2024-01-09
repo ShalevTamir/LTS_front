@@ -7,19 +7,14 @@ $chart-logo-size: $menu-size;
 }
 
 .card {
-    background: rgb(26, 32, 73);
-    background: radial-gradient(
-     circle,
-     rgba(26, 32, 73, 1) 0%,
-     rgba(19, 22, 47, 1) 100%
-    );
+    background: radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%);
     padding: 15px 30px 20px 30px;
     border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    display: grid;
     max-height: 430px;
     width: 100%;
+    justify-content: center;
+    height: 264px;
     max-width: 480px;
     & + & {
         margin-left: 20px;
@@ -82,10 +77,8 @@ $chart-logo-size: $menu-size;
         font-size: 20px;
     }
     #btn-menu-container{
-        position: absolute;
-        display: flex;
-        width: 90%;
-        justify-content: flex-end;
+        justify-self: end;
+        grid-column: 3;
         #btn-menu{
             bottom:12px;
         }
@@ -114,4 +107,14 @@ span.chart-description{
 
 app-gauge-chart{
     margin: 4% auto 0 auto;
+}
+
+#title-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 10px;
+}
+
+.card-chart{
+    align-self: center;
 }

@@ -1,16 +1,19 @@
 <div class="card">
-    <div id="btn-menu-container">
-        <button id="btn-menu" mat-icon-button color="primary" [matMenuTriggerFor]="menu">
-            <mat-icon>menu</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu" class="menu-panel">
-            <button (click)="changeChartType(chartType)" *ngFor="let chartType of chartTypes" mat-menu-item>
-                <mat-icon style="background-image:url('../../../../../assets/images/{{chartType.toLowerCase()}}-chart.png')"></mat-icon>
-                <span class="chart-description">{{chartType}}</span>
+    <div id="title-container">
+        <span>{{parameterName}}</span>
+        
+        <div id="btn-menu-container">
+            <button id="btn-menu" mat-icon-button color="primary" [matMenuTriggerFor]="menu">
+                <mat-icon>menu</mat-icon>
             </button>
-          </mat-menu>
+            <mat-menu #menu="matMenu" class="menu-panel">
+                <button (click)="changeChartType(chartType)" *ngFor="let chartType of chartTypes" mat-menu-item>
+                    <mat-icon style="background-image:url('../../../../../assets/images/{{chartType.toLowerCase()}}-chart.png')"></mat-icon>
+                    <span class="chart-description">{{chartType}}</span>
+                </button>
+              </mat-menu>
+        </div>
     </div>
-    <span>{{parameterName}}</span>
-    <app-chartjs-chart *ngIf="!selectedGaugeChart" [chartType]="selectedChartType"></app-chartjs-chart>
-    <app-gauge-chart *ngIf="selectedGaugeChart"></app-gauge-chart>
+    <app-chartjs-chart class="card-chart" *ngIf="!selectedGaugeChart" [chartType]="selectedChartType"></app-chartjs-chart>
+    <app-gauge-chart class="card-chart" *ngIf="selectedGaugeChart"></app-gauge-chart>
 </div>

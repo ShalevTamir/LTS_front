@@ -20,7 +20,9 @@ export class ChartFactoryService {
 
   generateChartConfig(chartType: ConfigChartType, xAxisData: string[], yAxisData: string[]){
     let options = {
+      responsive: true,
       aspectRatio:2.5,
+      height: 1500,
       plugins:{
         legend: {
           display: false,
