@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ChartjsChartComponent } from './chartjs-chart/chartjs-chart.component';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
@@ -15,7 +15,7 @@ import { GaugeChartComponent } from './gauge-chart/gauge-chart.component';
   styleUrl: './card.component.scss'
 })
 export class CardComponent {
-    parameterName: string = "Parameter Name";
+    @Input() parameterName: string = "Parameter Name";
     chartTypes: string[] = Object.keys(ConfigChartType).filter(value => isNaN(Number(value)))
     selectedChartType: ConfigChartType = ChartjsChartComponent.defaultChartType;
     selectedGaugeChart: boolean = false;

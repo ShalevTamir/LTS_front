@@ -4,6 +4,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { firstValueFrom } from 'rxjs';
 import { ClientConnectionId } from '../models/ros/client-connection-id.ros';
 import { ParametersListDto } from '../models/dtos/parameters-list.dto';
+import { FilteredFrame } from '../models/ros/filtered-frame.ros';
 
 @Injectable({
   providedIn: 'root'
@@ -26,13 +27,17 @@ export class SocketHandlerService {
       .withUrl(this.SERVER_URL+"/live-parameters-socket")
       .build();
 
-    this._connection.on('receiveParameters', parameters => {
-      console.log(parameters);
-    })
+    this._connection.on('receiveParameters', (filteredTeleFrame: FilteredFrame) => {
+      // console.log(filteredTeleFrame);
+      // console.log(typeof(filteredTeleFrame));
+      // console.log(typeof(filteredTeleFrame.Parameters));
+      // console.log(typeof(filteredTeleFrame.TimeStamp));
+      console.log(filteredTeleFrame);
+    });
 
     this._connection.on('connectionStatus', isConnectionSuccessful =>{
       console.log(isConnectionSuccessful);
-    })
+    });
 
     await this._connection.start();
   }
