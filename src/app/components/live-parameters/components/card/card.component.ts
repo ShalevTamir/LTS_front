@@ -3,14 +3,14 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
-import { GaugeChartComponent } from './components/gauge-chart/gauge-chart.component';
-import { ConfigChartType } from './components/chartjs-chart/models/config-chart-type.model';
 import { ChartjsChartComponent } from './components/chartjs-chart/chartjs-chart.component';
+import { ConfigChartType } from './components/chartjs-chart/models/config-chart-type.model';
+import { GaugeChartComponent } from './components/gauge-chart/gauge-chart.component';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [ChartjsChartComponent, MatMenuModule, MatButtonModule, MatIconModule, NgFor, NgIf, GaugeChartComponent, MatIconModule],
+  imports: [MatMenuModule, MatButtonModule, MatIconModule, NgFor, NgIf, GaugeChartComponent, MatIconModule, ChartjsChartComponent],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
