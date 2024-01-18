@@ -1,3 +1,7 @@
 <div class="chart-container">
-    <canvas [id]="chartId">{{ chart }}</canvas>
+    <canvas #canvasRef [id]="chartId">{{ chart }}</canvas>
+</div>
+<div #noDataRef class="no-data">
+    <img src="../../../../../../../assets/images/cloud.png" alt="">
+    <span>No Chart Data</span>
 </div>

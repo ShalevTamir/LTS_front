@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import Chart, { ChartData, ChartTypeRegistry } from 'chart.js/auto';
-import { ConfigChartType } from './models/config-chart-type.model';
-import { isNullOrUndef } from 'chart.js/dist/helpers/helpers.core';
 import { ChartFactoryService } from '../../../../../../common/utils/chart-factory.service';
+import { NgIf } from '@angular/common';
+import { ConfigChartType } from './models/config-chart-type.model';
 
 @Component({
   selector: 'app-chartjs-chart',
   standalone: true,
-  imports: [],
+  imports: [NgIf],
   templateUrl: './chartjs-chart.component.html',
   styleUrl: './chartjs-chart.component.scss',
   providers: [ChartFactoryService]
@@ -17,6 +17,10 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
   public static chartsAmount: number = 0;
   xAxisData: string[]
   yAxisData: string[]
+  noDataInserted!: boolean;
+  @ViewChild('canvasRef', { static: true }) canvasRef!: ElementRef;
+  @ViewChild('noDataRef', { static: true }) noDataRef!: ElementRef;
+
 
   chartId: string = "chart-element-"+ChartjsChartComponent.chartsAmount;
   chart: any;
@@ -30,21 +34,29 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
     Chart.defaults.color = "#9b9ca7";
     this.xAxisData = []
     this.yAxisData = []
+    this.noDataInserted = true;
   }
   
   ngAfterViewInit(){
+    this.noDataRef.nativeElement.style.display="block";
+    this.canvasRef.nativeElement.style.display="none";
     this.chart = this.createChart();
-    // console.log(this.chart.data);
   }
 
   ngOnChanges(){
     if (this.chart){
       this.chart.destroy();
       this.chart = this.createChart();
+      this.canvasRef.nativeElement.style.display="block";
     }
   }	
 
   public insertData(xData: string, yData: string){
+    if(this.noDataInserted){
+      this.noDataRef.nativeElement.style.display="none";
+      this.canvasRef.nativeElement.style.display="block";
+      this.noDataInserted = !this.noDataInserted;
+    }
     this.chart.data.labels.push(xData);
     this.chart.data.datasets[0].data.push(yData);
     this.chart.update();

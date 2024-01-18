@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CardComponent } from './components/card/card.component';
-import { SocketHandlerService } from './services/socket-handler.service';
 import { HttpClientModule } from '@angular/common/http';
 import { NgFor } from '@angular/common';
 import { FilteredFrame } from './models/ros/filtered-frame.ros';
+import { SocketHandlerService } from './services/socket-handler.service';
 import { TelemetryParameter } from './models/ros/telemetry-parameter.ros';
 
 @Component({
