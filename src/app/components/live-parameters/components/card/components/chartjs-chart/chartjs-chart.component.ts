@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit } from '@angular/core';
 import Chart, { ChartData, ChartTypeRegistry } from 'chart.js/auto';
-import { ChartFactoryService } from '../../../../../common/utils/chart-factory.service';
 import { ConfigChartType } from './models/config-chart-type.model';
 import { isNullOrUndef } from 'chart.js/dist/helpers/helpers.core';
+import { ChartFactoryService } from '../../../../../../common/utils/chart-factory.service';
 
 @Component({
   selector: 'app-chartjs-chart',
@@ -15,6 +15,8 @@ import { isNullOrUndef } from 'chart.js/dist/helpers/helpers.core';
 export class ChartjsChartComponent implements AfterViewInit, OnChanges{
   public static defaultChartType: ConfigChartType = ConfigChartType.Line;
   public static chartsAmount: number = 0;
+  xAxisData: string[]
+  yAxisData: string[]
 
   chartId: string = "chart-element-"+ChartjsChartComponent.chartsAmount;
   chart: any;
@@ -26,10 +28,13 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
     this.chartId = "chart-element-"+ChartjsChartComponent.chartsAmount;
     Chart.defaults.font.size = 14;
     Chart.defaults.color = "#9b9ca7";
+    this.xAxisData = []
+    this.yAxisData = []
   }
   
   ngAfterViewInit(){
     this.chart = this.createChart();
+    // console.log(this.chart.data);
   }
 
   ngOnChanges(){
@@ -39,14 +44,19 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
     }
   }	
 
-  createChart(){
+  public insertData(xData: string, yData: string){
+    this.chart.data.labels.push(xData);
+    this.chart.data.datasets[0].data.push(yData);
+    this.chart.update();
+  }
 
-    let [xAxisData, yAxisData] = this._chartFactoryService.generateChartData();
+  private createChart(){
+    // let [xAxisData, yAxisData] = this._chartFactoryService.generateChartData();
     return this._chartFactoryService.buildChart(
       this.chartId, 
       this.chartType,
-      xAxisData,
-      yAxisData
+      this.xAxisData,
+      this.yAxisData
       );
   }
 }

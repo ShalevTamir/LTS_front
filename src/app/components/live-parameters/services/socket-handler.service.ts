@@ -16,29 +16,26 @@ export class SocketHandlerService {
 
   constructor(private httpClient: HttpClient) { }
 
-  async initWebSocket(parametersToConfig: string[]){
+  async initWebSocket(parametersToConfig: string[], processParameters: (filteredTeleFrame: FilteredFrame) => void){
     this._clientId = await this.retrieveClientId(parametersToConfig)
-    await this.initConnection();
+    await this.initConnection(processParameters);
     await this.startParametersTransfer();
   }
 
-  private async initConnection(){
+  private async initConnection(processParameters: (filteredTeleFrame: FilteredFrame) => void){
     this._connection = new HubConnectionBuilder()
       .withUrl(this.SERVER_URL+"/live-parameters-socket")
       .build();
 
     this._connection.on('receiveParameters', (filteredTeleFrame: FilteredFrame) => {
-      // console.log(filteredTeleFrame);
-      // console.log(typeof(filteredTeleFrame));
-      // console.log(typeof(filteredTeleFrame.Parameters));
-      // console.log(typeof(filteredTeleFrame.TimeStamp));
-      console.log(filteredTeleFrame);
+     
+      processParameters(filteredTeleFrame);
     });
 
-    this._connection.on('connectionStatus', isConnectionSuccessful =>{
+    this._connection.on('connectionStatus', (isConnectionSuccessful: boolean) =>{
       console.log(isConnectionSuccessful);
     });
-
+    
     await this._connection.start();
   }
 
