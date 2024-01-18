@@ -1,5 +1,5 @@
 <div class="card">
-    <div *ngIf="cardType == 'chart' " class="chart-container">
+    <div *ngIf="cardType == 'chart'" class="chart-container">
         <div id="title-container">
             <span>{{parameterName}}</span>
             
@@ -15,8 +15,12 @@
                 </mat-menu>
             </div>
         </div>
-        <app-chartjs-chart class="card-chart" *ngIf="!selectedGaugeChart" [chartType]="selectedChartType"></app-chartjs-chart>
-        <app-gauge-chart class="card-chart" *ngIf="selectedGaugeChart"></app-gauge-chart>
+        <app-chartjs-chart [style.display]="chartMode.toString() == '0' ? 'block' : 'none'" class="card-chart" *ngIf="!selectedGaugeChart" [chartType]="selectedChartType"></app-chartjs-chart>
+        <app-gauge-chart [style.display]="chartMode.toString() == '0' ? 'block' : 'none'" class="card-chart" *ngIf="selectedGaugeChart"></app-gauge-chart>
+        <div [style.display]="chartMode.toString() == '1' ? 'flex' : 'none' " class="no-data-container">
+            <img src="../../../../../../../assets/images/cloud.png" alt="">
+            <span>No Chart Data</span>
+        </div>
     </div>
     <div *ngIf="cardType == 'addCard' " class="add-card">
         <img src="../../../../../assets/images/plus.png" alt="">

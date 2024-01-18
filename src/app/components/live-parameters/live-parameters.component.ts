@@ -14,7 +14,7 @@ import { TelemetryParameter } from './models/ros/telemetry-parameter.ros';
   styleUrl: './live-parameters.component.scss',
   providers: [SocketHandlerService]
 })
-export class LiveParametersComponent implements OnInit, AfterViewInit{
+export class LiveParametersComponent implements OnInit{
   parameters: string[]
   @ViewChildren(CardComponent) cards!: QueryList<CardComponent>
   constructor(private _socketHandlerService: SocketHandlerService) {
@@ -25,9 +25,6 @@ export class LiveParametersComponent implements OnInit, AfterViewInit{
     this._socketHandlerService.initWebSocket(this.parameters, this.updateAllCharts);
   }
 
-  ngAfterViewInit(): void {
-    console.log("hello" + this.cards);
-  }
 
   updateAllCharts = (filteredTeleFrame: FilteredFrame) => {
     this.cards.forEach(card => {
