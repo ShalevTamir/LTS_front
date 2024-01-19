@@ -15,8 +15,8 @@ import { ConfigChartType } from './models/config-chart-type.model';
 export class ChartjsChartComponent implements AfterViewInit, OnChanges{
   public static defaultChartType: ConfigChartType = ConfigChartType.Line;
   public static chartsAmount: number = 0;
-  xAxisData: string[]
-  yAxisData: string[]
+  @Input({required: true}) xAxisData!: string[]
+  @Input({required: true}) yAxisData!: string[]
   noDataInserted!: boolean;
   // @ViewChild('canvasRef', { static: true }) canvasRef!: ElementRef;
   // @ViewChild('noDataRef', { static: true }) noDataRef!: ElementRef;
@@ -32,14 +32,9 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
     this.chartId = "chart-element-"+ChartjsChartComponent.chartsAmount;
     Chart.defaults.font.size = 14;
     Chart.defaults.color = "#9b9ca7";
-    this.xAxisData = []
-    this.yAxisData = []
-    // this.noDataInserted = true;
   }
   
   ngAfterViewInit(){
-    // this.noDataRef.nativeElement.style.display="block";
-    // this.canvasRef.nativeElement.style.display="none";
     this.chart = this.createChart();
   }
 
@@ -47,16 +42,10 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
     if (this.chart){
       this.chart.destroy();
       this.chart = this.createChart();
-      // this.canvasRef.nativeElement.style.display="block";
     }
   }	
 
   public insertData(xData: string, yData: string){
-    // if(this.noDataInserted){
-      // this.noDataRef.nativeElement.style.display="none";
-      // this.canvasRef.nativeElement.style.display="block";
-      // this.noDataInserted = !this.noDataInserted;
-    // }
     this.chart.data.labels.push(xData);
     this.chart.data.datasets[0].data.push(yData);
     this.chart.update();
@@ -64,7 +53,6 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
   }
 
   private createChart(){
-    // let [xAxisData, yAxisData] = this._chartFactoryService.generateChartData();
     return this._chartFactoryService.buildChart(
       this.chartId, 
       this.chartType,

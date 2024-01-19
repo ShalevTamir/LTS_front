@@ -28,6 +28,8 @@ export class CardComponent {
     selectedGaugeChart: boolean = false;
     firstFrameReceived: boolean = false;
     chartMode: ChartMode = ChartMode.NO_DATA;
+    xAxisData: string[] = []
+    yAxisData: string[] = []
   constructor(){
     console.log(this.chartMode.toString());
   }
