@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Chart, ChartConfiguration, ChartType, ChartTypeRegistry } from 'chart.js/auto';
+import { Animation, Chart, ChartConfiguration, ChartOptions, ChartType, ChartTypeRegistry, DefaultDataPoint } from 'chart.js/auto';
 import { ConfigChartType } from '../../components/live-parameters/components/card/components/chartjs-chart/models/config-chart-type.model';
 
 @Injectable({
@@ -19,7 +19,10 @@ export class ChartFactoryService {
   }
 
   generateChartConfig(chartType: ConfigChartType, xAxisData: string[], yAxisData: string[]){
-    let options = {
+    let options = {      
+      interaction: {
+        intersect: false,
+      },
       responsive: true,
       aspectRatio:2.5,
       height: 1500,
@@ -31,11 +34,11 @@ export class ChartFactoryService {
       scales: {
         y: {
           ticks: {
-            padding: 7 // Add 10px padding around each label
+            padding: 7 
           }
         }
       }
-    }
+    } as ChartOptions
 
     switch(chartType){
       case ConfigChartType.Stepped:

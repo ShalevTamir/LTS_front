@@ -17,21 +17,21 @@ import { ChartMode } from './components/chartjs-chart/models/enums/chart-mode';
 })
 
 export class CardComponent {
-    @Input() parameterName: string = "Parameter Name";
-    @Input() cardType: string = "chart";
-    @ViewChild(ChartjsChartComponent) chartjs: ChartjsChartComponent | undefined;
-    @ViewChild(GaugeChartComponent) gauge: GaugeChartComponent | undefined;
-    // @ViewChild('chartContainerRef', { static: true }) chartContainerRef!: ElementRef;
-    // @ViewChild('noDataRef', { static: true }) noDataRef!: ElementRef;
-    chartTypes: string[] = Object.keys(ConfigChartType).filter(value => isNaN(Number(value)))
-    selectedChartType: ConfigChartType = ChartjsChartComponent.defaultChartType;
-    selectedGaugeChart: boolean = false;
-    firstFrameReceived: boolean = false;
-    chartMode: ChartMode = ChartMode.NO_DATA;
-    xAxisData: string[] = []
-    yAxisData: string[] = []
+  static readonly maxChartSamples: number = 60;
+  @Input() parameterName: string = "Parameter Name";
+  @Input() cardType: string = "chart";
+  @ViewChild(ChartjsChartComponent) chartjs: ChartjsChartComponent | undefined;
+  @ViewChild(GaugeChartComponent) gauge: GaugeChartComponent | undefined;
+  // @ViewChild('chartContainerRef', { static: true }) chartContainerRef!: ElementRef;
+  // @ViewChild('noDataRef', { static: true }) noDataRef!: ElementRef;
+  chartTypes: string[] = Object.keys(ConfigChartType).filter(value => isNaN(Number(value)))
+  selectedChartType: ConfigChartType = ChartjsChartComponent.defaultChartType;
+  selectedGaugeChart: boolean = false;
+  firstFrameReceived: boolean = false;
+  chartMode: ChartMode = ChartMode.NO_DATA;
+  xAxisData: string[] = []
+  yAxisData: string[] = []
   constructor(){
-    console.log(this.chartMode.toString());
   }
 
     changeChartType(updatedChartType: string){
@@ -41,7 +41,7 @@ export class CardComponent {
 
     public updateChartValues(xData: string, yData: string){
       if(this.chartjs !== undefined){
-        this.chartjs.insertData(xData,yData);
+        this.chartjs?.insertData(xData,yData, this.xAxisData.length >= CardComponent.maxChartSamples);
       }
       else if(this.gauge !== undefined){
         this.gauge.gaugeValue = +yData;
@@ -51,5 +51,4 @@ export class CardComponent {
       }
       this.chartMode = ChartMode.HAS_DATA;
     }
-
 }

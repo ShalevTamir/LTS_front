@@ -45,11 +45,20 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
     }
   }	
 
-  public insertData(xData: string, yData: string){
-    this.chart.data.labels.push(xData);
-    this.chart.data.datasets[0].data.push(yData);
+  public insertData(xData: string, yData: string, replaceOldData: boolean){
+
+    this.xAxisData.push(xData);
+    this.yAxisData.push(yData);
+
     this.chart.update();
-    console.log(this.xAxisData);
+
+
+    if(replaceOldData){
+      this.xAxisData.shift();
+      this.yAxisData.shift();
+      this.chart.update();
+    }
+
   }
 
   private createChart(){

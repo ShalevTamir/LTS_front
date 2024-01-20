@@ -33,7 +33,7 @@ export class SocketHandlerService {
     });
 
     this._connection.on('connectionStatus', (isConnectionSuccessful: boolean) =>{
-      console.log(isConnectionSuccessful);
+      // console.log(isConnectionSuccessful);
     });
     
     await this._connection.start();
