@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { SensorAlertsSocketService } from './sensor-alerts-socket.service';
 import { SensorState } from '../models/enums/sensor-state.enum';
 import { SensorAlertsRos } from '../models/ros/sensor-alert.ros';
-import { ToastrService } from 'ngx-toastr';
+import { IndividualConfig, ToastrService } from 'ngx-toastr';
+import { seperateString } from '../../../common/utils/string-utils';
 
 
 @Injectable({
@@ -23,7 +24,7 @@ export class SensorAlertsService{
     private processAlert = ({SensorName, CurrentStatus}: SensorAlertsRos) => {
         console.log(SensorName, CurrentStatus);
         let parsedStatus = SensorState[CurrentStatus].charAt(0) + SensorState[CurrentStatus].substring(1).toLowerCase();
-        let notificationArgs = [SensorName, "Status: "+ parsedStatus];
+        let notificationArgs = [this.statusMessage+ " "+ parsedStatus, seperateString(SensorName, '_')];
         switch( CurrentStatus ){
             case SensorState.VALID:
                 this._notificationsService.success(...notificationArgs);
