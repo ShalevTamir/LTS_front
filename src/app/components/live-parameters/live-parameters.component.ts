@@ -20,8 +20,9 @@ import { SensorState } from './models/enums/sensor-state.enum';
   providers: [LiveParametersSocketService, SensorAlertsSocketService]
 })
 export class LiveParametersComponent implements OnInit{
-  parameters: string[]
-  @ViewChildren(CardComponent) cards!: QueryList<CardComponent>
+  parameters: string[];
+  @ViewChildren(CardComponent) cards!: QueryList<CardComponent>;
+  public title: string ="Live Telemetry Parameters";
   constructor(
     private _liveParametersSocket: LiveParametersSocketService,
     private _sensorAlerts: SensorAlertsService,

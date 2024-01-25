@@ -19,10 +19,12 @@
     align-items: center;
     padding: 117px 0 40px;
     animation: left 1s var(--delay) both;
-    svg {
+    a {
+     color: #5a5b69;
+    
      width: 24px;
      cursor: pointer;
-     & + svg {
+     & + a {
       margin-top: 34px;
      }
      &:last-child {
