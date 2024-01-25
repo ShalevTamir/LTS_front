@@ -35,7 +35,9 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
   }
   
   ngAfterViewInit(){
-    this.chart = this.createChart();
+    setTimeout(() => {
+      this.chart = this.createChart();
+    });
   }
 
   ngOnChanges(){

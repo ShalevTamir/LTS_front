@@ -6,6 +6,7 @@ import { FilteredFrame } from './models/ros/filtered-frame.ros';
 import { LiveParametersSocketService } from '../../common/utils/socket-connection/live-parameters-socket.service';
 import { TelemetryParameter } from './models/ros/telemetry-parameter.ros';
 import { SensorAlertsSocketService } from '../../common/utils/socket-connection/sensor-alerts-socket.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-live-parameters',
@@ -20,7 +21,8 @@ export class LiveParametersComponent implements OnInit{
   @ViewChildren(CardComponent) cards!: QueryList<CardComponent>
   constructor(
     private _liveParametersSocket: LiveParametersSocketService,
-    private _sensorAlertsSocker: SensorAlertsSocketService
+    private _sensorAlertsSocker: SensorAlertsSocketService,
+    private toastr: ToastrService
     ) {
     this.parameters = ["Altitude","Longitude","Wind_Speed"];
   }
@@ -28,6 +30,7 @@ export class LiveParametersComponent implements OnInit{
   ngOnInit(): void {
     this._liveParametersSocket.initWebSocket(this.parameters, this.updateAllCharts);
     this._sensorAlertsSocker.initWebSocket();
+    this.toastr.info("test", undefined, {closeButton: true, progressBar: true, toastClass: 'custom-toast ngx-toastr'});
   }
 
 
