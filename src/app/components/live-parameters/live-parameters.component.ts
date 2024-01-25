@@ -3,10 +3,13 @@ import { CardComponent } from './components/card/card.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgFor } from '@angular/common';
 import { FilteredFrame } from './models/ros/filtered-frame.ros';
-import { LiveParametersSocketService } from '../../common/utils/socket-connection/live-parameters-socket.service';
+import { LiveParametersSocketService } from './services/live-parameters-socket.service';
 import { TelemetryParameter } from './models/ros/telemetry-parameter.ros';
-import { SensorAlertsSocketService } from '../../common/utils/socket-connection/sensor-alerts-socket.service';
+import { SensorAlertsSocketService } from './services/sensor-alerts-socket.service';
 import { ToastrService } from 'ngx-toastr';
+import { SensorAlertsService } from './services/sensor-alerts.service';
+import { SensorAlertsRos } from './models/ros/sensor-alert.ros';
+import { SensorState } from './models/enums/sensor-state.enum';
 
 @Component({
   selector: 'app-live-parameters',
@@ -21,17 +24,16 @@ export class LiveParametersComponent implements OnInit{
   @ViewChildren(CardComponent) cards!: QueryList<CardComponent>
   constructor(
     private _liveParametersSocket: LiveParametersSocketService,
-    private _sensorAlertsSocker: SensorAlertsSocketService,
-    private toastr: ToastrService
+    private _sensorAlerts: SensorAlertsService,
     ) {
     this.parameters = ["Altitude","Longitude","Wind_Speed"];
   }
 
   ngOnInit(): void {
     this._liveParametersSocket.initWebSocket(this.parameters, this.updateAllCharts);
-    this._sensorAlertsSocker.initWebSocket();
-    this.toastr.info("test", undefined, {closeButton: true, progressBar: true, toastClass: 'custom-toast ngx-toastr'});
+    this._sensorAlerts.init();
   }
+  
 
 
   updateAllCharts = (filteredTeleFrame: FilteredFrame) => {

@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { firstValueFrom } from 'rxjs';
-import { ParametersListDto } from '../../../components/live-parameters/models/dtos/parameters-list.dto';
-import { ClientConnectionId } from '../../../components/live-parameters/models/ros/client-connection-id.ros';
-import { FilteredFrame } from '../../../components/live-parameters/models/ros/filtered-frame.ros';
-import { SocketHandlerService } from './socket-handler.service';
+import { ParametersListDto } from '../models/dtos/parameters-list.dto';
+import { ClientConnectionId } from '../models/ros/client-connection-id.ros';
+import { FilteredFrame } from '../models/ros/filtered-frame.ros';
+import { SocketHandlerService } from '../../../common/utils/socket-connection/socket-handler.service';
 
 @Injectable({
   providedIn: 'root'
