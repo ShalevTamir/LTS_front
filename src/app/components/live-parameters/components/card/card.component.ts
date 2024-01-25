@@ -41,7 +41,7 @@ export class CardComponent {
 
     public updateChartValues(xData: string, yData: string){
       if(this.chartjs !== undefined){
-        this.chartjs?.insertData(xData,yData, this.xAxisData.length >= CardComponent.maxChartSamples);
+        this.chartjs.insertData(xData,yData, this.xAxisData.length >= CardComponent.maxChartSamples);
       }
       else if(this.gauge !== undefined){
         this.gauge.gaugeValue = +yData;

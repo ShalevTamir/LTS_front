@@ -3,8 +3,9 @@ import { CardComponent } from './components/card/card.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgFor } from '@angular/common';
 import { FilteredFrame } from './models/ros/filtered-frame.ros';
-import { SocketHandlerService } from './services/socket-handler.service';
+import { LiveParametersSocketService } from '../../common/utils/socket-connection/live-parameters-socket.service';
 import { TelemetryParameter } from './models/ros/telemetry-parameter.ros';
+import { SensorAlertsSocketService } from '../../common/utils/socket-connection/sensor-alerts-socket.service';
 
 @Component({
   selector: 'app-live-parameters',
@@ -12,17 +13,21 @@ import { TelemetryParameter } from './models/ros/telemetry-parameter.ros';
   imports: [CardComponent, HttpClientModule, NgFor],
   templateUrl: './live-parameters.component.html',
   styleUrl: './live-parameters.component.scss',
-  providers: [SocketHandlerService]
+  providers: [LiveParametersSocketService, SensorAlertsSocketService]
 })
 export class LiveParametersComponent implements OnInit{
   parameters: string[]
   @ViewChildren(CardComponent) cards!: QueryList<CardComponent>
-  constructor(private _socketHandlerService: SocketHandlerService) {
+  constructor(
+    private _liveParametersSocket: LiveParametersSocketService,
+    private _sensorAlertsSocker: SensorAlertsSocketService
+    ) {
     this.parameters = ["Altitude","Longitude","Wind_Speed"];
   }
 
   ngOnInit(): void {
-    this._socketHandlerService.initWebSocket(this.parameters, this.updateAllCharts);
+    this._liveParametersSocket.initWebSocket(this.parameters, this.updateAllCharts);
+    this._sensorAlertsSocker.initWebSocket();
   }
 
 
