@@ -1,25 +1,20 @@
-import { AfterViewInit, Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CardComponent } from './components/card/card.component';
-import { HttpClientModule } from '@angular/common/http';
 import { NgFor } from '@angular/common';
 import { FilteredFrame } from './models/ros/filtered-frame.ros';
 import { LiveParametersSocketService } from './services/live-parameters-socket.service';
 import { TelemetryParameter } from './models/ros/telemetry-parameter.ros';
-import { SensorAlertsSocketService } from './services/sensor-alerts-socket.service';
-import { ToastrService } from 'ngx-toastr';
 import { SensorAlertsService } from './services/sensor-alerts.service';
-import { SensorAlertsRos } from './models/ros/sensor-alert.ros';
-import { SensorState } from './models/enums/sensor-state.enum';
+import { Router, RoutesRecognized } from '@angular/router';
 
 @Component({
   selector: 'app-live-parameters',
   standalone: true,
-  imports: [CardComponent, HttpClientModule, NgFor],
+  imports: [CardComponent, NgFor],
   templateUrl: './live-parameters.component.html',
   styleUrl: './live-parameters.component.scss',
-  providers: [LiveParametersSocketService, SensorAlertsSocketService]
 })
-export class LiveParametersComponent implements OnInit{
+export class LiveParametersComponent implements OnInit, OnDestroy{
   parameters: string[];
   @ViewChildren(CardComponent) cards!: QueryList<CardComponent>;
   public title: string ="Live Telemetry Parameters";
@@ -27,7 +22,11 @@ export class LiveParametersComponent implements OnInit{
     private _liveParametersSocket: LiveParametersSocketService,
     private _sensorAlerts: SensorAlertsService,
     ) {
-    this.parameters = ["Altitude","Longitude","Wind_Speed"];
+      this.parameters = ["Altitude","Longitude","Wind_Speed"];
+  }
+  ngOnDestroy(): void {
+    this._liveParametersSocket.stopWebSocket();
+    this._sensorAlerts.stopWebSocket();
   }
 
   ngOnInit(): void {

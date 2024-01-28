@@ -15,14 +15,16 @@ export class SensorAlertsService{
     constructor(
         private _sensorAlertsSocket: SensorAlertsSocketService,
         private _notificationsService: ToastrService
-        ){ }
+        ){}
 
-    public init(){
-        this._sensorAlertsSocket.initWebSocket(this.processAlert);
+    public async init(){
+        await this._sensorAlertsSocket.initWebSocket(this.processAlert);
+    }
+    public async stopWebSocket(){
+        await this._sensorAlertsSocket.stopWebSocket();
     }
 
     private processAlert = ({SensorName, CurrentStatus}: SensorAlertsRos) => {
-        console.log(SensorName, CurrentStatus);
         let parsedStatus = SensorState[CurrentStatus].charAt(0) + SensorState[CurrentStatus].substring(1).toLowerCase();
         let notificationArgs = [this.statusMessage+ " "+ parsedStatus, seperateString(SensorName, '_')];
         switch( CurrentStatus ){
@@ -41,6 +43,7 @@ export class SensorAlertsService{
            
         }
     }
+
 
     
 }

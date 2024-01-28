@@ -4,6 +4,9 @@ import { NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LiveParametersComponent } from './components/live-parameters/live-parameters.component';
+import { LiveParametersSocketService } from './components/live-parameters/services/live-parameters-socket.service';
+import { HttpClientModule } from '@angular/common/http';
+import { SensorAlertsService } from './components/live-parameters/services/sensor-alerts.service';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +17,12 @@ import { LiveParametersComponent } from './components/live-parameters/live-param
     SidebarComponent,
     HeaderComponent,
     LiveParametersComponent,
-    RouterOutlet
+    RouterOutlet,
+    HttpClientModule
+  ],
+  providers:[
+    LiveParametersSocketService,
+    SensorAlertsService
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

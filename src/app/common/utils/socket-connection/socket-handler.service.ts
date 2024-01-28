@@ -8,7 +8,7 @@ import { Injectable } from "@angular/core";
 export class SocketHandlerService{
     constructor() { }
   
-    public async initWebSocket(server_url : string, listeners: HubListener[]): Promise<HubConnection>{
+    public initWebSocket(server_url : string, listeners: HubListener[]): HubConnection{
         let hubConnection = new HubConnectionBuilder()
             .withUrl(server_url)
             .build();
@@ -16,8 +16,15 @@ export class SocketHandlerService{
             hubConnection.on(listener.listenerName, listener.callback);
         });
   
-      await hubConnection.start();
       return hubConnection;
     }
+
+    // public async disconnectWebSocket(connection: HubConnection){
+    //   await connection.stop();
+    // }
+
+    // public async reconnectWebSocket(connection: HubConnection){
+    //   await connection.start();
+    // }
   }
   

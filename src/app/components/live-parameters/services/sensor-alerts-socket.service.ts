@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { SocketHandlerService } from "../../../common/utils/socket-connection/socket-handler.service";
 import { SensorState } from "../models/enums/sensor-state.enum";
 import { SensorAlertsRos } from "../models/ros/sensor-alert.ros";
+import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 
 @Injectable({
     providedIn: 'root'
@@ -9,14 +10,23 @@ import { SensorAlertsRos } from "../models/ros/sensor-alert.ros";
 export class SensorAlertsSocketService{
     constructor(private _socketHandlerService: SocketHandlerService) { }
     private readonly SERVER_URL: string = "https://localhost:5002";
+    private _connection: HubConnection | undefined;
+
 
     public async initWebSocket(alertCallback: (alert: SensorAlertsRos, sensorState: SensorState) => void){
-        await this._socketHandlerService.initWebSocket(this.SERVER_URL+"/sensor-alerts-socket",[
+        this._connection??= this._socketHandlerService.initWebSocket(this.SERVER_URL+"/sensor-alerts-socket",[
             {
                 listenerName: 'receiveAlerts',
                 callback: alertCallback
             }
         ]);
+        if (this._connection.state === HubConnectionState.Disconnected){
+            await this._connection.start();
+        }
+    }
+
+    public async stopWebSocket(){
+        this._connection?.stop();
     }
 
 }
