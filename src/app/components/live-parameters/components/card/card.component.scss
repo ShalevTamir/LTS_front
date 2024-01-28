@@ -163,16 +163,18 @@ app-gauge-chart{
 }
 
 .no-data-container{
+    grid-template-columns: auto 1fr;
     align-items: center;
-    justify-content: center;
+    gap: 12px;
     img{
         width:150px;
+        justify-self: flex-start;
     }
     span{
         font-size: 30px;
         color:#85bcff;
         font-family: 'RobotoMono';
         letter-spacing: 1px;
-        margin: 0 33px;
+        margin-bottom: 30px;
     }
 }

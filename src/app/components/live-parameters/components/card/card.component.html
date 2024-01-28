@@ -24,7 +24,7 @@
             [yAxisData]="yAxisData">
         </app-chartjs-chart>
         <app-gauge-chart [style.display]="chartMode.toString() == '0' ? 'block' : 'none'" class="card-chart" *ngIf="selectedGaugeChart"></app-gauge-chart>
-        <div [style.display]="chartMode.toString() == '1' ? 'flex' : 'none' " class="no-data-container">
+        <div [style.display]="chartMode.toString() == '1' ? 'grid' : 'none' " class="no-data-container">
             <img src="../../../../../../../assets/images/cloud.png" alt="">
             <span>No Chart Data</span>
         </div>
