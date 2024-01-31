@@ -36,8 +36,9 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
   
   ngAfterViewInit(){
     setTimeout(() => {
+      if(this.chart === undefined)
       this.chart = this.createChart();
-    });
+    }, 0);
   }
 
   ngOnChanges(){
@@ -48,19 +49,15 @@ export class ChartjsChartComponent implements AfterViewInit, OnChanges{
   }	
 
   public insertData(xData: string, yData: string, replaceOldData: boolean){
-
     this.xAxisData.push(xData);
     this.yAxisData.push(yData);
-
     this.chart.update();
-
 
     if(replaceOldData){
       this.xAxisData.shift();
       this.yAxisData.shift();
       this.chart.update();
     }
-
   }
 
   private createChart(){

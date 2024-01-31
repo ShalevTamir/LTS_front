@@ -3,18 +3,18 @@ import { SocketHandlerService } from "../../../common/utils/socket-connection/so
 import { SensorState } from "../models/enums/sensor-state.enum";
 import { SensorAlertsRos } from "../models/ros/sensor-alert.ros";
 import { HubConnection, HubConnectionState } from "@microsoft/signalr";
+import { LIVE_TELE_URL } from "../../../common/constants";
 
 @Injectable({
     providedIn: 'root'
 })
 export class SensorAlertsSocketService{
     constructor(private _socketHandlerService: SocketHandlerService) { }
-    private readonly SERVER_URL: string = "https://localhost:5002";
     private _connection: HubConnection | undefined;
 
 
     public async initWebSocket(alertCallback: (alert: SensorAlertsRos, sensorState: SensorState) => void){
-        this._connection??= this._socketHandlerService.initWebSocket(this.SERVER_URL+"/sensor-alerts-socket",[
+        this._connection??= this._socketHandlerService.initWebSocket(LIVE_TELE_URL+"/sensor-alerts-socket",[
             {
                 listenerName: 'receiveAlerts',
                 callback: alertCallback

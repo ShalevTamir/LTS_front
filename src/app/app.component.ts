@@ -7,6 +7,8 @@ import { LiveParametersComponent } from './components/live-parameters/live-param
 import { LiveParametersSocketService } from './components/live-parameters/services/live-parameters-socket.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SensorAlertsService } from './components/live-parameters/services/sensor-alerts.service';
+import { ParametersRangesService } from './components/live-parameters/services/parameters-ranges.service';
+import { GaugesDataPersistenceService } from './components/live-parameters/components/card/services/gauges-data-persistence.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +24,9 @@ import { SensorAlertsService } from './components/live-parameters/services/senso
   ],
   providers:[
     LiveParametersSocketService,
-    SensorAlertsService
+    SensorAlertsService,
+    ParametersRangesService,
+    GaugesDataPersistenceService
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

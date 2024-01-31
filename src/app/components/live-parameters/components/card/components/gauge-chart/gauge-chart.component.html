@@ -1,12 +1,17 @@
-<ngx-gauge [type]="gaugeType" 
+<ngx-gauge *ngIf="showContent" 
+           [type]="gaugeType" 
            [value]="gaugeValue" 
-           [markers] = "markerConfig"
-           [min] = "guageMinValue"
-           [max] = "guageMaxValue"
-           [thresholds]="thresholdConfig"
+           [markers] = "defineMarkerConfig()"
+           [min] = "gaugeMinValue ? gaugeMinValue : 0"
+           [max] = "gaugeMaxValue ? gaugeMaxValue : 0"
            [thick] = "25"
            [margin] = "10"
            [size] = "220"
+           foregroundColor="#1976cf"
            cap="butt"
         >
 </ngx-gauge>
+
+<div *ngIf="!showContent" class="missing-required-data">
+    <h1>Missing Required Data</h1>
+</div>

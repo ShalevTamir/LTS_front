@@ -15,16 +15,17 @@
                 </mat-menu>
             </div>
         </div>
+        
         <app-chartjs-chart 
-            [style.display]="chartMode.toString() == '0' ? 'block' : 'none'" 
+            
             class="card-chart" 
-            *ngIf="!selectedGaugeChart" 
+            *ngIf="selectedChartType != 3 && chartMode == 0" 
             [chartType]="selectedChartType"
             [xAxisData]="xAxisData"
             [yAxisData]="yAxisData">
         </app-chartjs-chart>
-        <app-gauge-chart [style.display]="chartMode.toString() == '0' ? 'block' : 'none'" class="card-chart" *ngIf="selectedGaugeChart"></app-gauge-chart>
-        <div [style.display]="chartMode.toString() == '1' ? 'grid' : 'none' " class="no-data-container">
+        <app-gauge-chart class="card-chart" *ngIf="selectedChartType == 3 && chartMode == 0" [parameterName]="parameterName"></app-gauge-chart>
+        <div *ngIf="chartMode == 1" class="no-data-container">
             <img src="../../../../../../../assets/images/cloud.png" alt="">
             <span>No Chart Data</span>
         </div>

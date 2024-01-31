@@ -6,6 +6,9 @@ import { LiveParametersSocketService } from './services/live-parameters-socket.s
 import { TelemetryParameter } from './models/ros/telemetry-parameter.ros';
 import { SensorAlertsService } from './services/sensor-alerts.service';
 import { Router, RoutesRecognized } from '@angular/router';
+import { ParametersRangesService } from './services/parameters-ranges.service';
+import { ParameterRange } from './models/ros/parameter-range.ros';
+import { GaugesDataPersistenceService } from './components/card/services/gauges-data-persistence.service';
 
 @Component({
   selector: 'app-live-parameters',
@@ -21,20 +24,37 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
   constructor(
     private _liveParametersSocket: LiveParametersSocketService,
     private _sensorAlerts: SensorAlertsService,
-    ) {
+    private _parametersRangesService: ParametersRangesService,
+    private _gaugesDataService: GaugesDataPersistenceService) {
       this.parameters = ["Altitude","Longitude","Wind_Speed"];
-  }
-  ngOnDestroy(): void {
-    this._liveParametersSocket.stopWebSocket();
-    this._sensorAlerts.stopWebSocket();
-  }
-
-  ngOnInit(): void {
-    this._liveParametersSocket.initWebSocket(this.parameters, this.updateAllCharts);
-    this._sensorAlerts.init();
+    }
+    ngOnDestroy(): void {
+      this._liveParametersSocket.stopWebSocket();
+      this._sensorAlerts.stopWebSocket();
+    }
+    
+    ngOnInit(): void {
+      this._liveParametersSocket.initWebSocket(this.parameters, this.updateAllCharts);
+      this._sensorAlerts.init();
+      this._parametersRangesService.getRanges(this.parameters).then((value: ParameterRange[]) => {
+        this.configGauges(value);
+      });
   }
   
-
+  configGauges(parametersRanges: ParameterRange[]){
+    this.cards.forEach(card =>{
+      let parameterRange = parametersRanges.find(parameter => parameter.ParameterName == card.parameterName);
+      if (parameterRange !== undefined){
+        this._gaugesDataService.saveGaugeData(
+          card.parameterName,
+          {minValue: +parameterRange.MinValue,
+          maxValue: +parameterRange.MaxValue});
+      }
+      else{
+        console.log("[ERROR] couldn't find parameter range for parameter "+card.parameterName);
+      }
+    })
+  }
 
   updateAllCharts = (filteredTeleFrame: FilteredFrame) => {
     this.cards.forEach(card => {

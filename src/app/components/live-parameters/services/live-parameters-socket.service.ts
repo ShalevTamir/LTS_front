@@ -6,6 +6,7 @@ import { ParametersListDto } from '../models/dtos/parameters-list.dto';
 import { ClientConnectionId } from '../models/ros/client-connection-id.ros';
 import { FilteredFrame } from '../models/ros/filtered-frame.ros';
 import { SocketHandlerService } from '../../../common/utils/socket-connection/socket-handler.service';
+import { LIVE_DATA_URL } from '../../../common/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,6 @@ import { SocketHandlerService } from '../../../common/utils/socket-connection/so
 export class LiveParametersSocketService {
   private _connection: HubConnection | undefined;
   private _clientId: string | undefined;
-  private readonly SERVER_URL: string = "https://localhost:5003";
   private _parametersToConfig!: string[]
 
   constructor(private _httpClient: HttpClient, private _socketHandler: SocketHandlerService) { 
@@ -22,7 +22,7 @@ export class LiveParametersSocketService {
   public async initWebSocket(parametersToConfig: string[], processParameters: (filteredTeleFrame: FilteredFrame) => void){
     this._parametersToConfig = parametersToConfig;
     this._clientId ??= await this.retrieveClientId(parametersToConfig)
-    this._connection = this._socketHandler.initWebSocket(this.SERVER_URL+"/live-parameters-socket", [
+    this._connection = this._socketHandler.initWebSocket(LIVE_DATA_URL+"/live-parameters-socket", [
       {
         listenerName: 'receiveParameters',
         callback: processParameters
@@ -44,7 +44,7 @@ export class LiveParametersSocketService {
   }
   
   private async retrieveClientId(parametersToConfig: string[]): Promise<string>{
-    let reqRes = this._httpClient.post<ClientConnectionId>(this.SERVER_URL+"/socket-config",new ParametersListDto(parametersToConfig));
+    let reqRes = this._httpClient.post<ClientConnectionId>(LIVE_DATA_URL+"/socket-config",new ParametersListDto(parametersToConfig));
     let connectionIdRos: ClientConnectionId = await firstValueFrom(reqRes);
     return connectionIdRos.ConnectionId;
   }
