@@ -37,13 +37,22 @@ export class CardComponent {
  }
  
 
+  private insertChartjsData(xData: string, yData:string){
+    this.xAxisData.push(xData);
+    this.yAxisData.push(yData);
+    this.chartjs?.chart.update();
+    if(this.xAxisData.length > CardComponent.maxChartSamples){
+      this.xAxisData.shift();
+      this.yAxisData.shift();
+      this.chartjs?.chart.update();
+    }
+  }
+
   public updateChartValues(xData: string, yData: string){
     this.chartMode = ChartMode.HAS_DATA;
     setTimeout(() => {
-      if(this.chartjs !== undefined){
-        this.chartjs.insertData(xData,yData, this.xAxisData.length >= CardComponent.maxChartSamples);
-      }
-      else if(this.gauge !== undefined){
+      this.insertChartjsData(xData, yData);      
+      if(this.gauge !== undefined){
         this.gauge.updateGaugeValue(+yData);
       }
     }, 1);

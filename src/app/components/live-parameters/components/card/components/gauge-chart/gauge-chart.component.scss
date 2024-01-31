@@ -2,3 +2,17 @@
     overflow: visible;
     color: #555;
 }
+
+.missing-required-data{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    h1{
+        font-size: 30px;
+        color: #85bcff;
+        font-family: "RobotoMono";
+        letter-spacing: 1px;
+        text-align: center;
+        margin-bottom: 15%;
+    }    
+}
