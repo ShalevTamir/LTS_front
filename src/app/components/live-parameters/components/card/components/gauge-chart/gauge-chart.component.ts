@@ -14,7 +14,7 @@ import { GaugeData } from '../../models/gauge-data';
 })
 export class GaugeChartComponent implements AfterViewInit{
   @Input({required: true}) parameterName!: string
-  @Input({alias: "value"}) gaugeValue: number = 0;
+  @Input({alias: "value"}) gaugeValue: number | undefined;
   @Input({alias: "minValue"}) gaugeMinValue: number | undefined;
   @Input({alias: "maxValue"}) gaugeMaxValue: number | undefined;
   gaugeType: NgxGaugeType = "arch" as NgxGaugeType;  
@@ -26,9 +26,17 @@ export class GaugeChartComponent implements AfterViewInit{
     this._gaugesDataService.getGaugeDataAsync(this.parameterName).then((gaugeData: GaugeData) => {
       this.gaugeMinValue = gaugeData.minValue;
       this.gaugeMaxValue = gaugeData.maxValue; 
-      this.showContent = true;
     });
   }
+  
+  updateGaugeValue(updatedGaugeValue: number){
+    this.gaugeValue = updatedGaugeValue;
+    this.showContent = [this.gaugeMinValue, this.gaugeMaxValue, this.gaugeValue].every((value) => {
+      return value !== undefined;
+    });
+  }
+
+  
   // @Input() warnValue: number = 50;
   // @Input() invalidValue: number = 70;
   

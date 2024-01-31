@@ -44,7 +44,7 @@ export class CardComponent {
         this.chartjs.insertData(xData,yData, this.xAxisData.length >= CardComponent.maxChartSamples);
       }
       else if(this.gauge !== undefined){
-        this.gauge.gaugeValue = +yData;
+        this.gauge.updateGaugeValue(+yData);
       }
     }, 1);
     
