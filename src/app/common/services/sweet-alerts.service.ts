@@ -56,8 +56,8 @@ export class SweetAlertsService{
     private _generateMultipleInputsHtml(subtitles: string[]){
         return subtitles
         .map((subtitle, index) => {
-            return `<label for="swal-input-${index+1}">${subtitle}</label>
-            <input id="swal-input-${index+1}" class="swal2-input">`;
+            return `<label for="swal-input-${index+1} custom-swal2-input">${subtitle}</label>
+            <input id="swal-input-${index+1}" class="swal2-input custom-swal2-input">`;
         })
         .join("\n");
     }
