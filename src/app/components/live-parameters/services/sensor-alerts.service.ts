@@ -26,7 +26,7 @@ export class SensorAlertsService{
 
     private processAlert = ({SensorName, CurrentStatus}: SensorAlertsRos) => {
         let parsedStatus = SensorState[CurrentStatus].charAt(0) + SensorState[CurrentStatus].substring(1).toLowerCase();
-        let notificationArgs = [this.statusMessage+ " "+ parsedStatus, seperateString(SensorName, '_')];
+        let notificationArgs: [string, string, Partial<IndividualConfig<any>>] = [this.statusMessage+ " "+ parsedStatus, seperateString(SensorName, '_'), {positionClass: 'toast-bottom-right'}];
         switch( CurrentStatus ){
             case SensorState.VALID:
                 this._notificationsService.success(...notificationArgs);

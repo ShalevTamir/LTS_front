@@ -9,6 +9,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { SensorAlertsService } from './components/live-parameters/services/sensor-alerts.service';
 import { ParametersRangesService } from './components/live-parameters/services/parameters-ranges.service';
 import { GaugesDataPersistenceService } from './components/live-parameters/components/card/services/gauges-data-persistence.service';
+import { SweetAlertsService } from './common/services/sweet-alerts.service';
+import { DynamicSensorService } from './components/header/services/dynamic-sensor.service';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +28,9 @@ import { GaugesDataPersistenceService } from './components/live-parameters/compo
     LiveParametersSocketService,
     SensorAlertsService,
     ParametersRangesService,
-    GaugesDataPersistenceService
+    GaugesDataPersistenceService,
+    SweetAlertsService,
+    DynamicSensorService,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

@@ -13,7 +13,7 @@ export class ParametersRangesService{
     constructor(private _httpClient: HttpClient){}
 
     public async getRanges(parametersNames: string[]): Promise<ParameterRange[]>{
-        let reqRes = this._httpClient.post<ParameterRange[]>(LIVE_DATA_URL+"/parameters-config",new ParametersListDto(parametersNames))
+        let reqRes = this._httpClient.post<ParameterRange[]>(LIVE_DATA_URL+"/parameters-config/parameter-ranges",new ParametersListDto(parametersNames))
         return await firstValueFrom(reqRes);
     }
 }

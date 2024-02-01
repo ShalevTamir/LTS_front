@@ -2,6 +2,9 @@ import { Component, Input } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { seperateString } from '../../common/utils/string-utils';
+import { SweetAlertsService } from '../../common/services/sweet-alerts.service';
+import { SweetAlertResult } from 'sweetalert2';
+import { DynamicSensorService } from './services/dynamic-sensor.service';
 
 @Component({
   selector: 'app-header',
@@ -12,13 +15,17 @@ import { seperateString } from '../../common/utils/string-utils';
 })
 export class HeaderComponent {
   title: string = ""
-  constructor(private router: Router){
+  constructor(private router: Router, private _dynamicSensorService: DynamicSensorService){
     this.router.events.subscribe((event: any) =>{
       if(event instanceof RoutesRecognized){
         let eventUrl: string = event.url;
         this.title = seperateString(eventUrl.substring(1), '-');
       }
     });
+  }
+
+  async handleAddDynamicSensor(){
+    this._dynamicSensorService.addDynamicSensorAsync();
   }
 
 }
