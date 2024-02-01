@@ -39,6 +39,20 @@ export class SweetAlertsService{
         });
     }
 
+    public errorAlert(errorMessage: string): void{
+        Swal.fire({
+            title: errorMessage,
+            icon: 'error',
+        });
+    }
+
+    public successAlert(successMessage: string): void{
+        Swal.fire({
+            title: successMessage,
+            icon: 'success'
+        });
+    }
+
     private _generateMultipleInputsHtml(subtitles: string[]){
         return subtitles
         .map((subtitle, index) => {
