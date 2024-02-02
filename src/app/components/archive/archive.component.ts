@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-archive',
   standalone: true,
-  imports: [],
+  imports: [MatPaginatorModule],
   templateUrl: './archive.component.html',
-  styleUrl: './archive.component.scss'
+  styleUrl: './archive.component.scss',
 })
-export class ArchiveComponent {
-
+export class ArchiveComponent{
+ 
 }
