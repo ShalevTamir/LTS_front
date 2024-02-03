@@ -1,8 +1,21 @@
 <div id="archive-container">
-    <mat-paginator [length]="100"
-                  [pageSize]="10"
-                  [pageSizeOptions]="[5, 10, 25, 100]"
-                  aria-label="Select page"
-                  >        
-    </mat-paginator>
+    <div id="inputs-container">
+        
+        <mat-form-field>
+            <!-- <mat-label>Enter a date range</mat-label> -->
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Start date" type="datetime-local">
+              <input matEndDate placeholder="End date" type="datetime-local">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <!-- <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle> -->
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <mat-paginator [length]="100"
+                      [pageSize]="defaultMaxSamples"
+                      [pageSizeOptions]="[5, 10, 25, 100]"
+                      aria-label="Select page"
+                      (page)="handlePageEvent($event)">        
+        </mat-paginator>
+    </div>
 </div>

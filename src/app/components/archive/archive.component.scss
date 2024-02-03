@@ -4,10 +4,19 @@ $mat-paginator-color: rgb(155, 156, 167);
     margin-top: 1%;
 }
 
+#inputs-container{
+    display: grid;
+    // background: linear-gradient(to bottom right, #131731, rgb(63, 94, 252));
+    grid-template-rows: 1fr;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+}
+
 mat-paginator{
-    background:linear-gradient(to bottom right, #131731, rgb(63, 94, 252));
+    background:transparent;
     color:$mat-paginator-color;
     border-radius: 5px;
+    justify-self: right;
 }
 
 ::ng-deep mat-select{
