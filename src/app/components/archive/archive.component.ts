@@ -19,7 +19,9 @@ export class ArchiveComponent implements OnInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   readonly defaultMaxSamples: number = 10;
 
+  constructor(private _mongoDBHandler: mongoDBHandlerService){
     
+  }
 
   ngOnInit(){
     console.log()
