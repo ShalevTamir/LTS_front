@@ -1,16 +1,29 @@
 <div id="archive-container">
     <div id="inputs-container">
-        
-        <mat-form-field>
-            <!-- <mat-label>Enter a date range</mat-label> -->
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate placeholder="Start date" type="datetime-local">
-              <input matEndDate placeholder="End date" type="datetime-local">
-            </mat-date-range-input>
-            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-            <!-- <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle> -->
-            <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
+        <div class="date-time-container">
+            <mat-form-field>
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="fromDatePicker">
+                <mat-datepicker-toggle matIconSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #fromDatePicker></mat-datepicker>
+            </mat-form-field>
+            <ngx-mat-timepicker-field color="primary"[format]="24" [controlOnly]="true">
+            </ngx-mat-timepicker-field>
+        </div>
+        <img src="../../../assets/images/minus.png" alt="" id="range-img">
+        <div class="date-time-container"> 
+            <mat-form-field>
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="toDatePicker">
+                <mat-datepicker-toggle matIconSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #toDatePicker></mat-datepicker>
+            </mat-form-field>
+            
+            <ngx-mat-timepicker-field color="primary"[format]="24" [controlOnly]="true">
+            </ngx-mat-timepicker-field>
+        </div>
+        <button id="search-button"></button>
+
         <mat-paginator [length]="100"
                       [pageSize]="defaultMaxSamples"
                       [pageSizeOptions]="[5, 10, 25, 100]"
