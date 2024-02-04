@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { LIVE_DATA_URL } from "../../../common/constants";
+import { firstValueFrom } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -8,12 +9,13 @@ import { LIVE_DATA_URL } from "../../../common/constants";
 export class mongoDBHandlerService{
     constructor(private _httpClient: HttpClient){}
 
-    fetchFrames(minTimeStamp: number, maxTimeStamp: number, maxSamplesInPage: number, pageNumber: number){
-        this._httpClient.get(LIVE_DATA_URL+"/frames",{params: {
+    async fetchFrames(minTimeStamp: number, maxTimeStamp: number, maxSamplesInPage: number, pageNumber: number){
+        console.log(minTimeStamp, maxTimeStamp, maxSamplesInPage, pageNumber);
+        return await firstValueFrom(this._httpClient.get(LIVE_DATA_URL+"/frames",{params: {
             MinTimeStamp: minTimeStamp,
             MaxTimeStamp: maxTimeStamp,
             MaxSamplesInPage: maxSamplesInPage,
             PageNumber: pageNumber
-        }});
+        }}));
     }
 }

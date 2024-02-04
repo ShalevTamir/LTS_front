@@ -3,26 +3,26 @@
         <div class="date-time-container">
             <mat-form-field>
                 <mat-label>Start Date</mat-label>
-                <input matInput [matDatepicker]="fromDatePicker">
+                <input matInput [matDatepicker]="fromDatePicker" (dateChange)="handleFromDateChange($event)">
                 <mat-datepicker-toggle matIconSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
                 <mat-datepicker #fromDatePicker></mat-datepicker>
             </mat-form-field>
-            <ngx-mat-timepicker-field color="primary"[format]="24" [controlOnly]="true">
+            <ngx-mat-timepicker-field color="primary"[format]="24" [controlOnly]="true" (timeChanged)="handleTimeChange($event, 'from')">
             </ngx-mat-timepicker-field>
         </div>
         <img src="../../../assets/images/minus.png" alt="" id="range-img">
         <div class="date-time-container"> 
             <mat-form-field>
                 <mat-label>End Date</mat-label>
-                <input matInput [matDatepicker]="toDatePicker">
+                <input matInput [matDatepicker]="toDatePicker" (dateChange)="handleToDateChange($event)">
                 <mat-datepicker-toggle matIconSuffix [for]="toDatePicker"></mat-datepicker-toggle>
                 <mat-datepicker #toDatePicker></mat-datepicker>
             </mat-form-field>
             
-            <ngx-mat-timepicker-field color="primary"[format]="24" [controlOnly]="true">
+            <ngx-mat-timepicker-field color="primary"[format]="24" [controlOnly]="true" (timeChanged)="handleTimeChange($event, 'to')">
             </ngx-mat-timepicker-field>
         </div>
-        <button id="search-button"></button>
+        <button id="search-button" (click)="handleRangeSubmit()"></button>
 
         <mat-paginator [length]="100"
                       [pageSize]="defaultMaxSamples"
