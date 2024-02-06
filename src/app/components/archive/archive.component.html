@@ -24,8 +24,18 @@
         </div>
         <button id="search-button" (click)="handleRangeSubmit()"></button>
 
+        <div id="btns-data-type-container">
+            <button 
+            *ngFor="let dataType of dataTypeEnum "
+            class="btn-data-type"
+            mat-raised-button
+            #btnDataType
+            (click)="handleDataTypeSelection($event, dataType[1])"
+            >{{dataType[0].charAt(0)+dataType[0].slice(1).toLowerCase()}}</button>
+        </div>
+
         <mat-paginator [length]="100"
-                      [pageSize]="defaultMaxSamples"
+                      [pageSize]="maxSamples"
                       [pageSizeOptions]="[5, 10, 25, 100]"
                       aria-label="Select page"
                       (page)="handlePageEvent($event)">        

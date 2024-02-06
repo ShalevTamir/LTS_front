@@ -8,12 +8,11 @@ $mat-paginator-color: rgb(155, 156, 167);
     display: grid;
     // background: linear-gradient(to bottom right, #131731, rgb(63, 94, 252));
     grid-template-rows: 1fr;
-    grid-template-columns: repeat(4, auto) 1fr;
+    grid-template-columns: repeat(4, auto) 1fr 1fr;
 }
 
 .date-time-container {
     display: flex;
-   
 }
 
 ngx-mat-timepicker-field{
@@ -73,6 +72,25 @@ mat-label{
 #range-img{
     width: 20px;
     margin: auto 15px;
+}
+
+#btns-data-type-container{
+    align-self: center;
+    margin: 0 auto;
+}
+
+.btn-data-type{
+    background-color: #24a0ee !important;
+    box-shadow: 0px 0px 5px 1px #24a0ee;
+    margin: 0 35px;
+    // width: 117px;    
+    // color:#ebebd3 !important;
+}
+
+.btn-selected{
+    background-color: white !important;
+    box-shadow: 0px 0px 5px 1px white !important;
+    transform: scale(1.1);
 }
 
 

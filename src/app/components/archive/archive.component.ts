@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {MatPaginator, MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 import {MatTableModule} from '@angular/material/table';
 import { mongoDBHandlerService } from './services/mongoDB-handler.service';
@@ -8,28 +8,57 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { FormsModule } from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import { NgFor } from '@angular/common';
+import { DataType } from './models/enums/data-type';
+import { forIn } from 'lodash'
 
 @Component({
   selector: 'app-archive',
   standalone: true,
-  imports: [MatPaginatorModule, MatTableModule, MatFormFieldModule, MatDatepickerModule, MatInputModule, NgxMatTimepickerModule, FormsModule],
+  imports: [MatPaginatorModule, MatTableModule, MatFormFieldModule, MatDatepickerModule, MatInputModule, NgxMatTimepickerModule, FormsModule, MatButtonModule, NgFor],
   templateUrl: './archive.component.html',
   styleUrl: './archive.component.scss',
   providers: [provideNativeDateAdapter()]
 })
-export class ArchiveComponent implements OnInit{
-  readonly defaultMaxSamples: number = 10;
+export class ArchiveComponent implements AfterViewInit{
+  readonly defaultDataType: DataType;
+  dataTypeEnum!: [string, number][]
   selectedFromDate!: Date 
   selectedToDate!: Date;
-  maxSamples: number = this.defaultMaxSamples;
-  pageNumber: number = 0;
+  maxSamples: number;
+  pageNumber: number;
+  selectedDataType: DataType;
   
+  @ViewChildren('btnDataType', { read: ElementRef }) dataTypeButtons!: QueryList<ElementRef>
 
   constructor(private _mongoDBHandler: mongoDBHandlerService){
-    
+    this.defaultDataType = DataType.PARAMETERS;
+    this.maxSamples = 10;
+    this.pageNumber = 0;
+    this.selectedDataType = this.defaultDataType;
+    this.dataTypeEnum = []
+    forIn(DataType, (key, value) => {
+      if(typeof(key) === "string"){
+        this.dataTypeEnum.push([key,+value]);
+      }
+    })
   }
 
-  ngOnInit(){
+  ngAfterViewInit(): void {
+    this.applyBtnSelection(this.dataTypeButtons.find((button) =>{
+      return (button.nativeElement as HTMLElement).innerText.toUpperCase() == DataType[this.defaultDataType]
+    })?.nativeElement);
+  }  
+  
+  handleDataTypeSelection(event: MouseEvent, dataTypeValue: DataType){
+    this.dataTypeButtons.forEach((button) => {
+      this.removeBtnSelection(button.nativeElement);
+    });
+    let clickedButton = event.currentTarget as HTMLElement;
+    this.applyBtnSelection(clickedButton);    
+    this.selectedDataType = dataTypeValue;
+    console.log(this.selectedDataType);
   }
 
   handlePageEvent(event: PageEvent){
@@ -38,7 +67,7 @@ export class ArchiveComponent implements OnInit{
   }
 
   async handleRangeSubmit(){
-    let res = await this._mongoDBHandler.fetchFrames(this.selectedFromDate.getTime(), this.selectedToDate.getTime(), this.maxSamples, this.pageNumber);
+    let res = await this._mongoDBHandler.fetchData(this.selectedDataType, this.selectedFromDate.getTime(), this.selectedToDate.getTime(), this.maxSamples, this.pageNumber);
     console.log(res);
   }
 
@@ -57,5 +86,10 @@ export class ArchiveComponent implements OnInit{
     dateToChange.setMinutes(+minutes);
   }
 
-
+  private applyBtnSelection(ref: HTMLElement){
+    ref.classList.add('btn-selected');
+  }
+  private removeBtnSelection(ref: HTMLElement){
+    ref.classList.remove('btn-selected');
+  }
 }
