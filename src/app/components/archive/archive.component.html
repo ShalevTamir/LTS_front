@@ -41,4 +41,14 @@
                       (page)="handlePageEvent($event)">        
         </mat-paginator>
     </div>
+    <table mat-table [dataSource]="tableData" #table>
+         <!-- Position Column -->
+        <ng-container matColumnDef="timestamp">
+            <th mat-header-cell *matHeaderCellDef> TimeStamp </th>
+            <td mat-cell *matCellDef="let element"> {{element}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let rowData; columns: columnsToDisplay"></tr>
+    </table>
 </div>

@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CardComponent } from './components/card/card.component';
 import { NgFor } from '@angular/common';
-import { FilteredFrame } from './models/ros/filtered-frame.ros';
+import { FilteredFrame } from '../../common/models/ros/filtered-frame.ros';
 import { LiveParametersSocketService } from './services/live-parameters-socket.service';
-import { TelemetryParameter } from './models/ros/telemetry-parameter.ros';
+import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
 import { SensorAlertsService } from './services/sensor-alerts.service';
 import { Router, RoutesRecognized } from '@angular/router';
 import { ParametersRangesService } from './services/parameters-ranges.service';

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {MatPaginator, MatPaginatorModule, PageEvent} from '@angular/material/paginator';
-import {MatTableModule} from '@angular/material/table';
+import {MatTable, MatTableModule} from '@angular/material/table';
 import { mongoDBHandlerService } from './services/mongoDB-handler.service';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepicker, MatDatepickerInputEvent, MatDatepickerModule} from '@angular/material/datepicker';
@@ -12,6 +12,8 @@ import {MatButtonModule} from '@angular/material/button';
 import { NgFor } from '@angular/common';
 import { DataType } from './models/enums/data-type';
 import { forIn } from 'lodash'
+import { FilteredFrame } from '../../common/models/ros/filtered-frame.ros';
+import { MongoSensorAlertsRos } from './models/ros/mongo-sensor-alert.ros';
 
 @Component({
   selector: 'app-archive',
@@ -22,6 +24,7 @@ import { forIn } from 'lodash'
   providers: [provideNativeDateAdapter()]
 })
 export class ArchiveComponent implements AfterViewInit{
+  @ViewChild('table', {static: true}) table!: MatTable<any>;
   readonly defaultDataType: DataType;
   dataTypeEnum!: [string, number][]
   selectedFromDate!: Date 
@@ -29,6 +32,8 @@ export class ArchiveComponent implements AfterViewInit{
   maxSamples: number;
   pageNumber: number;
   selectedDataType: DataType;
+  tableData: any[]
+  columnsToDisplay= ['timestamp']
   
   @ViewChildren('btnDataType', { read: ElementRef }) dataTypeButtons!: QueryList<ElementRef>
 
@@ -37,7 +42,8 @@ export class ArchiveComponent implements AfterViewInit{
     this.maxSamples = 10;
     this.pageNumber = 0;
     this.selectedDataType = this.defaultDataType;
-    this.dataTypeEnum = []
+    this.dataTypeEnum = [];
+    this.tableData = [];
     forIn(DataType, (key, value) => {
       if(typeof(key) === "string"){
         this.dataTypeEnum.push([key,+value]);
@@ -67,8 +73,9 @@ export class ArchiveComponent implements AfterViewInit{
   }
 
   async handleRangeSubmit(){
-    let res = await this._mongoDBHandler.fetchData(this.selectedDataType, this.selectedFromDate.getTime(), this.selectedToDate.getTime(), this.maxSamples, this.pageNumber);
-    console.log(res);
+    let res: (FilteredFrame | MongoSensorAlertsRos)[] = await this._mongoDBHandler.fetchData(this.selectedDataType, this.selectedFromDate.getTime(), this.selectedToDate.getTime(), this.maxSamples, this.pageNumber);
+    this.tableData = res.map((value) => value.TimeStamp);
+    this.table.renderRows();
   }
 
   handleFromDateChange(event: MatDatepickerInputEvent<any>){
