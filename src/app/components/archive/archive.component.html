@@ -34,21 +34,52 @@
             >{{dataType[0].charAt(0)+dataType[0].slice(1).toLowerCase()}}</button>
         </div>
 
-        <mat-paginator [length]="100"
-                      [pageSize]="maxSamples"
-                      [pageSizeOptions]="[5, 10, 25, 100]"
-                      aria-label="Select page"
-                      (page)="handlePageEvent($event)">        
-        </mat-paginator>
     </div>
-    <table mat-table [dataSource]="tableData" #table>
-         <!-- Position Column -->
+    <table mat-table [dataSource]="expandableTableData" multiTemplateDataRows #expandableTable>
         <ng-container matColumnDef="timestamp">
             <th mat-header-cell *matHeaderCellDef> TimeStamp </th>
-            <td mat-cell *matCellDef="let element"> {{element}} </td>
+            <td mat-cell *matCellDef="let element"> {{epochToUTC(element)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="expand">
+            <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-icon-button (click)="handleRowClick(element); $event.stopPropagation()">
+                    @if( expandedElement === element ){
+                        <mat-icon>keyboard_arrow_up</mat-icon>
+                    }
+                    @else {
+                        <mat-icon>keyboard_arrow_down</mat-icon>
+                    }
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+                <div [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'" >
+                    <table mat-table [dataSource]="expandableTableData">
+                        <ng-container *ngFor="let column of expandedColumnsToDisplay" matColumnDef="{{column}}">
+                            <th mat-header-cell *matHeaderCellDef>{{column}}</th>
+                            <td mat-cell *matCellDef="let element">{{element[column]}}</td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="expandedColumnsToDisplay"></tr>
+                        <tr mat-row *matRowDef="let expandedRow; columns: expandedColumnsToDisplay"></tr>
+                    </table>
+                </div>
+            </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-        <tr mat-row *matRowDef="let rowData; columns: columnsToDisplay"></tr>
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand"
+        class="element-row"
+        [class.expanded-row]="expandedElement === element"
+        (click)="handleRowClick(element)"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
     </table>
+    <mat-paginator [length]="totalPages"
+                  [disabled]="!expandableTableData.length"
+                  [pageSize]="maxSamples"
+                  [pageSizeOptions]="[5, 10, 25, 100]"
+                  aria-label="Select page"
+                  (page)="handlePageEvent($event)">        
+    </mat-paginator>
 </div>

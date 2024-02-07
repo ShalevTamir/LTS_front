@@ -14,17 +14,30 @@ import { DataType } from './models/enums/data-type';
 import { forIn } from 'lodash'
 import { FilteredFrame } from '../../common/models/ros/filtered-frame.ros';
 import { MongoSensorAlertsRos } from './models/ros/mongo-sensor-alert.ros';
+import { MatIconModule } from '@angular/material/icon';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
+import { MongoSensorAlert } from './models/mongo-sensor-alert';
 
 @Component({
   selector: 'app-archive',
   standalone: true,
-  imports: [MatPaginatorModule, MatTableModule, MatFormFieldModule, MatDatepickerModule, MatInputModule, NgxMatTimepickerModule, FormsModule, MatButtonModule, NgFor],
+  imports: [MatPaginatorModule, MatTableModule, MatFormFieldModule, MatDatepickerModule, MatInputModule, NgxMatTimepickerModule, FormsModule, MatButtonModule, NgFor, MatIconModule],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed,void', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
   templateUrl: './archive.component.html',
   styleUrl: './archive.component.scss',
   providers: [provideNativeDateAdapter()]
 })
 export class ArchiveComponent implements AfterViewInit{
-  @ViewChild('table', {static: true}) table!: MatTable<any>;
+  @ViewChild('expandableTable', {static: true}) table!: MatTable<any>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChildren('btnDataType', { read: ElementRef }) dataTypeButtons!: QueryList<ElementRef>
   readonly defaultDataType: DataType;
   dataTypeEnum!: [string, number][]
   selectedFromDate!: Date 
@@ -32,18 +45,30 @@ export class ArchiveComponent implements AfterViewInit{
   maxSamples: number;
   pageNumber: number;
   selectedDataType: DataType;
-  tableData: any[]
-  columnsToDisplay= ['timestamp']
+  expandableTableData: number[];
+  expandedTableData: (TelemetryParameter | MongoSensorAlert)[];
+  columnsToDisplay;
+  columnsToDisplayWithExpand;
+  totalPages!: number;
+  expandedElement!: number | null;
+  fetchedData: (FilteredFrame | MongoSensorAlertsRos)[];
+  expandedColumnsToDisplay: string[];
+
   
-  @ViewChildren('btnDataType', { read: ElementRef }) dataTypeButtons!: QueryList<ElementRef>
 
   constructor(private _mongoDBHandler: mongoDBHandlerService){
     this.defaultDataType = DataType.PARAMETERS;
     this.maxSamples = 10;
     this.pageNumber = 0;
+    this.totalPages = 0;
     this.selectedDataType = this.defaultDataType;
     this.dataTypeEnum = [];
-    this.tableData = [];
+    this.expandableTableData = [];
+    this.expandedTableData = [];
+    this.columnsToDisplay = ['timestamp'];
+    this.columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
+    this.fetchedData = [];
+    this.expandedColumnsToDisplay = ['name', 'value', 'units'];
     forIn(DataType, (key, value) => {
       if(typeof(key) === "string"){
         this.dataTypeEnum.push([key,+value]);
@@ -67,15 +92,48 @@ export class ArchiveComponent implements AfterViewInit{
     console.log(this.selectedDataType);
   }
 
-  handlePageEvent(event: PageEvent){
+  async handlePageEvent(event: PageEvent){
     this.maxSamples = event.pageSize;
     this.pageNumber = event.pageIndex;
+    this.updateTabularData();
   }
 
   async handleRangeSubmit(){
-    let res: (FilteredFrame | MongoSensorAlertsRos)[] = await this._mongoDBHandler.fetchData(this.selectedDataType, this.selectedFromDate.getTime(), this.selectedToDate.getTime(), this.maxSamples, this.pageNumber);
-    this.tableData = res.map((value) => value.TimeStamp);
+    this.updateTabularData();
+    this.updateTotalPages();
+  }
+
+  handleRowClick(clickedTimestamp: number){
+    this.updateExpandedData(clickedTimestamp);
+    this.expandedElement = this.expandedElement === clickedTimestamp ? null : clickedTimestamp
+  }
+
+  epochToUTC(epochTime: number){
+    var date = new Date(0);
+    date.setMilliseconds(epochTime);
+    return date.toLocaleDateString()+" "+date.toLocaleTimeString();
+  }
+
+  private updateExpandedData(clickedTimestamp: number){
+    let clickedDataSample: FilteredFrame | MongoSensorAlertsRos = 
+      this.fetchedData.find((value) => value.TimeStamp == clickedTimestamp) as FilteredFrame | MongoSensorAlertsRos;
+    if(clickedDataSample instanceof FilteredFrame){
+      this.expandedTableData = clickedDataSample.Parameters;
+    }
+  }
+
+  private async updateTabularData(){
+    this.fetchedData = await this._mongoDBHandler.fetchData(this.selectedDataType, this.selectedFromDate.getTime(), this.selectedToDate.getTime(), this.maxSamples, this.pageNumber);
+    this.expandableTableData = this.fetchedData.map((value) => {
+      return value.TimeStamp;
+    });
+    
     this.table.renderRows();
+  }
+
+  private async updateTotalPages(){
+    this.totalPages = await this._mongoDBHandler.countData(this.selectedDataType, this.selectedFromDate.getTime(), this.selectedToDate.getTime());
+    // this.paginator.length = this.totalPages;
   }
 
   handleFromDateChange(event: MatDatepickerInputEvent<any>){

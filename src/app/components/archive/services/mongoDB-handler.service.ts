@@ -5,6 +5,7 @@ import { firstValueFrom } from "rxjs";
 import { DataType } from "../models/enums/data-type";
 import { FilteredFrame } from "../../../common/models/ros/filtered-frame.ros";
 import { MongoSensorAlertsRos } from "../models/ros/mongo-sensor-alert.ros";
+import { CountDataRos } from "../models/ros/count-data.ros";
 
 @Injectable({
     providedIn: 'root'
@@ -20,6 +21,13 @@ export class mongoDBHandlerService{
             PageNumber: pageNumber
         }}));
     }    
+
+    async countData(dataType: DataType, minTimeStamp: number, maxTimeStamp: number){
+        return (await firstValueFrom(this._httpClient.get<CountDataRos>(this.dataTypeToUrl(dataType)+"/count", {params: {
+            MinTimeStamp: minTimeStamp,
+            MaxTimeStamp: maxTimeStamp
+        }}))).Count;
+    }
 
     private dataTypeToUrl(dataType: DataType){
         switch(dataType){

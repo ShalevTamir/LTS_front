@@ -16,7 +16,7 @@ export class DynamicSensorService{
     async addDynamicSensorAsync(){
         let userInput: SweetAlertResult = (await this._sweetAlertsService.multipleInputAlert("Add Dynamic Sensor", ["Sensor Name","Sensor Description"]));
         let [sensorName, sensorDescription] = userInput.value;
-        this._httpClient.post(LIVE_TELE_URL+"/sensor-alerts/add-sensor",new DirectSensorDto(sensorName, sensorDescription))
+        this._httpClient.post(LIVE_TELE_URL+"/live-sensor-alerts/add-sensor",new DirectSensorDto(sensorName, sensorDescription))
         .subscribe({
             error: (e: HttpErrorResponse) =>{
                 this._sweetAlertsService.errorAlert(e.error);
