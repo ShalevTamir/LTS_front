@@ -49,8 +49,11 @@ export class ExpandableMatTableComponent implements AfterViewInit{
     this.dataType = dataType;
   }
 
+  public renderRows(){
+    this.matTable.renderRows();
+  }
+
   protected handleRowClick(clickedTimeStamp: number){
-    console.log(clickedTimeStamp);
     this.expandedElement = this.expandedElement === clickedTimeStamp ? null : clickedTimeStamp
     this.updateSubTable(clickedTimeStamp);
   }
