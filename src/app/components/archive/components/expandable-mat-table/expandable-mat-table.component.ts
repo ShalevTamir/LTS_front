@@ -73,10 +73,11 @@ export class ExpandableMatTableComponent implements AfterViewInit{
     else if(this.dataType === ArchiveDataType.ALERTS){
       this.expandedColumnsToDisplay = ['sensorName', 'sensorStatus']
       let clickedAlerts: MongoSensorAlertsRos[] = this.fetchedData.filter((value) => value.TimeStamp == clickedTimestamp) as MongoSensorAlertsRos[];
-      this.expandedDataSource = clickedAlerts.map((alert): MongoSensorAlert => {
+      console.log(clickedAlerts);
+      this.expandedDataSource = clickedAlerts.map((alert: MongoSensorAlertsRos): MongoSensorAlert => {
         return {
         sensorName: alert.SensorName,
-        sensorStatus: alert.Status
+        sensorStatus: alert.SensorStatus
       }});
     }
   }
