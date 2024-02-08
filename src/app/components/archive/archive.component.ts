@@ -9,10 +9,7 @@ import { DateTimeComponent } from "./components/date-time/date-time.component";
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { ExpandableMatTableComponent } from './components/expandable-mat-table/expandable-mat-table.component';
 import { MatButton } from '@angular/material/button';
-
-interface rowDataTable{
-  timestamp: number
-}
+import { ArchiveData } from '../../common/models/custom-types';
 
 @Component({
     selector: 'app-archive',
@@ -34,12 +31,14 @@ export class ArchiveComponent implements AfterViewInit{
   @ViewChild('fromDateTime', {static: true}) fromDatePicker!: DateTimeComponent;
   @ViewChild('toDateTime', {static: true}) toDatePicker!: DateTimeComponent;
   @ViewChild('paginator', {static: true}) paginator!: PaginatorComponent;
+  @ViewChild('expandableTable', {static: true}) expandableTable!: ExpandableMatTableComponent;
 
   readonly defaultDataType: DataType = DataType.PARAMETERS;
   dataTypeEnum: [string, number][] = []
   selectedDataType: DataType = this.defaultDataType;
-  expandableTableData: rowDataTable[] = [];
+  expandableTableData: number[] = [];
   columnsToDisplay = ['timestamp'];
+  fetchedData: ArchiveData[] = [];
 
   constructor(private _mongoDBHandler: mongoDBHandlerService){
     forIn(DataType, (key, value) => {
@@ -65,25 +64,28 @@ export class ArchiveComponent implements AfterViewInit{
   }
 
   async handleRangeSubmit(){
+    await this.updatePageData();
+  }  
+  
+  protected async updatePageData(){
+    await this.fetchData();
     this.updateTabularData();
     this.updateTotalPages();
   }
-
-  epochToUTC(epochTime: number){
-    var date = new Date(0);
-    date.setMilliseconds(epochTime);
-    return date.toLocaleDateString()+" "+date.toLocaleTimeString();
+  
+  protected updateTabularData(){
+    this.expandableTable.updateData(this.fetchedData, this.selectedDataType);
+    this.expandableTableData = this.fetchedData.map((value) => {return value.TimeStamp});
   }
 
-  private async updateTabularData(){
-    let fetchedData = await this._mongoDBHandler.fetchData(
+  private async fetchData(){
+    this.fetchedData = await this._mongoDBHandler.fetchData(
       this.selectedDataType,
       this.fromDatePicker.selectedDate.getTime(),
       this.toDatePicker.selectedDate.getTime(),
       this.paginator.maxSamples, 
       this.paginator.pageNumber);
-    this.expandableTableData = fetchedData.map((value) => {return {timestamp: value.TimeStamp}});
-  }
+  }    
 
   private async updateTotalPages(){
     let totalPages = await this._mongoDBHandler.countData(

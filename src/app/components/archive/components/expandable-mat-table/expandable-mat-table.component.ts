@@ -1,10 +1,16 @@
 import { NgFor, NgIf } from '@angular/common';
-import { AfterViewInit, Component, Input } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { MatTable, MatTableModule } from '@angular/material/table';
 import { FilterColumnsPipe } from "./pipes/filter-columns-pipe";
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ArchiveData } from '../../../../common/models/custom-types';
+import { MatTableComponent } from "./components/mat-table/mat-table.component";
+import { FilteredFrame } from '../../../../common/models/ros/filtered-frame.ros';
+import { MongoSensorAlertsRos } from '../../models/ros/mongo-sensor-alert.ros';
+import { DataType as ArchiveDataType } from '../../models/enums/data-type';
+import { MongoSensorAlert } from '../../models/mongo-sensor-alert';
 
 @Component({
     selector: 'app-expandable-mat-table',
@@ -12,20 +18,25 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     templateUrl: './expandable-mat-table.component.html',
     styleUrl: './expandable-mat-table.component.scss',
     animations: [
-      trigger('detailExpand', [
-        state('collapsed,void', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-      ]),
+        trigger('detailExpand', [
+            state('collapsed,void', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
     ],
-    imports: [MatTableModule, NgFor, MatIcon, NgIf, FilterColumnsPipe, MatButtonModule]
+    imports: [MatTableModule, NgFor, MatIcon, NgIf, FilterColumnsPipe, MatButtonModule, MatTableComponent]
 })
-export class ExpandableMatTableComponent<TData> implements AfterViewInit{
-  @Input({required: true}) dataSource!: TData[];
+export class ExpandableMatTableComponent implements AfterViewInit{
+  @ViewChild('table', {static: true}) matTable!: MatTable<any>;
+  @Input({required: true}) dataSource!: number[];
   @Input({required: true}) columnsToDisplay!: string[];
-  expandedElement!: TData | null;
+  fetchedData: ArchiveData[] = [];
+  dataType!: ArchiveDataType;
+  expandedElement!: number | null;
   expandColumnDef = 'expand';
   expandedDetailDef = 'expandedDetail'
+  expandedDataSource: unknown[] = [];
+  expandedColumnsToDisplay: string[] = [];
   
   ngAfterViewInit(){
     setTimeout(() => {
@@ -33,11 +44,37 @@ export class ExpandableMatTableComponent<TData> implements AfterViewInit{
     });
   }
 
-  filterMethod(columnName: string){
-    !this.columnsToDisplay.includes(columnName);
+  public updateData(fetchedData: ArchiveData[], dataType: ArchiveDataType){
+    this.fetchedData = fetchedData;
+    this.dataType = dataType;
   }
-  handleRowClick(clickedElement: TData){
-    
-    this.expandedElement = this.expandedElement === clickedElement ? null : clickedElement
+
+  protected handleRowClick(clickedTimeStamp: number){
+    console.log(clickedTimeStamp);
+    this.expandedElement = this.expandedElement === clickedTimeStamp ? null : clickedTimeStamp
+    this.updateSubTable(clickedTimeStamp);
+  }
+
+  protected epochToUTC(epochTime: number){
+    var date = new Date(0);
+    date.setMilliseconds(epochTime);
+    return date.toLocaleDateString()+" "+date.toLocaleTimeString();
+  }
+
+  private updateSubTable(clickedTimestamp: number){
+    if (this.dataType === ArchiveDataType.PARAMETERS){
+      this.expandedColumnsToDisplay = ['Name', 'Value', 'Units'];
+      let clickedFrame: FilteredFrame = this.fetchedData.find((value) => value.TimeStamp == clickedTimestamp) as FilteredFrame;
+      this.expandedDataSource = clickedFrame.Parameters;
+    }
+    else if(this.dataType === ArchiveDataType.ALERTS){
+      this.expandedColumnsToDisplay = ['sensorName', 'sensorStatus']
+      let clickedAlerts: MongoSensorAlertsRos[] = this.fetchedData.filter((value) => value.TimeStamp == clickedTimestamp) as MongoSensorAlertsRos[];
+      this.expandedDataSource = clickedAlerts.map((alert): MongoSensorAlert => {
+        return {
+        sensorName: alert.SensorName,
+        sensorStatus: alert.Status
+      }});
+    }
   }
 }

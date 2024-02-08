@@ -18,10 +18,10 @@
 
     </div>
     
-    <app-expandable-mat-table 
+    <app-expandable-mat-table #expandableTable
     [dataSource]="expandableTableData" 
     [columnsToDisplay]="columnsToDisplay">
     </app-expandable-mat-table>
-    <app-paginator #paginator></app-paginator>
+    <app-paginator #paginator (pageEvent)="updatePageData()"></app-paginator>
     
 </div>

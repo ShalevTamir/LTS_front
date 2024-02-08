@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -10,6 +10,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 })
 export class PaginatorComponent {
   @Input() disabled: boolean = false;
+  @Output() pageEvent = new EventEmitter();
   maxSamples = 10;
   pageNumber = 0;
   totalPages = 0;
@@ -18,7 +19,7 @@ export class PaginatorComponent {
   async handlePageEvent(event: PageEvent){
     this.maxSamples = event.pageSize;
     this.pageNumber = event.pageIndex;
-    // this.updateTabularData();
+    this.pageEvent.emit();
   }
 
 }
