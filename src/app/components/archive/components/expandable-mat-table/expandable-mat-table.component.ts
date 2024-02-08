@@ -7,10 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
-    selector: 'app-mat-table',
+    selector: 'app-expandable-mat-table',
     standalone: true,
-    templateUrl: './mat-table.component.html',
-    styleUrl: './mat-table.component.scss',
+    templateUrl: './expandable-mat-table.component.html',
+    styleUrl: './expandable-mat-table.component.scss',
     animations: [
       trigger('detailExpand', [
         state('collapsed,void', style({height: '0px', minHeight: '0'})),
@@ -20,19 +20,16 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     ],
     imports: [MatTableModule, NgFor, MatIcon, NgIf, FilterColumnsPipe, MatButtonModule]
 })
-export class MatTableComponent<TData> implements AfterViewInit{
+export class ExpandableMatTableComponent<TData> implements AfterViewInit{
   @Input({required: true}) dataSource!: TData[];
   @Input({required: true}) columnsToDisplay!: string[];
-  @Input() expandable: boolean = false;
   expandedElement!: TData | null;
   expandColumnDef = 'expand';
   expandedDetailDef = 'expandedDetail'
   
   ngAfterViewInit(){
     setTimeout(() => {
-      if(this.expandable){
-        this.columnsToDisplay.push(this.expandColumnDef);
-      }
+      this.columnsToDisplay.push(this.expandColumnDef);
     });
   }
 
@@ -40,8 +37,7 @@ export class MatTableComponent<TData> implements AfterViewInit{
     !this.columnsToDisplay.includes(columnName);
   }
   handleRowClick(clickedElement: TData){
-    console.log(clickedElement);
-    // this.updateExpandedData(clickedTimestamp);
+    
     this.expandedElement = this.expandedElement === clickedElement ? null : clickedElement
   }
 }

@@ -1,0 +1,10 @@
+<div class="date-time-container">
+    <mat-form-field>
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="fromDatePicker" (dateChange)="handleDateChange($event)">
+        <mat-datepicker-toggle matIconSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #fromDatePicker></mat-datepicker>
+    </mat-form-field>
+    <ngx-mat-timepicker-field color="primary"[format]="24" [controlOnly]="true" (timeChanged)="handleTimeChange($event, 'from')">
+    </ngx-mat-timepicker-field>
+</div>

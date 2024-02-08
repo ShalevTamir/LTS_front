@@ -13,6 +13,14 @@ import { CountDataRos } from "../models/ros/count-data.ros";
 export class mongoDBHandlerService{
     constructor(private _httpClient: HttpClient){}
 
+    async fetchFrames(minTimeStamp: number, maxTimeStamp: number, maxSamplesInPage: number, pageNumber: number): Promise<FilteredFrame[]>{
+        return await this.fetchData(DataType.PARAMETERS, minTimeStamp, maxTimeStamp, maxSamplesInPage, pageNumber) as FilteredFrame[];
+    }
+
+    async fetchAlerts(minTimeStamp: number, maxTimeStamp: number, maxSamplesInPage: number, pageNumber: number): Promise<MongoSensorAlertsRos[]>{
+        return await this.fetchData(DataType.ALERTS, minTimeStamp, maxTimeStamp, maxSamplesInPage, pageNumber) as MongoSensorAlertsRos[];
+    }
+
     async fetchData(dataType: DataType, minTimeStamp: number, maxTimeStamp: number, maxSamplesInPage: number, pageNumber: number): Promise<(FilteredFrame | MongoSensorAlertsRos)[]>{
         return await firstValueFrom(this._httpClient.get<(FilteredFrame | MongoSensorAlertsRos)[]>(this.dataTypeToUrl(dataType), {params: {
             MinTimeStamp: minTimeStamp,

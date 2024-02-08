@@ -1,4 +1,3 @@
-$mat-paginator-color: rgb(155, 156, 167);
 
 #archive-container{
     margin-top: 1%;
@@ -11,47 +10,6 @@ $mat-paginator-color: rgb(155, 156, 167);
     grid-template-columns: repeat(4, auto) 1fr 1fr;
 }
 
-.date-time-container {
-    display: flex;
-}
-
-.detail-row{
-    height: 0;
-}
-
-tr.element-row:not(.expandend-row):hover{
-    background: whitesmoke;
-}
-
-tr.element-row:not(.expandend-row):active{
-    background: #efefef;
-}
-
-.element-row td{
-    border-bottom-width: 0;
-}
-
-
-
-ngx-mat-timepicker-field{
-    margin-left: 1%;
-}
-
-mat-paginator{
-    background:transparent;
-    color:$mat-paginator-color;
-    border-radius: 5px;
-    justify-self: right;
-    align-self: baseline;
-}
-
-mat-form-field{
-    width: 180px;
-}
-
-mat-label{
-    color: $mat-paginator-color;
-}
 
 @keyframes search-hover{
     0%{
@@ -112,84 +70,4 @@ mat-label{
 }
 
 
-::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper{
-    border-bottom: 1px solid $mat-paginator-color!important;
-}
-
-::ng-deep .ngx-mat-timepicker-control[_ngcontent-ng-c3402909199] .arrows-wrap[_ngcontent-ng-c3402909199] > .arrow[_ngcontent-ng-c3402909199] svg path:nth-child(2){
-    fill: white;
-}
-
-::ng-deep .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input{
-    color: $mat-paginator-color !important;
-}
-
-::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper{
-    border: none;
-    text-decoration: aqua !important;
-}
-
-::ng-deep .mat-mdc-icon-button svg{
-    color:beige;
-}
-
-::ng-deep ::placeholder{
-    color: $mat-paginator-color !important;
-}
-
-::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled){
-    background-color:transparent !important;
-}
-
-::ng-deep .ngx-mat-timepicker{
-    background-color:transparent;
-    align-items: center;
-}
-
-::ng-deep .ngx-mat-timepicker__toggle{
-    margin:0 !important;
-}
-
-::ng-deep .mat-mdc-text-field-wrapper{
-    padding-left: 8% !important;
-}
-
-::ng-deep .mat-mdc-text-field-wrapper{
-    align-items: center !important;
-}
-
-::ng-deep .mat-mdc-form-field-subscript-wrapper{
-    display: none;
-}
-
-::ng-deep mat-select{
-    color:$mat-paginator-color !important;
-}
-
-::ng-deep .mat-mdc-text-field-wrapper{
-    border: 1px solid $mat-paginator-color;
-    border-radius: 2px !important;
-}
-
-::ng-deep .mat-mdc-select-arrow{
-    svg{
-        color: $mat-paginator-color;
-    }
-}
-
-::ng-deep .mat-mdc-paginator-icon{
-    fill: $mat-paginator-color !important;
-}
-
-::ng-deep .mat-mdc-icon-button[disabled] .mat-mdc-paginator-icon{
-    fill: #4c4d52 !important;
-}
-
-::ng-deep .mat-mdc-paginator-container{
-    justify-content: center !important;
-}
-
-::ng-deep .ng-trigger-transformPanel{
-    background: linear-gradient(to bottom right, rgb(88, 160, 229), rgb(63, 94, 252)) !important;
-}
 

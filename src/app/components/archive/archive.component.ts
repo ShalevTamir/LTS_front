@@ -1,24 +1,14 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import {MatPaginator, MatPaginatorModule, PageEvent} from '@angular/material/paginator';
-import {MatTable, MatTableModule} from '@angular/material/table';
+import { AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { mongoDBHandlerService } from './services/mongoDB-handler.service';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatDatepicker, MatDatepickerInputEvent, MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
-import {MatInputModule} from '@angular/material/input';
-import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
-import { FormsModule } from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
 import { NgFor } from '@angular/common';
 import { DataType } from './models/enums/data-type';
 import { forIn } from 'lodash'
-import { FilteredFrame } from '../../common/models/ros/filtered-frame.ros';
-import { MongoSensorAlertsRos } from './models/ros/mongo-sensor-alert.ros';
-import { MatIconModule } from '@angular/material/icon';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
-import { MongoSensorAlert } from './models/mongo-sensor-alert';
-import { MatTableComponent } from "./components/mat-table/mat-table.component";
+import { DateTimeComponent } from "./components/date-time/date-time.component";
+import { PaginatorComponent } from './components/paginator/paginator.component';
+import { ExpandableMatTableComponent } from './components/expandable-mat-table/expandable-mat-table.component';
+import { MatButton } from '@angular/material/button';
 
 interface rowDataTable{
   timestamp: number
@@ -37,38 +27,21 @@ interface rowDataTable{
     templateUrl: './archive.component.html',
     styleUrl: './archive.component.scss',
     providers: [provideNativeDateAdapter()],
-    imports: [MatPaginatorModule, MatTableModule, MatFormFieldModule, MatDatepickerModule, MatInputModule, NgxMatTimepickerModule, FormsModule, MatButtonModule, NgFor, MatIconModule, MatTableComponent]
+    imports: [NgFor, ExpandableMatTableComponent, DateTimeComponent, PaginatorComponent, MatButton]
 })
 export class ArchiveComponent implements AfterViewInit{
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChildren('btnDataType', { read: ElementRef }) dataTypeButtons!: QueryList<ElementRef>
-  readonly defaultDataType: DataType;
-  dataTypeEnum!: [string, number][]
-  selectedFromDate!: Date 
-  selectedToDate!: Date;
-  maxSamples: number;
-  pageNumber: number;
-  selectedDataType: DataType;
-  expandableTableData: rowDataTable[];
-  columnsToDisplay;
-  totalPages!: number;
-  
-  fetchedData: (FilteredFrame | MongoSensorAlertsRos)[];
-  expandedColumnsToDisplay: string[];
+  @ViewChild('fromDateTime', {static: true}) fromDatePicker!: DateTimeComponent;
+  @ViewChild('toDateTime', {static: true}) toDatePicker!: DateTimeComponent;
+  @ViewChild('paginator', {static: true}) paginator!: PaginatorComponent;
 
-  
+  readonly defaultDataType: DataType = DataType.PARAMETERS;
+  dataTypeEnum: [string, number][] = []
+  selectedDataType: DataType = this.defaultDataType;
+  expandableTableData: rowDataTable[] = [];
+  columnsToDisplay = ['timestamp'];
 
   constructor(private _mongoDBHandler: mongoDBHandlerService){
-    this.defaultDataType = DataType.PARAMETERS;
-    this.maxSamples = 10;
-    this.pageNumber = 0;
-    this.totalPages = 0;
-    this.selectedDataType = this.defaultDataType;
-    this.dataTypeEnum = [];
-    this.expandableTableData = [];
-    this.columnsToDisplay = ['timestamp'];
-    this.fetchedData = [];
-    this.expandedColumnsToDisplay = ['name', 'value', 'units'];
     forIn(DataType, (key, value) => {
       if(typeof(key) === "string"){
         this.dataTypeEnum.push([key,+value]);
@@ -89,21 +62,12 @@ export class ArchiveComponent implements AfterViewInit{
     let clickedButton = event.currentTarget as HTMLElement;
     this.applyBtnSelection(clickedButton);    
     this.selectedDataType = dataTypeValue;
-    console.log(this.selectedDataType);
-  }
-
-  async handlePageEvent(event: PageEvent){
-    this.maxSamples = event.pageSize;
-    this.pageNumber = event.pageIndex;
-    this.updateTabularData();
   }
 
   async handleRangeSubmit(){
     this.updateTabularData();
     this.updateTotalPages();
   }
-
-  
 
   epochToUTC(epochTime: number){
     var date = new Date(0);
@@ -112,32 +76,23 @@ export class ArchiveComponent implements AfterViewInit{
   }
 
   private async updateTabularData(){
-    this.fetchedData = await this._mongoDBHandler.fetchData(this.selectedDataType, this.selectedFromDate.getTime(), this.selectedToDate.getTime(), this.maxSamples, this.pageNumber);
-    this.expandableTableData = this.fetchedData.map((value) => {
-      return {timestamp: value.TimeStamp};
-    });
-    
+    let fetchedData = await this._mongoDBHandler.fetchData(
+      this.selectedDataType,
+      this.fromDatePicker.selectedDate.getTime(),
+      this.toDatePicker.selectedDate.getTime(),
+      this.paginator.maxSamples, 
+      this.paginator.pageNumber);
+    this.expandableTableData = fetchedData.map((value) => {return {timestamp: value.TimeStamp}});
   }
 
   private async updateTotalPages(){
-    this.totalPages = await this._mongoDBHandler.countData(this.selectedDataType, this.selectedFromDate.getTime(), this.selectedToDate.getTime());
-    // this.paginator.length = this.totalPages;
+    let totalPages = await this._mongoDBHandler.countData(
+      this.selectedDataType,
+      this.fromDatePicker.selectedDate.getTime(),
+      this.toDatePicker.selectedDate.getTime());
+    this.paginator.length = totalPages;
   }
-
-  handleFromDateChange(event: MatDatepickerInputEvent<any>){
-    this.selectedFromDate = event.value;
-  }
-
-  handleToDateChange(event: MatDatepickerInputEvent<any>){
-    this.selectedToDate = event.value;    
-  }
-
-  handleTimeChange(time: string, fromOrTo: string){
-    let dateToChange = fromOrTo == 'from' ? this.selectedFromDate : this.selectedToDate;   
-    let [hours, minutes] = time.split(':');
-    dateToChange.setHours(+hours);
-    dateToChange.setMinutes(+minutes);
-  }
+  
 
   private applyBtnSelection(ref: HTMLElement){
     ref.classList.add('btn-selected');
