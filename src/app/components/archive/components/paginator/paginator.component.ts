@@ -1,10 +1,11 @@
+import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-paginator',
   standalone: true,
-  imports: [MatPaginator],
+  imports: [MatPaginator, NgIf],
   templateUrl: './paginator.component.html',
   styleUrl: './paginator.component.scss'
 })
@@ -14,7 +15,6 @@ export class PaginatorComponent {
   maxSamples = 10;
   pageNumber = 0;
   totalPages = 0;
-  length = 0;
 
   async handlePageEvent(event: PageEvent){
     this.maxSamples = event.pageSize;

@@ -92,7 +92,7 @@ export class ArchiveComponent implements AfterViewInit{
       this.selectedDataType,
       this.fromDatePicker.selectedDate.getTime(),
       this.toDatePicker.selectedDate.getTime());
-    this.paginator.length = totalPages;
+    this.paginator.totalPages = totalPages;
   }
   
 
