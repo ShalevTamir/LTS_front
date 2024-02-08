@@ -6,6 +6,7 @@ import { DataType } from "../models/enums/data-type";
 import { FilteredFrame } from "../../../common/models/ros/filtered-frame.ros";
 import { MongoSensorAlertsRos } from "../models/ros/mongo-sensor-alert.ros";
 import { CountDataRos } from "../models/ros/count-data.ros";
+import { ArchiveData } from "../../../common/models/custom-types";
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +22,7 @@ export class mongoDBHandlerService{
         return await this.fetchData(DataType.ALERTS, minTimeStamp, maxTimeStamp, maxSamplesInPage, pageNumber) as MongoSensorAlertsRos[];
     }
 
-    async fetchData(dataType: DataType, minTimeStamp: number, maxTimeStamp: number, maxSamplesInPage: number, pageNumber: number): Promise<(FilteredFrame | MongoSensorAlertsRos)[]>{
+    async fetchData(dataType: DataType, minTimeStamp: number, maxTimeStamp: number, maxSamplesInPage: number, pageNumber: number): Promise<ArchiveData[]>{
         return await firstValueFrom(this._httpClient.get<(FilteredFrame | MongoSensorAlertsRos)[]>(this.dataTypeToUrl(dataType), {params: {
             MinTimeStamp: minTimeStamp,
             MaxTimeStamp: maxTimeStamp,
