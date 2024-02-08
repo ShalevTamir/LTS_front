@@ -1,0 +1,35 @@
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+    <ng-container *ngFor="let column of columnsToDisplay | filterColumns: expandColumnDef" matColumnDef="{{column}}">
+        <th mat-header-cell *matHeaderCellDef>{{column.charAt(0).toUpperCase()+column.slice(1)}}</th>
+        <td mat-cell *matCellDef="let element">{{element[column]}}</td>
+    </ng-container>
+
+    <ng-container *ngIf="expandable" [matColumnDef]="expandColumnDef">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="handleRowClick(element); $event.stopPropagation()">
+                @if( expandedElement === element ){
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                }
+                @else {
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                }
+            </button>
+        </td>
+    </ng-container>
+    <ng-container *ngIf="expandable" [matColumnDef]="expandedDetailDef">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+            <div [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'">
+                <app-test></app-test>
+            </div>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row 
+    class="element-row" 
+    [class.expanded-row]="expandable && expandedElement === rowElement"
+    *matRowDef="let rowElement; columns: columnsToDisplay" 
+    (click)="handleRowClick(rowElement)"></tr>
+    <tr mat-row *matRowDef="let row; columns: [expandedDetailDef]" class="detail-row"></tr>
+</table>

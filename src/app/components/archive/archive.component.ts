@@ -18,24 +18,28 @@ import { MatIconModule } from '@angular/material/icon';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
 import { MongoSensorAlert } from './models/mongo-sensor-alert';
+import { MatTableComponent } from "./components/mat-table/mat-table.component";
+
+interface rowDataTable{
+  timestamp: number
+}
 
 @Component({
-  selector: 'app-archive',
-  standalone: true,
-  imports: [MatPaginatorModule, MatTableModule, MatFormFieldModule, MatDatepickerModule, MatInputModule, NgxMatTimepickerModule, FormsModule, MatButtonModule, NgFor, MatIconModule],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed,void', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
-  templateUrl: './archive.component.html',
-  styleUrl: './archive.component.scss',
-  providers: [provideNativeDateAdapter()]
+    selector: 'app-archive',
+    standalone: true,
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed,void', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
+    templateUrl: './archive.component.html',
+    styleUrl: './archive.component.scss',
+    providers: [provideNativeDateAdapter()],
+    imports: [MatPaginatorModule, MatTableModule, MatFormFieldModule, MatDatepickerModule, MatInputModule, NgxMatTimepickerModule, FormsModule, MatButtonModule, NgFor, MatIconModule, MatTableComponent]
 })
 export class ArchiveComponent implements AfterViewInit{
-  @ViewChild('expandableTable', {static: true}) table!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChildren('btnDataType', { read: ElementRef }) dataTypeButtons!: QueryList<ElementRef>
   readonly defaultDataType: DataType;
@@ -45,12 +49,10 @@ export class ArchiveComponent implements AfterViewInit{
   maxSamples: number;
   pageNumber: number;
   selectedDataType: DataType;
-  expandableTableData: number[];
-  expandedTableData: (TelemetryParameter | MongoSensorAlert)[];
+  expandableTableData: rowDataTable[];
   columnsToDisplay;
-  columnsToDisplayWithExpand;
   totalPages!: number;
-  expandedElement!: number | null;
+  
   fetchedData: (FilteredFrame | MongoSensorAlertsRos)[];
   expandedColumnsToDisplay: string[];
 
@@ -64,9 +66,7 @@ export class ArchiveComponent implements AfterViewInit{
     this.selectedDataType = this.defaultDataType;
     this.dataTypeEnum = [];
     this.expandableTableData = [];
-    this.expandedTableData = [];
     this.columnsToDisplay = ['timestamp'];
-    this.columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
     this.fetchedData = [];
     this.expandedColumnsToDisplay = ['name', 'value', 'units'];
     forIn(DataType, (key, value) => {
@@ -103,10 +103,7 @@ export class ArchiveComponent implements AfterViewInit{
     this.updateTotalPages();
   }
 
-  handleRowClick(clickedTimestamp: number){
-    this.updateExpandedData(clickedTimestamp);
-    this.expandedElement = this.expandedElement === clickedTimestamp ? null : clickedTimestamp
-  }
+  
 
   epochToUTC(epochTime: number){
     var date = new Date(0);
@@ -114,21 +111,12 @@ export class ArchiveComponent implements AfterViewInit{
     return date.toLocaleDateString()+" "+date.toLocaleTimeString();
   }
 
-  private updateExpandedData(clickedTimestamp: number){
-    let clickedDataSample: FilteredFrame | MongoSensorAlertsRos = 
-      this.fetchedData.find((value) => value.TimeStamp == clickedTimestamp) as FilteredFrame | MongoSensorAlertsRos;
-    if(clickedDataSample instanceof FilteredFrame){
-      this.expandedTableData = clickedDataSample.Parameters;
-    }
-  }
-
   private async updateTabularData(){
     this.fetchedData = await this._mongoDBHandler.fetchData(this.selectedDataType, this.selectedFromDate.getTime(), this.selectedToDate.getTime(), this.maxSamples, this.pageNumber);
     this.expandableTableData = this.fetchedData.map((value) => {
-      return value.TimeStamp;
+      return {timestamp: value.TimeStamp};
     });
     
-    this.table.renderRows();
   }
 
   private async updateTotalPages(){

@@ -1,0 +1,15 @@
+.detail-row{
+    height: 0;
+}
+
+.element-row{
+    border-bottom-width: 0;
+    &:not(.expanded-row){
+        height: 0;
+        &:hover{
+            background: #efefef;
+        }
+    }
+}
+
+
