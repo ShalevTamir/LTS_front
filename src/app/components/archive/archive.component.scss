@@ -1,7 +1,7 @@
 app-expandable-mat-table{
     width: 100%;
     overflow-y: scroll;
-    height: 497px;
+    height: 484px;
     display: block;
 }
 
@@ -68,6 +68,7 @@ app-expandable-mat-table{
     // background: linear-gradient(to bottom right, #131731, rgb(63, 94, 252));
     grid-template-rows: 1fr;
     grid-template-columns: repeat(4, auto) 1fr;
+    margin-bottom: 1%;
 }
 
 
