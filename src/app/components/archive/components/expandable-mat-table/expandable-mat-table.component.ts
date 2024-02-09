@@ -40,7 +40,7 @@ export class ExpandableMatTableComponent implements AfterViewInit{
   
   ngAfterViewInit(){
     setTimeout(() => {
-      this.columnsToDisplay.push(this.expandColumnDef);
+      this.columnsToDisplay.unshift(this.expandColumnDef);
     });
   }
 
