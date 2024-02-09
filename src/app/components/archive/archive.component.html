@@ -9,12 +9,10 @@
             <button 
             *ngFor="let dataType of dataTypeEnum"
             class="btn-data-type"
-            mat-raised-button
             #btnDataType
             (click)="handleDataTypeSelection($event, dataType[1])"
-            >{{dataType[0].charAt(0)+dataType[0].slice(1).toLowerCase()}}</button>
+            ><span class="text">{{dataType[0].charAt(0)+dataType[0].slice(1).toLowerCase()}}</span></button>
         </div>
-        
 
     </div>
     
