@@ -58,10 +58,10 @@ export class ExpandableMatTableComponent implements AfterViewInit{
     this.updateSubTable(clickedTimeStamp);
   }
 
-  protected epochToUTC(epochTime: number){
+  protected epochToUTC(epochTime: number, isDate: boolean){
     var date = new Date(0);
     date.setMilliseconds(epochTime);
-    return date.toLocaleDateString()+" "+date.toLocaleTimeString();
+    return isDate ? date.toLocaleDateString() : date.toLocaleTimeString();
   }
 
   private updateSubTable(clickedTimestamp: number){
