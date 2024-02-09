@@ -1,3 +1,8 @@
+@font-face {
+    font-family: OpenSans;
+    src: url('../../../../../assets/fonts/OpenSans-VariableFont.ttf');
+}
+
 .detail-row{
     height: 0;
 }
@@ -7,7 +12,7 @@
     &:not(.expanded-row){
         height: 0;
         &:hover{
-            background: #efefef;
+            backdrop-filter: contrast(80%);
         }
     }
 }
@@ -21,4 +26,55 @@
     width:100px;
 }
 
+// td[mat-cell]{
+//     background-color: transparent !important;
+// }
 
+// tr[mat-row]{
+//     background-color: transparent;
+// }
+
+table::before{
+    position: absolute;
+    content: "";
+    width: 91%;
+    height: 430px;
+    filter: blur(10px);
+    background: linear-gradient(to bottom right, rgb(0 0 0 / 50%), rgba(63, 94, 252, 0.5));
+    // z-index: -2;
+}
+table{
+    // box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    background: none;
+    
+    tr,td{
+        background: none;
+        color: beige;
+        position: relative;
+        font-family: OpenSans;
+    }
+    th{
+        background-color: #0a0b1b;
+        font-family: OpenSans;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    scrollbar-color: red orange;
+}
+
+/*width*/
+::-webkit-scrollbar {
+    width:6px;
+}
+
+/*track*/
+::-webkit-scrollbar-track {
+background:rgba(255, 0, 0, 0);
+}
+
+/*thumb*/
+::-webkit-scrollbar-thumb {
+background:rgb(0, 89, 231);
+border-style:solid;
+border-radius:10px;
+}
