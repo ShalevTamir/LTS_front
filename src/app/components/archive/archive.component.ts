@@ -34,6 +34,8 @@ export class ArchiveComponent implements AfterViewInit{
   @ViewChild('expandableTable', {static: true}) expandableTable!: ExpandableMatTableComponent;
 
   readonly defaultDataType: DataType = DataType.PARAMETERS;
+  readonly defaultFromDate = new Date(0);
+  readonly defaultToDate = new Date(Date.now());
   dataTypeEnum: [string, number][] = []
   selectedDataType: DataType = this.defaultDataType;
   expandableTableData: number[] = [];
@@ -41,6 +43,7 @@ export class ArchiveComponent implements AfterViewInit{
   fetchedData: ArchiveData[] = [];
 
   constructor(private _mongoDBHandler: mongoDBHandlerService){
+    console.log(Date.now())
     forIn(DataType, (key, value) => {
       if(typeof(key) === "string"){
         this.dataTypeEnum.push([key,+value]);
@@ -52,6 +55,7 @@ export class ArchiveComponent implements AfterViewInit{
     this.applyBtnSelection(this.dataTypeButtons.find((button) =>{
       return (button.nativeElement as HTMLElement).innerText.toUpperCase() == DataType[this.defaultDataType]
     })?.nativeElement);
+    this.updatePageData();
   }  
   
   handleDataTypeSelection(event: MouseEvent, dataTypeValue: DataType){

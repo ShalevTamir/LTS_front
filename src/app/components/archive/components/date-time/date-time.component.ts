@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { Component, Input, ViewChild } from '@angular/core';
+import { MatDatepicker, MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
@@ -12,13 +12,18 @@ import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
   styleUrl: './date-time.component.scss'
 })
 export class DateTimeComponent {
+  @Input() startAtDate!: Date
   selectedDate!: Date;
 
-  handleDateChange(event: MatDatepickerInputEvent<any>){
+  ngAfterViewInit(){
+    this.selectedDate = this.startAtDate;
+  }
+
+  protected handleDateChange(event: MatDatepickerInputEvent<any>){
     this.selectedDate = event.value;
   }
 
-  handleTimeChange(time: string, fromOrTo: string){
+  protected handleTimeChange(time: string){
     let [hours, minutes] = time.split(':');
     this.selectedDate.setHours(+hours);
     this.selectedDate.setMinutes(+minutes);
