@@ -1,34 +1,57 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
-import { NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChartjsChartComponent } from './components/chartjs-chart/chartjs-chart.component';
 import { ConfigChartType } from './components/chartjs-chart/models/config-chart-type.model';
 import { GaugeChartComponent } from './components/gauge-chart/gauge-chart.component';
 import { ChartMode } from './components/chartjs-chart/models/enums/chart-mode';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Observable, map, startWith } from 'rxjs';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [MatMenuModule, MatButtonModule, MatIconModule, NgFor, NgIf, GaugeChartComponent, MatIconModule, ChartjsChartComponent],
+  imports: [MatMenuModule, MatButtonModule, MatIconModule, NgFor, NgIf, GaugeChartComponent, MatIconModule, ChartjsChartComponent, MatAutocompleteModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, AsyncPipe],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
 
-export class CardComponent {
+export class CardComponent implements OnInit{
   static readonly maxChartSamples: number = 60;
   @Input() parameterName: string = "Parameter Name";
   @Input() cardType: string = "chart";
   @ViewChild(ChartjsChartComponent) chartjs: ChartjsChartComponent | undefined;
   @ViewChild(GaugeChartComponent) gauge: GaugeChartComponent | undefined;
-  chartTypes: string[] = Object.keys(ConfigChartType).filter(value => isNaN(Number(value)))
+  chartTypes: string[] = Object.keys(ConfigChartType).filter(value => isNaN(Number(value)));
   selectedChartType: ConfigChartType = ChartjsChartComponent.defaultChartType;
   chartMode: ChartMode = ChartMode.NO_DATA;
-  xAxisData: string[] = []
-  yAxisData: string[] = []
+  xAxisData: string[] = [];
+  yAxisData: string[] = [];
+
+  // add card
+  formControl = new FormControl('');
+  options: string[] = ['hello','world']
+  filteredOptions!: Observable<string[]>;
+  displayAddCardButton: boolean = true;
 
   constructor(){
+  }
+
+  ngOnInit(): void {
+    this.filteredOptions = this.formControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterOptions(value || ''))
+    );
+  }
+
+  private filterOptions(value: string): string[]{
+    const filterValue = value.toLowerCase();
+    return this.options.filter(option => option.toLowerCase().startsWith(filterValue));
   }
 
   
