@@ -11,6 +11,7 @@ import { ParametersRangesService } from './components/live-parameters/services/p
 import { GaugesDataPersistenceService } from './components/live-parameters/components/card/services/gauges-data-persistence.service';
 import { SweetAlertsService } from './common/services/sweet-alerts.service';
 import { DynamicSensorService } from './components/header/services/dynamic-sensor.service';
+import { mongoDBHandlerService } from './components/archive/services/mongoDB-handler.service';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +32,7 @@ import { DynamicSensorService } from './components/header/services/dynamic-senso
     GaugesDataPersistenceService,
     SweetAlertsService,
     DynamicSensorService,
+    mongoDBHandlerService
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

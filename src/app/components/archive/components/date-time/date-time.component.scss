@@ -1,0 +1,51 @@
+$mat-paginator-color: rgb(155, 156, 167);
+
+
+.date-time-container {
+    display: flex;
+}
+
+
+ngx-mat-timepicker-field{
+    margin-left: 1%;
+}
+
+mat-form-field{
+    width: 180px;
+}
+
+mat-label{
+    color: $mat-paginator-color;
+}
+
+
+::ng-deep mat-select{
+    color:$mat-paginator-color !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper{
+    border: 1px solid $mat-paginator-color;
+    border-radius: 2px !important;
+}
+
+::ng-deep .mat-mdc-select-arrow{
+    svg{
+        color: $mat-paginator-color;
+    }
+}
+
+::ng-deep .mat-mdc-paginator-icon{
+    fill: $mat-paginator-color !important;
+}
+
+::ng-deep .mat-mdc-icon-button[disabled] .mat-mdc-paginator-icon{
+    fill: #4c4d52 !important;
+}
+
+::ng-deep .mat-mdc-paginator-container{
+    justify-content: center !important;
+}
+
+::ng-deep .ng-trigger-transformPanel{
+    background: linear-gradient(to bottom right, rgb(88, 160, 229), rgb(63, 94, 252)) !important;
+}

@@ -4,7 +4,7 @@ import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@micros
 import { firstValueFrom } from 'rxjs';
 import { ParametersListDto } from '../models/dtos/parameters-list.dto';
 import { ClientConnectionId } from '../models/ros/client-connection-id.ros';
-import { FilteredFrame } from '../models/ros/filtered-frame.ros';
+import { FilteredFrame } from '../../../common/models/ros/filtered-frame.ros';
 import { SocketHandlerService } from '../../../common/utils/socket-connection/socket-handler.service';
 import { LIVE_DATA_URL } from '../../../common/constants';
 

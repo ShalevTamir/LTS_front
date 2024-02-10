@@ -1,0 +1,60 @@
+$mat-paginator-color: rgb(155, 156, 167);
+
+mat-paginator{
+    background:transparent;
+    color:$mat-paginator-color;
+    border-radius: 5px;
+    justify-self: right;
+    align-self: baseline;
+}
+
+
+::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper{
+    border-bottom: 1px solid $mat-paginator-color!important;
+}
+
+::ng-deep .ngx-mat-timepicker-control[_ngcontent-ng-c3402909199] .arrows-wrap[_ngcontent-ng-c3402909199] > .arrow[_ngcontent-ng-c3402909199] svg path:nth-child(2){
+    fill: white;
+}
+
+::ng-deep .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input{
+    color: $mat-paginator-color !important;
+}
+
+::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper{
+    border: none;
+    text-decoration: aqua !important;
+}
+
+::ng-deep .mat-mdc-icon-button svg{
+    color:beige;
+}
+
+::ng-deep ::placeholder{
+    color: $mat-paginator-color !important;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled){
+    background-color:transparent !important;
+}
+
+::ng-deep .ngx-mat-timepicker{
+    background-color:transparent;
+    align-items: center;
+}
+
+::ng-deep .ngx-mat-timepicker__toggle{
+    margin:0 !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper{
+    padding-left: 8% !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper{
+    align-items: center !important;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper{
+    display: none;
+}
