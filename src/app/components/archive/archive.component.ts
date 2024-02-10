@@ -39,7 +39,7 @@ export class ArchiveComponent implements AfterViewInit{
   dataTypeEnum: [string, number][] = []
   selectedDataType: DataType = this.defaultDataType;
   expandableTableData: number[] = [];
-  columnsToDisplay = ['timestamp'];
+  columnsToDisplay = ['date', 'time'];
   fetchedData: ArchiveData[] = [];
 
   constructor(private _mongoDBHandler: mongoDBHandlerService){

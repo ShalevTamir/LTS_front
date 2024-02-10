@@ -1,7 +1,5 @@
-export class TelemetryParameter{
-    constructor(
-        public Name: string,
-        public Value: string,
-        public Units: string
-    ){}
+export interface TelemetryParameter{
+    Name: string,
+    Value: string,
+    Units: string
 }

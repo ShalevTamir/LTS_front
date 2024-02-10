@@ -1,0 +1,27 @@
+
+.mat-column-Name{
+    width:100px;
+}
+
+
+.mat-column-Value{
+    width:100px;
+}
+
+table{
+    // box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    background: none;
+    
+    tr,td{
+        background: none;
+        color: rgb(194 196 209);
+        position: relative;
+        font-family: OpenSans;
+    }
+    th{
+        color: beige;
+        font-family: OpenSans;
+        font-weight: bold;
+        font-size: 16px;
+    }
+}
