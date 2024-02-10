@@ -2,5 +2,5 @@ import { SensorState } from "../../live-parameters/models/enums/sensor-state.enu
 
 export interface MongoSensorAlert{
     sensorName: string,
-    sensorStatus: SensorState   
+    sensorStatus: string   
 }

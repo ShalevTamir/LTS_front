@@ -77,7 +77,7 @@ export class ExpandableMatTableComponent implements AfterViewInit{
       this.expandedDataSource = clickedAlerts.map((alert: MongoSensorAlertsRos): MongoSensorAlert => {
         return {
         sensorName: alert.SensorName,
-        sensorStatus: alert.SensorStatus
+        sensorStatus: alert.SensorStatus.toString().charAt(0).toLocaleUpperCase()+alert.SensorStatus.toString().slice(1).toLowerCase()
       }});
     }
   }
