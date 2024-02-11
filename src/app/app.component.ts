@@ -8,7 +8,7 @@ import { LiveParametersSocketService } from './components/live-parameters/servic
 import { HttpClientModule } from '@angular/common/http';
 import { SensorAlertsService } from './components/live-parameters/services/sensor-alerts.service';
 import { ParametersConfigService } from './components/live-parameters/services/parameters-ranges.service';
-import { GaugesDataPersistenceService } from './components/live-parameters/components/card/services/gauges-data-persistence.service';
+import { GaugesDataPersistenceService } from './components/live-parameters/components/parameter-card/services/gauges-data-persistence.service';
 import { SweetAlertsService } from './common/services/sweet-alerts.service';
 import { DynamicSensorService } from './components/header/services/dynamic-sensor.service';
 import { mongoDBHandlerService } from './components/archive/services/mongoDB-handler.service';

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { CardComponent } from './components/card/card.component';
+import { ParameterCardComponent } from './components/parameter-card/parameter-card.component';
 import { NgFor } from '@angular/common';
 import { FilteredFrame } from '../../common/models/ros/filtered-frame.ros';
 import { LiveParametersSocketService } from './services/live-parameters-socket.service';
@@ -8,18 +8,18 @@ import { SensorAlertsService } from './services/sensor-alerts.service';
 import { Router, RoutesRecognized } from '@angular/router';
 import { ParametersConfigService } from './services/parameters-ranges.service';
 import { ParameterRange } from './models/ros/parameter-range.ros';
-import { GaugesDataPersistenceService } from './components/card/services/gauges-data-persistence.service';
+import { GaugesDataPersistenceService } from './components/parameter-card/services/gauges-data-persistence.service';
 
 @Component({
   selector: 'app-live-parameters',
   standalone: true,
-  imports: [CardComponent, NgFor],
+  imports: [ParameterCardComponent, NgFor],
   templateUrl: './live-parameters.component.html',
   styleUrl: './live-parameters.component.scss',
 })
 export class LiveParametersComponent implements OnInit, OnDestroy{
   parameters: string[];
-  @ViewChildren(CardComponent) cards!: QueryList<CardComponent>;
+  @ViewChildren(ParameterCardComponent) cards!: QueryList<ParameterCardComponent>;
   public title: string ="Live Telemetry Parameters";
   constructor(
     private _liveParametersSocket: LiveParametersSocketService,

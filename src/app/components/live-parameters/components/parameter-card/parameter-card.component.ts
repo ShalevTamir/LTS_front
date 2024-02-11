@@ -16,14 +16,14 @@ import { ParametersConfigService } from '../../services/parameters-ranges.servic
 import { LiveParametersSocketService } from '../../services/live-parameters-socket.service';
 
 @Component({
-  selector: 'app-card',
+  selector: 'app-parameter-card',
   standalone: true,
   imports: [MatMenuModule, MatButtonModule, MatIconModule, NgFor, NgIf, GaugeChartComponent, MatIconModule, ChartjsChartComponent, MatAutocompleteModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, AsyncPipe],
-  templateUrl: './card.component.html',
-  styleUrl: './card.component.scss'
+  templateUrl: './parameter-card.component.html',
+  styleUrl: './parameter-card.component.scss'
 })
 
-export class CardComponent implements OnInit{
+export class ParameterCardComponent implements OnInit{
   static readonly maxChartSamples: number = 60;
   @Input() parameterName: string = "Parameter Name";
   @Input() cardType: string = "chart";
@@ -76,7 +76,7 @@ export class CardComponent implements OnInit{
     this.xAxisData.push(xData);
     this.yAxisData.push(yData);
     this.chartjs?.chart.update();
-    if(this.xAxisData.length > CardComponent.maxChartSamples){
+    if(this.xAxisData.length > ParameterCardComponent.maxChartSamples){
       this.xAxisData.shift();
       this.yAxisData.shift();
       this.chartjs?.chart.update();
