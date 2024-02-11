@@ -36,28 +36,29 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
     ngOnInit(): void {
       this._liveParametersSocket.initWebSocket(this.parameters, this.updateAllCharts);
       this._sensorAlerts.init();
-      this._parametersConfigService.getRanges(this.parameters).then((value: ParameterRange[]) => {
-        this.configGauges(value);
-      });
+      this.configGauges(this.parameters);
   }
   
   handleAddParameter(parameterName: string){
+    this.configGauges([parameterName]);
     this.parameters.push(parameterName);
   }
 
-  configGauges(parametersRanges: ParameterRange[]){
-    this.cards.forEach(card =>{
-      let parameterRange = parametersRanges.find(parameter => parameter.ParameterName == card.parameterName);
-      if (parameterRange !== undefined){
-        this._gaugesDataService.saveGaugeData(
-          card.parameterName,
-          {minValue: +parameterRange.MinValue,
-          maxValue: +parameterRange.MaxValue});
-      }
-      else{
-        console.log("[ERROR] couldn't find parameter range for parameter "+card.parameterName);
-      }
-    })
+  configGauges(parametersNames: string[]){
+    this._parametersConfigService.getRanges(parametersNames).then((parametersRanges: ParameterRange[]) =>{
+      parametersRanges.forEach((parameterRange: ParameterRange) => {
+        let card = this.cards.find((card) => card.parameterName == parameterRange.ParameterName);
+        if (card !== undefined){
+          this._gaugesDataService.saveGaugeData(
+            card.parameterName,
+            {minValue: +parameterRange.MinValue,
+            maxValue: +parameterRange.MaxValue});
+        }
+        else{
+          console.error("Couldn't find card for parameter range "+parameterRange.ParameterName);
+        }
+      });
+    });
   }
 
   updateAllCharts = (filteredTeleFrame: FilteredFrame) => {

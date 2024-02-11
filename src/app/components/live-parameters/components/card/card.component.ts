@@ -86,7 +86,7 @@ export class CardComponent implements OnInit{
   public updateChartValues(xData: string, yData: string){
     this.chartMode = ChartMode.HAS_DATA;
     setTimeout(() => {
-      this.insertChartjsData(xData, yData);      
+      this.insertChartjsData(xData, yData);   
       if(this.gauge !== undefined){
         this.gauge.updateGaugeValue(+yData);
       }
