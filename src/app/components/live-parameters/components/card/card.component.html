@@ -40,7 +40,8 @@
                      aria-label="Telemetry Parameter Name"
                      matInput
                      [formControl]="formControl"
-                     [matAutocomplete]="auto">
+                     [matAutocomplete]="auto"
+                     >
               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleAddCard($event);">
                   <mat-option *ngFor="let option of filteredOptions | async" [value]="option">{{option}}</mat-option>
               </mat-autocomplete>

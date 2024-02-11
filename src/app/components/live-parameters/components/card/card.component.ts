@@ -27,6 +27,7 @@ export class CardComponent implements OnInit{
   static readonly maxChartSamples: number = 60;
   @Input() parameterName: string = "Parameter Name";
   @Input() cardType: string = "chart";
+  @Output() addCardEmitter: EventEmitter<string> = new EventEmitter();
   @ViewChild(ChartjsChartComponent) chartjs: ChartjsChartComponent | undefined;
   @ViewChild(GaugeChartComponent) gauge: GaugeChartComponent | undefined;
   chartTypes: string[] = Object.keys(ConfigChartType).filter(value => isNaN(Number(value)));
@@ -53,7 +54,11 @@ export class CardComponent implements OnInit{
   }
 
   protected async handleAddCard(selectEvent: MatAutocompleteSelectedEvent){
-    await this._liveParametersSocketService.addParameter(selectEvent.option.value);
+    let parameterName = selectEvent.option.value;
+    await this._liveParametersSocketService.addParameter(parameterName);
+    this.addCardEmitter.emit(parameterName);
+    this.formControl.reset();
+    this.displayAddCardButton = !this.displayAddCardButton;
   }
 
   private filterOptions(value: string): string[]{

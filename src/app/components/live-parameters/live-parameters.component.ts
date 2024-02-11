@@ -41,6 +41,10 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
       });
   }
   
+  handleAddParameter(parameterName: string){
+    this.parameters.push(parameterName);
+  }
+
   configGauges(parametersRanges: ParameterRange[]){
     this.cards.forEach(card =>{
       let parameterRange = parametersRanges.find(parameter => parameter.ParameterName == card.parameterName);
@@ -57,7 +61,6 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
   }
 
   updateAllCharts = (filteredTeleFrame: FilteredFrame) => {
-    console.log(filteredTeleFrame.Parameters);
     this.cards.forEach(card => {
       let cardTeleParameter: TelemetryParameter | undefined = 
         filteredTeleFrame.Parameters.find(parameter => parameter.Name == card.parameterName);
