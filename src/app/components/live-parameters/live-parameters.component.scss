@@ -5,6 +5,28 @@
     gap: 15px; row-gap: 15px;
 }
 
-::ng-deep .custom-toast{
-    box-shadow: none !important;
+::ng-deep{
+    .custom-toast{
+        box-shadow: none !important;
+    }
+    .mdc-text-field--filled:not(.mdc-text-field--disabled){
+        background-color: transparent !important;
+        background: none;
+        border-bottom: 1px solid rgb(155, 156, 167);
+    }
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input,.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text,.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after{
+        color: beige !important;
+    }
+    mat-label{
+        color: rgb(144, 144, 144);
+    }
+    ::placeholder{
+        color: rgb(144, 144, 144) !important;
+    }
+    div.mat-mdc-autocomplete-panel{
+        background: linear-gradient(to bottom right, rgb(88, 160, 229), rgb(63, 94, 252)) !important; 
+    }
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom right, rgb(34, 67, 97), rgb(20, 32, 91));
+    }
 }

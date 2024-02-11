@@ -6,7 +6,7 @@ import { LiveParametersSocketService } from './services/live-parameters-socket.s
 import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
 import { SensorAlertsService } from './services/sensor-alerts.service';
 import { Router, RoutesRecognized } from '@angular/router';
-import { ParametersRangesService } from './services/parameters-ranges.service';
+import { ParametersConfigService } from './services/parameters-ranges.service';
 import { ParameterRange } from './models/ros/parameter-range.ros';
 import { GaugesDataPersistenceService } from './components/card/services/gauges-data-persistence.service';
 
@@ -24,7 +24,7 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
   constructor(
     private _liveParametersSocket: LiveParametersSocketService,
     private _sensorAlerts: SensorAlertsService,
-    private _parametersRangesService: ParametersRangesService,
+    private _parametersConfigService: ParametersConfigService,
     private _gaugesDataService: GaugesDataPersistenceService) {
       this.parameters = ["Altitude","Longitude","Wind_Speed"];
     }
@@ -36,24 +36,29 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
     ngOnInit(): void {
       this._liveParametersSocket.initWebSocket(this.parameters, this.updateAllCharts);
       this._sensorAlerts.init();
-      this._parametersRangesService.getRanges(this.parameters).then((value: ParameterRange[]) => {
-        this.configGauges(value);
-      });
+      this.configGauges(this.parameters);
   }
   
-  configGauges(parametersRanges: ParameterRange[]){
-    this.cards.forEach(card =>{
-      let parameterRange = parametersRanges.find(parameter => parameter.ParameterName == card.parameterName);
-      if (parameterRange !== undefined){
-        this._gaugesDataService.saveGaugeData(
-          card.parameterName,
-          {minValue: +parameterRange.MinValue,
-          maxValue: +parameterRange.MaxValue});
-      }
-      else{
-        console.log("[ERROR] couldn't find parameter range for parameter "+card.parameterName);
-      }
-    })
+  handleAddParameter(parameterName: string){
+    this.configGauges([parameterName]);
+    this.parameters.push(parameterName);
+  }
+
+  configGauges(parametersNames: string[]){
+    this._parametersConfigService.getRanges(parametersNames).then((parametersRanges: ParameterRange[]) =>{
+      parametersRanges.forEach((parameterRange: ParameterRange) => {
+        let card = this.cards.find((card) => card.parameterName == parameterRange.ParameterName);
+        if (card !== undefined){
+          this._gaugesDataService.saveGaugeData(
+            card.parameterName,
+            {minValue: +parameterRange.MinValue,
+            maxValue: +parameterRange.MaxValue});
+        }
+        else{
+          console.error("Couldn't find card for parameter range "+parameterRange.ParameterName);
+        }
+      });
+    });
   }
 
   updateAllCharts = (filteredTeleFrame: FilteredFrame) => {

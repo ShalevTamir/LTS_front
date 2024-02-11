@@ -11,6 +11,13 @@ $chart-logo-size: $menu-size;
     src: url('../../../../../assets/fonts/RobotoMono-Regular.ttf');
 }
 
+#form-parameter-select{
+    width: 100%;
+    mat-form-field{
+        width: 100%;
+    }
+}
+
 .chart-container{
     justify-content: center;
     height: 264px;
@@ -26,6 +33,9 @@ $chart-logo-size: $menu-size;
     padding: 15px 15px 0px 30px;
     border-radius: 6px;
     justify-content: center;
+    &:has(> .add-card){
+        padding: 15px 15px 0 15px;
+    }
     & + & {
         margin-left: 20px;
        }
@@ -135,13 +145,13 @@ app-gauge-chart{
 }
 @keyframes plus-hover{
     0%{
-        width:36%;
+        width:30%;
     }
     50%{
-        width: 50%;
+        width: 44%;
     }
     100%{
-        width:40%;
+        width:34%;
     }
 }
 
@@ -151,13 +161,13 @@ app-gauge-chart{
     padding-bottom: 15px;
     img{
         color:white;
-        width:36%;
+        width:30%;
         &:hover{
             content:url('../../../../../assets/images/solid-plus.png');
             cursor:pointer;
             animation-name: plus-hover;
             animation-duration: 0.3s;
-            width: 40%;
+            width: 34%;
         }
     }
 }
