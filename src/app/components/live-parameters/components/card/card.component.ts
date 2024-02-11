@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
+import { ParametersConfigService } from '../../services/parameters-ranges.service';
 
 @Component({
   selector: 'app-card',
@@ -35,14 +36,15 @@ export class CardComponent implements OnInit{
 
   // add card
   formControl = new FormControl('');
-  options: string[] = ['hello','world','option','another option','option','another option','option','another option','option','another option'];
+  parametersNamesOptions: string[] = [];
   filteredOptions!: Observable<string[]>;
   displayAddCardButton: boolean = true;
 
-  constructor(){
+  constructor(private _parametersConfigService: ParametersConfigService){
   }
 
   ngOnInit(): void {
+    this._parametersConfigService.getParameterNames().then((parameterNames: string[]) => this.parametersNamesOptions = parameterNames);
     this.filteredOptions = this.formControl.valueChanges.pipe(
       startWith(''),
       map(value => this.filterOptions(value || ''))
@@ -51,7 +53,7 @@ export class CardComponent implements OnInit{
 
   private filterOptions(value: string): string[]{
     const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.toLowerCase().startsWith(filterValue));
+    return this.parametersNamesOptions.filter(option => option.toLowerCase().startsWith(filterValue));
   }
 
   

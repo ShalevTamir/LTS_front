@@ -6,7 +6,7 @@ import { LiveParametersSocketService } from './services/live-parameters-socket.s
 import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
 import { SensorAlertsService } from './services/sensor-alerts.service';
 import { Router, RoutesRecognized } from '@angular/router';
-import { ParametersRangesService } from './services/parameters-ranges.service';
+import { ParametersConfigService } from './services/parameters-ranges.service';
 import { ParameterRange } from './models/ros/parameter-range.ros';
 import { GaugesDataPersistenceService } from './components/card/services/gauges-data-persistence.service';
 
@@ -24,7 +24,7 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
   constructor(
     private _liveParametersSocket: LiveParametersSocketService,
     private _sensorAlerts: SensorAlertsService,
-    private _parametersRangesService: ParametersRangesService,
+    private _parametersRangesService: ParametersConfigService,
     private _gaugesDataService: GaugesDataPersistenceService) {
       this.parameters = ["Altitude","Longitude","Wind_Speed"];
     }

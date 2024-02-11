@@ -8,12 +8,17 @@ import { firstValueFrom } from "rxjs";
 @Injectable({
     providedIn: 'root'
 })
-export class ParametersRangesService{
+export class ParametersConfigService{
 
     constructor(private _httpClient: HttpClient){}
 
     public async getRanges(parametersNames: string[]): Promise<ParameterRange[]>{
         let reqRes = this._httpClient.post<ParameterRange[]>(LIVE_DATA_URL+"/parameters-config/parameter-ranges",new ParametersListDto(parametersNames))
+        return await firstValueFrom(reqRes);
+    }
+
+    public async getParameterNames(): Promise<string[]>{
+        let reqRes = this._httpClient.get<string[]>(LIVE_DATA_URL+"/parameters-config/parameter-names");
         return await firstValueFrom(reqRes);
     }
 }
