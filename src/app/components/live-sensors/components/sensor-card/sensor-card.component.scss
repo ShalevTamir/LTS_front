@@ -1,0 +1,31 @@
+.card {
+    height: 279.8px;
+    background: radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%);
+    padding: 15px 15px 0px 30px;
+    border-radius: 6px;
+    justify-content: center;
+    &:has(> .add-card){
+        padding: 15px 15px 0 15px;
+    }
+    & + & {
+        margin-left: 20px;
+       }
+   
+    
+    span{
+        width: fit-content;
+        color: #85bcff;
+        font-family: "OpenSans", sans-serif;
+        text-align: center;
+        font-size: 20px;
+        height:20px;
+    }
+    #btn-menu-container{
+        justify-self: end;
+        grid-column: 3;
+        #btn-menu{
+            bottom:12px;
+        }
+        height:20px;
+    }
+}
