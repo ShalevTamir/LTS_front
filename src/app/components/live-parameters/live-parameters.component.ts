@@ -24,7 +24,7 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
   constructor(
     private _liveParametersSocket: LiveParametersSocketService,
     private _sensorAlerts: SensorAlertsService,
-    private _parametersRangesService: ParametersConfigService,
+    private _parametersConfigService: ParametersConfigService,
     private _gaugesDataService: GaugesDataPersistenceService) {
       this.parameters = ["Altitude","Longitude","Wind_Speed"];
     }
@@ -36,7 +36,7 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
     ngOnInit(): void {
       this._liveParametersSocket.initWebSocket(this.parameters, this.updateAllCharts);
       this._sensorAlerts.init();
-      this._parametersRangesService.getRanges(this.parameters).then((value: ParameterRange[]) => {
+      this._parametersConfigService.getRanges(this.parameters).then((value: ParameterRange[]) => {
         this.configGauges(value);
       });
   }
@@ -57,6 +57,7 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
   }
 
   updateAllCharts = (filteredTeleFrame: FilteredFrame) => {
+    console.log(filteredTeleFrame.Parameters);
     this.cards.forEach(card => {
       let cardTeleParameter: TelemetryParameter | undefined = 
         filteredTeleFrame.Parameters.find(parameter => parameter.Name == card.parameterName);

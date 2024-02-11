@@ -7,12 +7,13 @@ import { ChartjsChartComponent } from './components/chartjs-chart/chartjs-chart.
 import { ConfigChartType } from './components/chartjs-chart/models/config-chart-type.model';
 import { GaugeChartComponent } from './components/gauge-chart/gauge-chart.component';
 import { ChartMode } from './components/chartjs-chart/models/enums/chart-mode';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { ParametersConfigService } from '../../services/parameters-ranges.service';
+import { LiveParametersSocketService } from '../../services/live-parameters-socket.service';
 
 @Component({
   selector: 'app-card',
@@ -40,7 +41,7 @@ export class CardComponent implements OnInit{
   filteredOptions!: Observable<string[]>;
   displayAddCardButton: boolean = true;
 
-  constructor(private _parametersConfigService: ParametersConfigService){
+  constructor(private _parametersConfigService: ParametersConfigService, private _liveParametersSocketService: LiveParametersSocketService){
   }
 
   ngOnInit(): void {
@@ -49,6 +50,10 @@ export class CardComponent implements OnInit{
       startWith(''),
       map(value => this.filterOptions(value || ''))
     );
+  }
+
+  protected async handleAddCard(selectEvent: MatAutocompleteSelectedEvent){
+    await this._liveParametersSocketService.addParameter(selectEvent.option.value);
   }
 
   private filterOptions(value: string): string[]{
