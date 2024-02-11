@@ -1,15 +1,16 @@
 import { SweetAlertResult } from "sweetalert2";
-import { SweetAlertsService } from "../../../common/services/sweet-alerts.service";
-import { LIVE_TELE_URL } from "../../../common/constants";
+import { SweetAlertsService } from "./sweet-alerts.service";
+import { LIVE_TELE_URL } from "../constants";
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpResponse } from "@angular/common/http";
-import { DirectSensorDto } from "../models/direct-sensor-dto";
+import { DirectSensorDto } from "../../components/header/models/direct-sensor-dto";
 import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
+import { SensorAlertsRos } from "../../components/live-parameters/models/ros/sensor-alert.ros";
 
 @Injectable({
     providedIn: 'root'
 })
-export class DynamicSensorService{
+export class SensorHandlerService{
     constructor(private _sweetAlertsService: SweetAlertsService, private _httpClient: HttpClient){
         
     }
@@ -26,6 +27,10 @@ export class DynamicSensorService{
             }
 
         });
-        
+    }
+
+    async getSensorsState(): Promise<SensorAlertsRos[]>{
+        let reqRes = this._httpClient.get<SensorAlertsRos[]>(LIVE_TELE_URL+"/live-sensor-alerts");
+        return await firstValueFrom(reqRes);
     }
 }

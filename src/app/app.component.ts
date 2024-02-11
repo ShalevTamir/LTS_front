@@ -10,7 +10,7 @@ import { SensorAlertsService } from './components/live-parameters/services/senso
 import { ParametersConfigService } from './components/live-parameters/services/parameters-ranges.service';
 import { GaugesDataPersistenceService } from './components/live-parameters/components/parameter-card/services/gauges-data-persistence.service';
 import { SweetAlertsService } from './common/services/sweet-alerts.service';
-import { DynamicSensorService } from './components/header/services/dynamic-sensor.service';
+import { SensorHandlerService } from './common/services/sensor-handler.service';
 import { mongoDBHandlerService } from './components/archive/services/mongoDB-handler.service';
 
 @Component({
@@ -31,7 +31,7 @@ import { mongoDBHandlerService } from './components/archive/services/mongoDB-han
     ParametersConfigService,
     GaugesDataPersistenceService,
     SweetAlertsService,
-    DynamicSensorService,
+    SensorHandlerService,
     mongoDBHandlerService
   ],
   templateUrl: './app.component.html',

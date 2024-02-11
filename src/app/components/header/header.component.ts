@@ -4,7 +4,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { seperateString } from '../../common/utils/string-utils';
 import { SweetAlertsService } from '../../common/services/sweet-alerts.service';
 import { SweetAlertResult } from 'sweetalert2';
-import { DynamicSensorService } from './services/dynamic-sensor.service';
+import { SensorHandlerService } from '../../common/services/sensor-handler.service';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +15,7 @@ import { DynamicSensorService } from './services/dynamic-sensor.service';
 })
 export class HeaderComponent {
   title: string = ""
-  constructor(private router: Router, private _dynamicSensorService: DynamicSensorService){
+  constructor(private router: Router, private _dynamicSensorService: SensorHandlerService){
     this.router.events.subscribe((event: any) =>{
       if(event instanceof RoutesRecognized){
         let eventUrl: string = event.url;

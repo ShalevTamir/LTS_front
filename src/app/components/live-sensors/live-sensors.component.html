@@ -1,6 +1,3 @@
 <div id="cards-container">
-    <app-sensor-card></app-sensor-card>
-    <app-sensor-card></app-sensor-card>
-    <app-sensor-card></app-sensor-card>
-    <app-sensor-card></app-sensor-card>
+    <app-sensor-card *ngFor="let sensorState of sensorStates" [sensorName]="sensorState.SensorName" [currentSensorState]="sensorState.CurrentStatus"></app-sensor-card>
 </div>
