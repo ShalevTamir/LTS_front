@@ -35,7 +35,7 @@ export class CardComponent implements OnInit{
 
   // add card
   formControl = new FormControl('');
-  options: string[] = ['hello','world']
+  options: string[] = ['hello','world','option','another option','option','another option','option','another option','option','another option'];
   filteredOptions!: Observable<string[]>;
   displayAddCardButton: boolean = true;
 

@@ -15,4 +15,21 @@
     overflow: auto;
     padding-left: 0;
    }
+
+::ng-deep{
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom right, rgb(88, 160, 229), rgb(63, 94, 252));
+        border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 6px;
+        background-color: transparent;
+    }
+}
+
    
