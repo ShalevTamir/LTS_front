@@ -34,7 +34,7 @@ export class ArchiveComponent implements AfterViewInit{
   @ViewChild('expandableTable', {static: true}) expandableTable!: ExpandableMatTableComponent;
 
   readonly defaultDataType: DataType = DataType.PARAMETERS;
-  readonly defaultFromDate = new Date(0);
+  readonly defaultFromDate;
   readonly defaultToDate = new Date(Date.now());
   dataTypeEnum: [string, number][] = []
   selectedDataType: DataType = this.defaultDataType;
@@ -43,7 +43,8 @@ export class ArchiveComponent implements AfterViewInit{
   fetchedData: ArchiveData[] = [];
 
   constructor(private _mongoDBHandler: mongoDBHandlerService){
-    console.log(Date.now())
+    this.defaultFromDate = new Date();
+    this.defaultFromDate.setDate(this.defaultToDate.getDate() - 7);
     forIn(DataType, (key, value) => {
       if(typeof(key) === "string"){
         this.dataTypeEnum.push([key,+value]);

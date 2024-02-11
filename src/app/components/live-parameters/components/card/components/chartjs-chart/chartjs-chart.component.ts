@@ -13,7 +13,7 @@ import { ConfigChartType } from './models/config-chart-type.model';
   providers: [ChartFactoryService]
 })
 export class ChartjsChartComponent implements AfterViewInit, OnChanges{
-  public static defaultChartType: ConfigChartType = ConfigChartType.Line;
+  public static defaultChartType: ConfigChartType = ConfigChartType.Guage;
   public static chartsAmount: number = 0;
   @Input({required: true}) xAxisData!: string[]
   @Input({required: true}) yAxisData!: string[]
