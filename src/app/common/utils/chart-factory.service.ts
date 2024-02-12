@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Animation, Chart, ChartConfiguration, ChartOptions, ChartType, ChartTypeRegistry, DefaultDataPoint } from 'chart.js/auto';
-import { ConfigChartType } from '../../components/live-parameters/components/card/components/chartjs-chart/models/config-chart-type.model';
+import { ConfigChartType } from '../../components/live-parameters/components/parameter-card/components/chartjs-chart/models/config-chart-type.model';
 
 @Injectable({
   providedIn: 'root'

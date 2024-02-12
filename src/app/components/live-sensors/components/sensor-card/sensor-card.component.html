@@ -1,0 +1,6 @@
+<div class="card">
+    <span class="title">{{sensorName}}</span>
+    <app-indicator-light [sensorState]="currentSensorState"></app-indicator-light>
+    <span class="sensorStatus">{{readableSensorState(currentSensorState)}}</span>
+    <!-- <span class="sensorStatus" [ngClass]="'--description-'+sensorStateEnum[currentSensorState].toLowerCase()">{{readableSensorState(currentSensorState)}}</span> -->
+</div>

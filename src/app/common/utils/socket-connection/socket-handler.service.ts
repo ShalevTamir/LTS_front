@@ -19,6 +19,26 @@ export class SocketHandlerService{
       return hubConnection;
     }
 
+    public async restartSocket(connection: HubConnection, listeners: HubListener[]){
+      //un-register previous handlers
+      this.unregisterListeners(connection, listeners);
+      this.registerListeners(connection, listeners);
+      await connection.start();
+    }
+
+    private unregisterListeners(connection: HubConnection, listeners: HubListener[]){
+      listeners.forEach((listener) => {
+        connection.off(listener.listenerName);
+      })
+    }
+
+    private registerListeners(connection: HubConnection, listeners: HubListener[]){
+      listeners.forEach((listener) => {
+        connection.on(listener.listenerName, listener.callback);
+      });
+    }
+
+
     // public async disconnectWebSocket(connection: HubConnection){
     //   await connection.stop();
     // }

@@ -11,6 +11,7 @@ import { FilteredFrame } from '../../../../common/models/ros/filtered-frame.ros'
 import { MongoSensorAlertsRos } from '../../models/ros/mongo-sensor-alert.ros';
 import { DataType as ArchiveDataType } from '../../models/enums/data-type';
 import { MongoSensorAlert } from '../../models/mongo-sensor-alert';
+import { SensorState } from '../../../live-parameters/models/enums/sensor-state.enum';
 
 @Component({
     selector: 'app-expandable-mat-table',
@@ -74,9 +75,10 @@ export class ExpandableMatTableComponent implements AfterViewInit{
       this.expandedColumnsToDisplay = ['sensorName', 'sensorStatus']
       let clickedAlerts: MongoSensorAlertsRos[] = this.fetchedData.filter((value) => value.TimeStamp == clickedTimestamp) as MongoSensorAlertsRos[];
       this.expandedDataSource = clickedAlerts.map((alert: MongoSensorAlertsRos): MongoSensorAlert => {
+        let strSensorStatus = SensorState[alert.SensorStatus];
         return {
         sensorName: alert.SensorName,
-        sensorStatus: alert.SensorStatus.toString().charAt(0).toLocaleUpperCase()+alert.SensorStatus.toString().slice(1).toLowerCase()
+        sensorStatus: strSensorStatus.charAt(0).toLocaleUpperCase()+strSensorStatus.slice(1).toLowerCase()
       }});
     }
   }
