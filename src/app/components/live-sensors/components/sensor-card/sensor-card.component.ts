@@ -19,4 +19,8 @@ export class SensorCardComponent{
     let strSensorState = SensorState[sensorStateValue]
     return strSensorState.charAt(0) + strSensorState.slice(1).toLocaleLowerCase();
   }
+
+  updateSensorStatus(updatedSensorStatus: SensorState){
+    this.currentSensorState = updatedSensorStatus;
+  }
 }
