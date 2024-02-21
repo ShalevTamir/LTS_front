@@ -17,22 +17,18 @@ export class SensorHandlerService{
         
     }
     async addDynamicSensorAsync(){
-        let userInput: SweetAlertResult = (await this._sweetAlertsService.multipleInputAlert("Add Dynamic Sensor", [
+        await this._sweetAlertsService.multipleInputAlert("Add Dynamic Sensor", [
             {subtitleDescription: "Sensor Name", expand: false},
             {subtitleDescription: "Sensor Description", expand: true}
-        ]));
-        let [sensorName, sensorDescription] = userInput.value;
-        this._httpClient.post(LIVE_TELE_URL+"/live-sensor-alerts/add-sensor",new DirectSensorDto(sensorName, sensorDescription))
-        .subscribe({
-            error: (e: HttpErrorResponse) =>{
-                this._sweetAlertsService.errorAlert("An error has occurred, please try again later");
-            },
-            next: (value) =>{
-                console.log(value as SensorRequirementRos);
-                this._sweetAlertsService.successAlert("Added sensor "+ sensorName + " succesfully");
-            }
+        ], this.parseSensorRequirements);
+    }
 
-        });
+    private parseSensorRequirements = async (...inputs: string[]) => {
+        let [sensorName, sensorRequirements] = inputs;
+        let reqRes = this._httpClient.post<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensor-alerts/add-sensor",new DirectSensorDto(sensorName, sensorRequirements));
+        let parsedRequirements: SensorRequirementRos[] = await firstValueFrom(reqRes);
+        console.log(parsedRequirements);
+        this._sweetAlertsService.successAlert("Added sensor "+ sensorName + " succesfully");
     }
 
     async getSensorsState(): Promise<SensorAlertsRos[]>{

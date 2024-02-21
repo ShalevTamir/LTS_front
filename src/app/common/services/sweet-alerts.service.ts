@@ -28,7 +28,7 @@ export class SweetAlertsService{
           })
     }
 
-    async multipleInputAlert(title: string, subtitles: Subtitle[]): Promise<SweetAlertResult>{
+    async multipleInputAlert(title: string, subtitles: Subtitle[], preConfirmCallback?: (...inputs: string[]) => Promise<void>): Promise<SweetAlertResult>{
         
         return await Swal.fire({
             title: title,
@@ -37,11 +37,11 @@ export class SweetAlertsService{
             width: 650,
             background: 'radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%)',
             color: 'white',
-            
+            showLoaderOnConfirm: true,
             customClass: {
                 confirmButton: "swal-btn-confirm"
             },
-            preConfirm: () => {
+            preConfirm: async () => {
                 let inputs: (HTMLInputElement | null)[] = [];
                 for(let i=0; i < subtitles.length; i++){
                     inputs[i] = document.getElementById("swal-input-"+(i+1)) as HTMLInputElement;
@@ -50,7 +50,11 @@ export class SweetAlertsService{
                     Swal.showValidationMessage("All inputs are required!");
                     return false;
                 }
-                return inputs.map((input) => input?.value)
+                let inputValues = inputs.filter((input) => input !== null).map((input) => (input as HTMLInputElement).value);
+                if(preConfirmCallback !== undefined){
+                    await preConfirmCallback(...inputValues)
+                }
+                return inputValues
               }
         });
     }
