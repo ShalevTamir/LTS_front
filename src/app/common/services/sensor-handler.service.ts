@@ -8,6 +8,10 @@ import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
 import { SensorAlertsRos } from "../../components/live-parameters/models/ros/sensor-alert.ros";
 import { SensorRequirementRos } from "../../components/header/models/ros/sensor-requirement-ros";
 import { BaseRequirementRos } from "../../components/header/models/ros/base-requirement-ros";
+import { DurationRos } from "../../components/header/models/ros/duration-ros";
+import { DurationType } from "../../components/header/models/enums/duration-type";
+import { normalizeString } from "../utils/string-utils";
+import { RangeRequirementRos } from "../../components/header/models/ros/range-requirement-ros";
 
 @Injectable({
     providedIn: 'root'
@@ -28,11 +32,78 @@ export class SensorHandlerService{
         let reqRes = this._httpClient.post<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensor-alerts/add-sensor",new DirectSensorDto(sensorName, sensorRequirements));
         let parsedRequirements: SensorRequirementRos[] = await firstValueFrom(reqRes);
         console.log(parsedRequirements);
-        this._sweetAlertsService.successAlert("Added sensor "+ sensorName + " succesfully");
+        let requirementsHtml = 
+        `<style>
+        @font-face {
+            font-family: 'Montserrat';
+            src: url('../../../assets/fonts/Montserrat-VariableFont_wght.ttf');
+        }
+
+        .requirement-card {
+            border-radius: 30px 15px;
+            border: 1px solid #ffffff70;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .requirement-card .sensor-name{
+            font-size: 25px;
+        }
+        
+        .requirement-card .sensor-value, .requirement-card .sensor-duration{
+            text-align: center;
+            font-size: 17px;
+        }
+        
+        .requirement-card *{
+            margin-bottom: 10px;
+        }
+        </style>`+
+        parsedRequirements.map((sensorRequirement) => 
+        `<div class="requirement-card">
+        <span class="sensor-name">${sensorRequirement.ParameterName}</span>
+        <span class="sensor-value">Range: ${this.requirementToText(sensorRequirement.Requirement)}</span>
+        <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
+        </div>`).join('\n');
+        await this._sweetAlertsService.customAlert({
+            title: "Sensor Requirements",
+            html: requirementsHtml,
+            confirmButtonText: 'Confirm',
+            showCancelButton: true
+        });
     }
 
     async getSensorsState(): Promise<SensorAlertsRos[]>{
         let reqRes = this._httpClient.get<SensorAlertsRos[]>(LIVE_TELE_URL+"/live-sensor-alerts");
         return await firstValueFrom(reqRes);
+    }
+
+    private requirementToText(requirement: BaseRequirementRos){
+        if('EndValue' in requirement){
+          let rangeRequirement = requirement as RangeRequirementRos;
+          if(rangeRequirement.Value == -Infinity){
+            return "Bellow "+rangeRequirement.EndValue;
+          }
+          else if(rangeRequirement.EndValue == Infinity){
+            return "Above "+rangeRequirement.Value;
+          }
+          else{
+            return rangeRequirement.Value+" - "+rangeRequirement.EndValue;
+          }
+        }
+        else{
+          return requirement.Value;
+        }
+      }
+    
+    private durationToText(duration?: DurationRos){
+        if(duration != null){
+            return this.requirementToText(duration.Requirement) 
+            + " "
+            + normalizeString(DurationType[duration.DurationType]);
+        }
+        return "None";
     }
 }

@@ -4,6 +4,9 @@ import { SensorHandlerService } from '../../common/services/sensor-handler.servi
 import { SensorAlertsRos } from '../live-parameters/models/ros/sensor-alert.ros';
 import { NgFor } from '@angular/common';
 import { SensorAlertsSocketService } from '../live-parameters/services/sensor-alerts-socket.service';
+import { RangeRequirementRos } from '../header/models/ros/range-requirement-ros';
+import { SensorRequirementRos } from '../header/models/ros/sensor-requirement-ros';
+import { DurationType } from '../header/models/enums/duration-type';
 
 @Component({
     selector: 'app-live-sensors',
@@ -14,7 +17,7 @@ import { SensorAlertsSocketService } from '../live-parameters/services/sensor-al
 })
 export class LiveSensorsComponent implements OnInit, OnDestroy{
     @ViewChildren(SensorCardComponent) sensors!: QueryList<SensorCardComponent>;
-    sensorStates: SensorAlertsRos[] = []
+    sensorStates: SensorAlertsRos[] = [];
 
     constructor(private _sensorHandlerService: SensorHandlerService, private _sensorAlertsSocketService: SensorAlertsSocketService){}
     

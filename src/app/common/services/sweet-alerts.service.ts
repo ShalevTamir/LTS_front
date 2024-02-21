@@ -1,11 +1,22 @@
 import { Injectable } from "@angular/core";
-import Swal, { SweetAlertResult } from "sweetalert2";
+import Swal, { SweetAlertOptions, SweetAlertResult } from "sweetalert2";
 import { Subtitle } from "../models/subtitle";
 
 @Injectable({
     providedIn: 'root'
 })
 export class SweetAlertsService{
+    async customAlert(options: SweetAlertOptions){
+        return await Swal.fire({
+            background: 'radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%)',
+            color: 'white',
+            customClass: {
+                confirmButton: "swal-btn-confirm"
+            },
+            ...options
+        });
+    }
+
     async inputAlert(title: string, subtitle: string = "") : Promise<SweetAlertResult<any>>{
         return await Swal.fire({
             title: title,
