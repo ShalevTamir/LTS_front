@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import Swal, { SweetAlertResult } from "sweetalert2";
+import { Subtitle } from "../models/subtitle";
 
 @Injectable({
     providedIn: 'root'
@@ -19,12 +20,27 @@ export class SweetAlertsService{
             }
         });
     }
-    async multipleInputAlert(title: string, subtitles: string[]): Promise<SweetAlertResult>{
+
+    async test(){
+        return await Swal.fire({
+            title: 'Input something',
+            input: 'textarea'
+          })
+    }
+
+    async multipleInputAlert(title: string, subtitles: Subtitle[]): Promise<SweetAlertResult>{
         
         return await Swal.fire({
             title: title,
             html: this._generateMultipleInputsHtml(subtitles),
             showCancelButton: true,
+            width: 650,
+            background: 'radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%)',
+            color: 'white',
+            
+            customClass: {
+                confirmButton: "swal-btn-confirm"
+            },
             preConfirm: () => {
                 let inputs: (HTMLInputElement | null)[] = [];
                 for(let i=0; i < subtitles.length; i++){
@@ -53,11 +69,15 @@ export class SweetAlertsService{
         });
     }
 
-    private _generateMultipleInputsHtml(subtitles: string[]){
-        return subtitles
-        .map((subtitle, index) => {
-            return `<label for="swal-input-${index+1} custom-swal2-input">${subtitle}</label>
-            <input id="swal-input-${index+1}" class="swal2-input custom-swal2-input">`;
+    private _generateMultipleInputsHtml(subtitles: Subtitle[]){
+        return `<style>.swal2-validation-message{background-color:transparent !important; color: white;}</style>`+subtitles
+        .map((subtitle: Subtitle, index) => {
+            return `<label for="swal-input-${index+1} custom-swal2-input" style='display:block;'>${subtitle.subtitleDescription}</label>`.concat(
+                    subtitle.expand ? 
+                    `<textarea id="swal-input-${index+1}" class="swal2-textarea custom-swal2-input"> </textarea>` :
+                    `<input id="swal-input-${index+1}" class="swal2-input custom-swal2-input" />`);
+                    
+            
         })
         .join("\n");
     }

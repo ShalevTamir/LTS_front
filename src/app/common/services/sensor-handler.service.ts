@@ -7,6 +7,7 @@ import { DirectSensorDto } from "../../components/header/models/dtos/direct-sens
 import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
 import { SensorAlertsRos } from "../../components/live-parameters/models/ros/sensor-alert.ros";
 import { SensorRequirementRos } from "../../components/header/models/ros/sensor-requirement-ros";
+import { BaseRequirementRos } from "../../components/header/models/ros/base-requirement-ros";
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +17,10 @@ export class SensorHandlerService{
         
     }
     async addDynamicSensorAsync(){
-        let userInput: SweetAlertResult = (await this._sweetAlertsService.multipleInputAlert("Add Dynamic Sensor", ["Sensor Name","Sensor Description"]));
+        let userInput: SweetAlertResult = (await this._sweetAlertsService.multipleInputAlert("Add Dynamic Sensor", [
+            {subtitleDescription: "Sensor Name", expand: false},
+            {subtitleDescription: "Sensor Description", expand: true}
+        ]));
         let [sensorName, sensorDescription] = userInput.value;
         this._httpClient.post(LIVE_TELE_URL+"/live-sensor-alerts/add-sensor",new DirectSensorDto(sensorName, sensorDescription))
         .subscribe({
