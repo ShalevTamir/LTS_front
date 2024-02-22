@@ -30,49 +30,54 @@ export class SensorHandlerService{
     private parseSensorRequirements = async (...inputs: string[]) => {
         let [sensorName, sensorRequirements] = inputs;
         let reqRes = this._httpClient.post<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensor-alerts/add-sensor",new DirectSensorDto(sensorName, sensorRequirements));
-        let parsedRequirements: SensorRequirementRos[] = await firstValueFrom(reqRes);
-        console.log(parsedRequirements);
-        let requirementsHtml = 
-        `<style>
-        @font-face {
-            font-family: 'Montserrat';
-            src: url('../../../assets/fonts/Montserrat-VariableFont_wght.ttf');
+        let parsedRequirements: SensorRequirementRos[] = [];
+        try{
+            parsedRequirements = await firstValueFrom(reqRes);
         }
-
-        .requirement-card {
-            border-radius: 30px 15px;
-            border: 1px solid #ffffff70;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
+        catch(e){
+            if(e instanceof HttpErrorResponse){
+                await this._sweetAlertsService.errorAlert(e.error);
+            }
         }
-
-        .requirement-card .sensor-name{
-            font-size: 25px;
+        if(parsedRequirements.length){
+            let requirementsHtml = 
+            `<style>
+    
+            .requirement-card {
+                border-radius: 30px 15px;
+                border: 1px solid #ffffff70;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 15px;
+            }
+    
+            .requirement-card .sensor-name{
+                font-size: 25px;
+            }
+            
+            .requirement-card .sensor-value, .requirement-card .sensor-duration{
+                text-align: center;
+                font-size: 17px;
+            }
+            
+            .requirement-card *{
+                margin-bottom: 10px;
+            }
+            </style>`+
+            parsedRequirements.map((sensorRequirement) => 
+            `<div class="requirement-card">
+            <span class="sensor-name">${sensorRequirement.ParameterName}</span>
+            <span class="sensor-value">Range: ${this.requirementToText(sensorRequirement.Requirement)}</span>
+            <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
+            </div>`).join('\n');
+            await this._sweetAlertsService.customAlert({
+                title: "Sensor Requirements",
+                html: requirementsHtml,
+                confirmButtonText: 'Confirm',
+                showCancelButton: true
+            });
         }
-        
-        .requirement-card .sensor-value, .requirement-card .sensor-duration{
-            text-align: center;
-            font-size: 17px;
-        }
-        
-        .requirement-card *{
-            margin-bottom: 10px;
-        }
-        </style>`+
-        parsedRequirements.map((sensorRequirement) => 
-        `<div class="requirement-card">
-        <span class="sensor-name">${sensorRequirement.ParameterName}</span>
-        <span class="sensor-value">Range: ${this.requirementToText(sensorRequirement.Requirement)}</span>
-        <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
-        </div>`).join('\n');
-        await this._sweetAlertsService.customAlert({
-            title: "Sensor Requirements",
-            html: requirementsHtml,
-            confirmButtonText: 'Confirm',
-            showCancelButton: true
-        });
     }
 
     async getSensorsState(): Promise<SensorAlertsRos[]>{
