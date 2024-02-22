@@ -2,17 +2,28 @@ import { Injectable } from "@angular/core";
 import Swal, { SweetAlertOptions, SweetAlertResult } from "sweetalert2";
 import { Subtitle } from "../models/subtitle";
 
+export interface customPreConfirm{
+    preConfirmAsync: (...args: any[]) => Promise<void>,
+    preConfirmArgs: any[]
+}
+
 @Injectable({
     providedIn: 'root'
 })
 export class SweetAlertsService{
-    async customAlert(options: SweetAlertOptions){
+    async customAlert(options: SweetAlertOptions, customPreConfirm: customPreConfirm): Promise<SweetAlertResult<any>>{
+        
         return await Swal.fire({
             background: 'radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%)',
             color: 'white',
             customClass: {
                 confirmButton: "swal-btn-confirm"
             },
+             
+            preConfirm: async () => {
+                await customPreConfirm.preConfirmAsync(...customPreConfirm.preConfirmArgs);
+            },
+            showLoaderOnConfirm: true,
             ...options
         });
     }
@@ -39,7 +50,7 @@ export class SweetAlertsService{
           })
     }
 
-    async multipleInputAlert(title: string, subtitles: Subtitle[], preConfirmCallback?: (...inputs: string[]) => Promise<void>): Promise<SweetAlertResult>{
+    async multipleInputAlert(title: string, subtitles: Subtitle[], preConfirmCallback?: (...inputs: string[]) => Promise<void>, options?: SweetAlertOptions): Promise<SweetAlertResult>{
         
         return await Swal.fire({
             title: title,
@@ -48,7 +59,6 @@ export class SweetAlertsService{
             width: 650,
             background: 'radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%)',
             color: 'white',
-            showLoaderOnConfirm: true,
             customClass: {
                 confirmButton: "swal-btn-confirm"
             },
@@ -66,7 +76,8 @@ export class SweetAlertsService{
                     await preConfirmCallback(...inputValues)
                 }
                 return inputValues
-              }
+              },
+            ...options
         });
     }
 

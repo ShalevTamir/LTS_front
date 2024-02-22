@@ -1,3 +1,3 @@
 export interface BaseRequirementRos{
-    Value: number;
+    Value: string;
 }
