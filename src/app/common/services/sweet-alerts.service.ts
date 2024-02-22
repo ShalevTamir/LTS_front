@@ -95,7 +95,7 @@ export class SweetAlertsService{
         .map((subtitle: Subtitle, index) => {
             return `<label for="swal-input-${index+1} custom-swal2-input" style='display:block;'>${subtitle.subtitleDescription}</label>`.concat(
                     subtitle.expand ? 
-                    `<textarea id="swal-input-${index+1}" class="swal2-textarea custom-swal2-input"> </textarea>` :
+                    `<textarea id="swal-input-${index+1}" class="swal2-textarea custom-swal2-input"></textarea>` :
                     `<input id="swal-input-${index+1}" class="swal2-input custom-swal2-input" />`);
                     
             

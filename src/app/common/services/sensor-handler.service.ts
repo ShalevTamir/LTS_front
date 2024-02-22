@@ -6,7 +6,7 @@ import { HttpClient, HttpErrorResponse, HttpResponse } from "@angular/common/htt
 import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
 import { SensorAlertsRos } from "../../components/live-parameters/models/ros/sensor-alert.ros";
 import { SensorRequirementRos } from "../../components/header/models/ros/sensor-requirement-ros";
-import { BaseRequirementRos } from "../../components/header/models/ros/base-requirement-ros";
+import { BaseRequirementRos, isRangeRequirement } from "../../components/header/models/ros/base-requirement-ros";
 import { DurationRos } from "../../components/header/models/ros/duration-ros";
 import { DurationType } from "../../components/header/models/enums/duration-type";
 import { normalizeString } from "../utils/string-utils";
@@ -88,11 +88,12 @@ export class SensorHandlerService{
     }
     
     private async showSensorRequirementsAsync(sensorName: string, parsedRequirements: SensorRequirementRos[]){
+        console.log(parsedRequirements);
         let requirementsHtml = this.sensorRequirementAlertCss +
         parsedRequirements.map((sensorRequirement) => 
         `<div class="requirement-card">
         <span class="sensor-name">${sensorRequirement.ParameterName}</span>
-        <span class="sensor-value">Range: ${this.requirementToText(sensorRequirement.Requirement)}</span>
+        <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${this.requirementToText(sensorRequirement.Requirement)}</span>
         <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
         </div>`).join('\n');
         await this._sweetAlertsService.customAlert({
@@ -109,7 +110,6 @@ export class SensorHandlerService{
             SensorName:  sensorName,
             Requirements: parsedRequirements
         }
-        //return infinity which can't be parsed to a number at the server
         try{
             let reqRes = this._httpClient.post(LIVE_TELE_URL+"/live-sensors/add-sensor", dynamicSensor);
             await firstValueFrom(reqRes);
@@ -123,8 +123,7 @@ export class SensorHandlerService{
         this._sweetAlertsService.successAlert("Sensor " + sensorName + " added successfuly");
     }
     private requirementToText(requirement: BaseRequirementRos){
-        console.log(requirement);
-        if('EndValue' in requirement){
+        if(isRangeRequirement(requirement)){
           let rangeRequirement = requirement as RangeRequirementRos;
           if(+rangeRequirement.Value == -Infinity){
             return "Bellow " + rangeRequirement.EndValue;
@@ -139,7 +138,7 @@ export class SensorHandlerService{
         else{
           return requirement.Value;
         }
-      }
+    }
     
     private durationToText(duration?: DurationRos){
         if(duration != null){
