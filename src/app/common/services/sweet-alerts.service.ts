@@ -11,25 +11,29 @@ export interface customPreConfirm{
     providedIn: 'root'
 })
 export class SweetAlertsService{
+    readonly commonOptions: SweetAlertOptions = {
+        background: 'radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%)',
+        color: 'white',
+        customClass: {
+            confirmButton: "swal-btn-confirm"
+        }
+    }
+
     async customAlert(options: SweetAlertOptions, customPreConfirm: customPreConfirm): Promise<SweetAlertResult<any>>{
         
         return await Swal.fire({
-            background: 'radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%)',
-            color: 'white',
-            customClass: {
-                confirmButton: "swal-btn-confirm"
-            },
-             
+            ...this.commonOptions,
             preConfirm: async () => {
                 await customPreConfirm.preConfirmAsync(...customPreConfirm.preConfirmArgs);
             },
             showLoaderOnConfirm: true,
             ...options
-        });
+        } as SweetAlertOptions);
     }
 
     async inputAlert(title: string, subtitle: string = "") : Promise<SweetAlertResult<any>>{
         return await Swal.fire({
+            ...this.commonOptions,
             title: title,
             input: "text",
             inputLabel: subtitle,
@@ -39,29 +43,18 @@ export class SweetAlertsService{
                     return "You need to write something!";
                 }
                 return "";
-            }
+            },
         });
-    }
-
-    async test(){
-        return await Swal.fire({
-            title: 'Input something',
-            input: 'textarea'
-          })
     }
 
     async multipleInputAlert(title: string, subtitles: Subtitle[], preConfirmCallback?: (...inputs: string[]) => Promise<void>, options?: SweetAlertOptions): Promise<SweetAlertResult>{
         
         return await Swal.fire({
+            ...this.commonOptions,
             title: title,
             html: this._generateMultipleInputsHtml(subtitles),
             showCancelButton: true,
             width: 650,
-            background: 'radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%)',
-            color: 'white',
-            customClass: {
-                confirmButton: "swal-btn-confirm"
-            },
             preConfirm: async () => {
                 let inputs: (HTMLInputElement | null)[] = [];
                 for(let i=0; i < subtitles.length; i++){
@@ -77,21 +70,23 @@ export class SweetAlertsService{
                 }
                 return inputValues
               },
-            ...options
-        });
+              ...options
+        } as SweetAlertOptions);
     }
 
     public errorAlert(errorMessage: string): void{
         Swal.fire({
             title: errorMessage,
             icon: 'error',
+            ...this.commonOptions
         });
     }
 
     public successAlert(successMessage: string): void{
         Swal.fire({
             title: successMessage,
-            icon: 'success'
+            icon: 'success',
+            ...this.commonOptions
         });
     }
 

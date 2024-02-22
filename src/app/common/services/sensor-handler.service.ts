@@ -49,11 +49,30 @@ export class SensorHandlerService{
         await this._sweetAlertsService.multipleInputAlert("Add Dynamic Sensor", [
             {subtitleDescription: "Sensor Name", expand: false},
             {subtitleDescription: "Sensor Description", expand: true}
-        ], this.parseSensorRequirementsAsync, {showLoaderOnConfirm: true});
+        ], this.checkIsSensorDuplicate, {showLoaderOnConfirm: true});
+    }
+    
+    async getSensorsState(): Promise<SensorAlertsRos[]>{
+        let reqRes = this._httpClient.get<SensorAlertsRos[]>(LIVE_TELE_URL+"/live-sensor-alerts");
+        return await firstValueFrom(reqRes);
     }
 
-    private parseSensorRequirementsAsync = async (...inputs: string[]) => {
+    private checkIsSensorDuplicate = async (...inputs: string[]) => {
         let [sensorName, sensorRequirements] = inputs;
+        let reqRes = this._httpClient.get<boolean>(LIVE_TELE_URL+"/live-sensors/has-sensor", {params: {
+            sensorName: sensorName
+        }});
+
+        let hasSensorDuplicate = await firstValueFrom(reqRes);
+        if(hasSensorDuplicate){
+            this._sweetAlertsService.errorAlert("Sensor with name "+sensorName+" already exists, please enter a different name");
+        }
+        else{
+            await this.parseSensorRequirementsAsync(sensorName, sensorRequirements);
+        }
+    }
+
+    private parseSensorRequirementsAsync = async (sensorName: string, sensorRequirements: string) => {
        
         let reqRes = this._httpClient.get<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
             sensorRequirements: sensorRequirements
@@ -84,7 +103,7 @@ export class SensorHandlerService{
         }, {preConfirmAsync: this.sendSensorToAddAsync, preConfirmArgs: [sensorName, parsedRequirements]});
         
     }
-
+    
     private sendSensorToAddAsync = async (sensorName: string, parsedRequirements: SensorRequirementRos[]) => {
         let dynamicSensor: DynamicSensorDto = {
             SensorName:  sensorName,
@@ -103,12 +122,6 @@ export class SensorHandlerService{
         }
         this._sweetAlertsService.successAlert("Sensor " + sensorName + " added successfuly");
     }
-    
-    async getSensorsState(): Promise<SensorAlertsRos[]>{
-        let reqRes = this._httpClient.get<SensorAlertsRos[]>(LIVE_TELE_URL+"/live-sensor-alerts");
-        return await firstValueFrom(reqRes);
-    }
-
     private requirementToText(requirement: BaseRequirementRos){
         console.log(requirement);
         if('EndValue' in requirement){
