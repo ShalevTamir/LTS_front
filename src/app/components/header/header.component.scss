@@ -1,5 +1,10 @@
 @import "../../../styles/variables.scss";
 
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../../../assets/fonts/Montserrat-VariableFont_wght.ttf');
+}
+
 $logo-size: 50px;
 
 .header {
@@ -71,4 +76,28 @@ $logo-size: 50px;
 .logo{
     width: 44px;
     margin: 5px 5px 5px 0;
+}
+
+::ng-deep{
+    .custom-swal2-input{
+        border-color: #9b9ca6;
+    }
+
+    .swal-btn-confirm{
+        background-color:#0069ff  !important;
+        &:focus{
+            box-shadow: none !important;
+        }
+    }
+    #swal-input-1{
+        margin-bottom: 50px;
+    }
+    #swal-input-2{
+        max-height: 300px;
+        height: 275px;
+        width: 500px;
+    }
+    .swal2-popup{
+        font-family: 'Montserrat' !important;
+    }
 }
