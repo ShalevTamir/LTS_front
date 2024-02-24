@@ -77,6 +77,8 @@ export class SensorHandlerService{
         let reqRes = this._httpClient.get<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
             sensorRequirements: sensorRequirements
         }});
+
+
       
         let parsedRequirements = await firstValueFrom(reqRes);;
         if(parsedRequirements.length){
@@ -126,7 +128,7 @@ export class SensorHandlerService{
         if(isRangeRequirement(requirement)){
           let rangeRequirement = requirement as RangeRequirementRos;
           if(+rangeRequirement.Value == -Infinity){
-            return "Bellow " + rangeRequirement.EndValue;
+            return "Below " + rangeRequirement.EndValue;
           }
           else if(+rangeRequirement.EndValue == Infinity){
             return "Above " + rangeRequirement.Value;

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ParameterCardComponent } from './components/parameter-card/parameter-card.component';
 import { NgFor } from '@angular/common';
 import { FilteredFrame } from '../../common/models/ros/filtered-frame.ros';
@@ -18,9 +18,10 @@ import { GaugesDataPersistenceService } from './components/parameter-card/servic
   styleUrl: './live-parameters.component.scss',
 })
 export class LiveParametersComponent implements OnInit, OnDestroy{
-  parameters: string[];
+  parameters: string[];  
   @ViewChildren(ParameterCardComponent) cards!: QueryList<ParameterCardComponent>;
   public title: string ="Live Telemetry Parameters";
+  parametersNamesOptions: string[] = []
   constructor(
     private _liveParametersSocket: LiveParametersSocketService,
     private _sensorAlerts: SensorAlertsService,
@@ -34,6 +35,7 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
     }
     
     ngOnInit(): void {
+    this._parametersConfigService.getParameterNames().then((parameterNames: string[]) => this.parametersNamesOptions = parameterNames);
       this._liveParametersSocket.initWebSocket(this.parameters, this.updateAllCharts);
       this._sensorAlerts.init();
       this.configGauges(this.parameters);

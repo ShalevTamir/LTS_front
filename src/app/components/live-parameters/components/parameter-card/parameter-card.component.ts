@@ -38,15 +38,14 @@ export class ParameterCardComponent implements OnInit{
 
   // add card
   formControl = new FormControl('');
-  parametersNamesOptions: string[] = [];
+  @Input() parametersNamesOptions: string[] = [];
   filteredOptions!: Observable<string[]>;
   displayAddCardButton: boolean = true;
 
-  constructor(private _parametersConfigService: ParametersConfigService, private _liveParametersSocketService: LiveParametersSocketService){
+  constructor(private _liveParametersSocketService: LiveParametersSocketService){
   }
 
   ngOnInit(): void {
-    this._parametersConfigService.getParameterNames().then((parameterNames: string[]) => this.parametersNamesOptions = parameterNames);
     this.filteredOptions = this.formControl.valueChanges.pipe(
       startWith(''),
       map(value => this.filterOptions(value || ''))
