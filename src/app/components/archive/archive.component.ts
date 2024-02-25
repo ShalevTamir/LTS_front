@@ -80,7 +80,7 @@ export class ArchiveComponent implements AfterViewInit{
   
   protected updateTabularData(){
     this.expandableTable.updateData(this.fetchedData, this.selectedDataType);
-    this.expandableTableData = this.fetchedData.map((value) => {return value.TimeStamp});
+    this.expandableTableData = [...new Set(this.fetchedData.map((value) => {return value.TimeStamp}))];
   }
 
   private async fetchData(){

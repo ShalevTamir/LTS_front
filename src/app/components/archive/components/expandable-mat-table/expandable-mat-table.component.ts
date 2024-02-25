@@ -8,7 +8,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { ArchiveData } from '../../../../common/models/custom-types';
 import { MatTableComponent } from "./components/mat-table/mat-table.component";
 import { FilteredFrame } from '../../../../common/models/ros/filtered-frame.ros';
-import { MongoSensorAlertsRos } from '../../models/ros/mongo-sensor-alert.ros';
+import { MongoSensorAlertRos, MongoSensorAlertsRos } from '../../models/ros/mongo-sensor-alert.ros';
 import { DataType as ArchiveDataType } from '../../models/enums/data-type';
 import { MongoSensorAlert } from '../../models/mongo-sensor-alert';
 import { SensorState } from '../../../live-parameters/models/enums/sensor-state.enum';
@@ -73,8 +73,8 @@ export class ExpandableMatTableComponent implements AfterViewInit{
     }
     else if(this.dataType === ArchiveDataType.ALERTS){
       this.expandedColumnsToDisplay = ['sensorName', 'sensorStatus']
-      let clickedAlerts: MongoSensorAlertsRos[] = this.fetchedData.filter((value) => value.TimeStamp == clickedTimestamp) as MongoSensorAlertsRos[];
-      this.expandedDataSource = clickedAlerts.map((alert: MongoSensorAlertsRos): MongoSensorAlert => {
+      let clickedAlerts: MongoSensorAlertsRos = this.fetchedData.find((value) => value.TimeStamp == clickedTimestamp) as MongoSensorAlertsRos;
+      this.expandedDataSource = clickedAlerts.MongoAlerts.map((alert: MongoSensorAlertRos): MongoSensorAlert => {
         let strSensorStatus = SensorState[alert.SensorStatus];
         return {
         sensorName: alert.SensorName,
