@@ -1,3 +1,8 @@
+<span *ngIf="!sensorStates.length" id="no-sensors-span">No sensors in the system</span>
 <div id="cards-container">
-    <app-sensor-card *ngFor="let sensorState of sensorStates" [sensorName]="sensorState.SensorName" [currentSensorState]="sensorState.CurrentStatus" (deleteSensorEvent)="deleteSensorAsync($event)"></app-sensor-card>
+    <app-sensor-card 
+    *ngFor="let sensorState of sensorStates" 
+    [sensorName]="sensorState.SensorName" 
+    [currentSensorState]="sensorState.CurrentStatus" 
+    (deleteSensorEvent)="deleteSensorAsync($event)"></app-sensor-card>
 </div>

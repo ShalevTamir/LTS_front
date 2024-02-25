@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } fro
 import { SensorCardComponent } from "./components/sensor-card/sensor-card.component";
 import { SensorHandlerService } from '../../common/services/sensor-handler.service';
 import { SensorAlertsRos } from '../live-parameters/models/ros/sensor-alert.ros';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { SensorAlertsSocketService } from '../live-parameters/services/sensor-alerts-socket.service';
 import { RangeRequirementRos } from '../header/models/ros/range-requirement-ros';
 import { SensorRequirementRos } from '../header/models/ros/sensor-requirement-ros';
@@ -13,7 +13,7 @@ import { DurationType } from '../header/models/enums/duration-type';
     standalone: true,
     templateUrl: './live-sensors.component.html',
     styleUrl: './live-sensors.component.scss',
-    imports: [SensorCardComponent, NgFor]
+    imports: [SensorCardComponent, NgFor, NgIf]
 })
 export class LiveSensorsComponent implements OnInit, OnDestroy{
     @ViewChildren(SensorCardComponent) sensors!: QueryList<SensorCardComponent>;

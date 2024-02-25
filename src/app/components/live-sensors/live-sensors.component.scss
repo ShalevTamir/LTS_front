@@ -1,6 +1,25 @@
+@font-face {
+    font-family: Montserrat;
+    src: url(../../../assets/fonts/Montserrat-VariableFont_wght.ttf);
+}
+
 #cards-container{
     margin-top:2%;
     display: grid;
     grid-template-columns: repeat(4,1fr);
     gap: 15px; row-gap: 15px;
+}
+
+#no-sensors-span{
+    font-family: Montserrat;
+    width: 92vw;
+    font-size: 40px;
+    height: 80vh;
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+    align-items: center;
+    padding: 200px;
+    text-align: center;
+    line-height: 1.3;
 }
