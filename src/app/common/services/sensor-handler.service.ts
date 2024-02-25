@@ -12,6 +12,7 @@ import { DurationType } from "../../components/header/models/enums/duration-type
 import { normalizeString } from "../utils/string-utils";
 import { RangeRequirementRos } from "../../components/header/models/ros/range-requirement-ros";
 import { DynamicSensorDto } from "../../components/header/models/dtos/dynamic-sensor.dto";
+import { ParametersConfigService } from "../../components/live-parameters/services/parameters-ranges.service";
 
 @Injectable({
     providedIn: 'root'
@@ -42,7 +43,11 @@ export class SensorHandlerService{
     }
     </style>`;
 
-    constructor(private _sweetAlertsService: SweetAlertsService, private _httpClient: HttpClient){
+    constructor(
+        private _sweetAlertsService: SweetAlertsService,
+        private _httpClient: HttpClient,
+        private _parametersConfigService: ParametersConfigService
+        ){
         
     }
     async addDynamicSensorAsync(){
@@ -74,18 +79,27 @@ export class SensorHandlerService{
 
     private parseSensorRequirementsAsync = async (sensorName: string, sensorRequirements: string) => {
        
-        let reqRes = this._httpClient.get<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
+        let parseSensorRequest = this._httpClient.get<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
             sensorRequirements: sensorRequirements
         }});
-
-
-      
-        let parsedRequirements = await firstValueFrom(reqRes);;
-        if(parsedRequirements.length){
-            this.showSensorRequirementsAsync(sensorName, parsedRequirements);
+        let parameterNames = await this._parametersConfigService.getParameterNames();
+        let parsedRequirements = await firstValueFrom(parseSensorRequest);        
+        let unknownParameterNames = parsedRequirements.filter(
+            (parsedRequirement) => !parameterNames.some(
+                (parameterName) => parameterName.toLowerCase() == parsedRequirement.ParameterName
+                ))
+                .map((parsedRequirement) => parsedRequirement.ParameterName);
+        if(!parsedRequirements.length){
+            this._sweetAlertsService.errorAlert("No sensor requirements detected");
+        }
+        else if(unknownParameterNames.length){
+            if(unknownParameterNames.length === 1)
+                this._sweetAlertsService.errorAlert("Parameter "+unknownParameterNames[0]+" is not recognized");
+            else
+                this._sweetAlertsService.errorAlert("Parameters "+unknownParameterNames.join(', ')+" are not recognized");
         }
         else{
-            this._sweetAlertsService.errorAlert("No sensor requirements detected");
+            this.showSensorRequirementsAsync(sensorName, parsedRequirements);
         }
     }
     
