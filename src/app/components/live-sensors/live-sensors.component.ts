@@ -22,7 +22,7 @@ export class LiveSensorsComponent implements OnInit, OnDestroy{
     constructor(private _sensorHandlerService: SensorHandlerService, private _sensorAlertsSocketService: SensorAlertsSocketService){}
     
     ngOnInit(): void {
-        this._sensorHandlerService.getSensorsState().then((sensorStates: SensorAlertsRos[]) => {
+        this._sensorHandlerService.getSensorsStateAsync().then((sensorStates: SensorAlertsRos[]) => {
             this.sensorStates = sensorStates;
         })
         this._sensorAlertsSocketService.initWebSocket(this.processSensorUpdate)
@@ -34,6 +34,11 @@ export class LiveSensorsComponent implements OnInit, OnDestroy{
 
     processSensorUpdate = (alert: SensorAlertsRos) => {
         this.sensors.find((sensor) => sensor.sensorName == alert.SensorName)?.updateSensorStatus(alert.CurrentStatus);
+    }
+
+    async deleteSensorAsync(sensorName: string){
+        await this._sensorHandlerService.removeDynamicSensorAsync(sensorName);
+        this.sensorStates = this.sensorStates.filter((sensorState) => sensorState.SensorName != sensorName)
     }
 
 }

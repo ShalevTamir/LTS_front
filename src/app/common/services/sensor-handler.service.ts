@@ -2,7 +2,7 @@ import { SweetAlertResult } from "sweetalert2";
 import { SweetAlertsService } from "./sweet-alerts.service";
 import { LIVE_TELE_URL } from "../constants";
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
 import { SensorAlertsRos } from "../../components/live-parameters/models/ros/sensor-alert.ros";
 import { SensorRequirementRos } from "../../components/header/models/ros/sensor-requirement-ros";
@@ -54,15 +54,32 @@ export class SensorHandlerService{
         await this._sweetAlertsService.multipleInputAlert("Add Dynamic Sensor", [
             {subtitleDescription: "Sensor Name", expand: false},
             {subtitleDescription: "Sensor Description", expand: true}
-        ], this.checkIsSensorDuplicate, {showLoaderOnConfirm: true});
+        ], this.checkIsSensorDuplicateAsync, {showLoaderOnConfirm: true});
     }
     
-    async getSensorsState(): Promise<SensorAlertsRos[]>{
+    async removeDynamicSensorAsync(sensorName: string){
+        try{
+            const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+            });
+            let reqRes = this._httpClient.post(LIVE_TELE_URL+"/live-sensors/remove-sensor", JSON.stringify(sensorName), {headers: headers});
+            await firstValueFrom(reqRes);
+        }
+        catch(e){
+            if(e instanceof HttpErrorResponse){
+                console.log(e);
+                this._sweetAlertsService.errorAlert(e.error);
+            }
+            return;
+        }
+    }
+
+    async getSensorsStateAsync(): Promise<SensorAlertsRos[]>{
         let reqRes = this._httpClient.get<SensorAlertsRos[]>(LIVE_TELE_URL+"/live-sensor-alerts");
         return await firstValueFrom(reqRes);
     }
 
-    private checkIsSensorDuplicate = async (...inputs: string[]) => {
+    private checkIsSensorDuplicateAsync = async (...inputs: string[]) => {
         let [sensorName, sensorRequirements] = inputs;
         let reqRes = this._httpClient.get<boolean>(LIVE_TELE_URL+"/live-sensors/has-sensor", {params: {
             sensorName: sensorName
