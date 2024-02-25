@@ -3,8 +3,10 @@ import { LiveParametersComponent } from './components/live-parameters/live-param
 import { ArchiveComponent } from './components/archive/archive.component';
 import { LiveSensorsComponent } from './components/live-sensors/live-sensors.component';
 
+export const TELE_PARAMS_ROUTE = 'live-telemetry-parameters';
+
 export const routes: Routes = [
-    { path: 'live-telemetry-parameters', component: LiveParametersComponent },
+    { path: TELE_PARAMS_ROUTE, component: LiveParametersComponent },
     { path: 'archive', component: ArchiveComponent },
     { path: 'live-telemetry-sensors', component: LiveSensorsComponent }
 ];
