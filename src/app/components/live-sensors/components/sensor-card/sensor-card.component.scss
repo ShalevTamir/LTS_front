@@ -60,9 +60,14 @@
         justify-self: right;
         margin-right: 8px;
     }
-    mat-icon{
-        color:white;
-        transform: scale(1.2);
+    .close-btn{
+        mat-icon{
+            color:white;
+            transform: scale(1.2);
+        }
+        &:hover{
+            transform: scale(1.4);
+        }
     }
 }
 

@@ -141,9 +141,12 @@ app-gauge-chart{
     height: 10px;
     width:100%;
     .close-btn{
-
         mat-icon{
             color: #4255d4;
+            
+        }
+        &:hover{
+            transform: scale(1.4);
         }
     }
 }
