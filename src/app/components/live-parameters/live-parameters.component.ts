@@ -64,6 +64,7 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
   }
 
   updateAllCharts = (filteredTeleFrame: FilteredFrame) => {
+    console.log(filteredTeleFrame.Parameters);
     this.cards.forEach(card => {
       let cardTeleParameter: TelemetryParameter | undefined = 
         filteredTeleFrame.Parameters.find(parameter => parameter.Name == card.parameterName);
@@ -76,5 +77,7 @@ export class LiveParametersComponent implements OnInit, OnDestroy{
   
   }
 
-    
+   removeParameter(parameterName: string){
+    this.parameters = this.parameters.filter((parameterNameOption) => parameterNameOption != parameterName)
+   } 
 }

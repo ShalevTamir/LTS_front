@@ -30,7 +30,7 @@ $chart-logo-size: $menu-size;
 .card {
     height: 279.8px;
     background: radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%);
-    padding: 15px 15px 0px 30px;
+    padding: 0 15px 0 15px;
     border-radius: 6px;
     justify-content: center;
     &:has(> .add-card){
@@ -101,6 +101,7 @@ $chart-logo-size: $menu-size;
     #btn-menu-container{
         justify-self: end;
         grid-column: 3;
+        margin-bottom: 5px;
         #btn-menu{
             bottom:12px;
         }
@@ -135,9 +136,16 @@ app-gauge-chart{
 
 #title-container{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto 1fr 1fr;
+    align-items: center;
     height: 10px;
     width:100%;
+    .close-btn{
+
+        mat-icon{
+            color: #4255d4;
+        }
+    }
 }
 
 .card-chart{

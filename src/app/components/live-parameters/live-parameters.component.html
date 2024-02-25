@@ -1,4 +1,4 @@
 <div id="cards-container">
-    <app-parameter-card *ngFor="let parameter of parameters" [parameterName]="parameter"></app-parameter-card>
+    <app-parameter-card *ngFor="let parameter of parameters" [parameterName]="parameter" (removeParameterEmitter)="removeParameter($event)"></app-parameter-card>
     <app-parameter-card cardType="addCard" (addCardEmitter)="handleAddParameter($event)" [parametersNamesOptions]="parametersNamesOptions"></app-parameter-card>
 </div>

@@ -28,6 +28,7 @@ export class ParameterCardComponent implements OnInit{
   @Input() parameterName: string = "Parameter Name";
   @Input() cardType: string = "chart";
   @Output() addCardEmitter: EventEmitter<string> = new EventEmitter();
+  @Output() removeParameterEmitter = new EventEmitter<string>();
   @ViewChild(ChartjsChartComponent) chartjs: ChartjsChartComponent | undefined;
   @ViewChild(GaugeChartComponent) gauge: GaugeChartComponent | undefined;
   chartTypes: string[] = Object.keys(ConfigChartType).filter(value => isNaN(Number(value)));
@@ -91,5 +92,10 @@ export class ParameterCardComponent implements OnInit{
       }
     }, 1);
     
+  }
+
+  public async removeParameter(){
+    await this._liveParametersSocketService.removeParameter(this.parameterName);
+    this.removeParameterEmitter.emit(this.parameterName);
   }
 }

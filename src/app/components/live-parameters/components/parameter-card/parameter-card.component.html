@@ -1,6 +1,9 @@
 <div class="card">
     <div *ngIf="cardType == 'chart'" class="chart-container">
         <div id="title-container">
+            <button class="close-btn" mat-icon-button (click)="removeParameter()">
+                <mat-icon>close</mat-icon>
+            </button>
             <span>{{parameterName}}</span>
             
             <div id="btn-menu-container">
