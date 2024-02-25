@@ -37,7 +37,7 @@ export class SensorAlertsService{
             case SensorState.INVALID:
                 this._notificationsService.error(...notificationArgs);
                 break;
-            case SensorState.NEUTRAL:
+            case SensorState.NORMAL:
                 this._notificationsService.info(...notificationArgs);
                 break;
            

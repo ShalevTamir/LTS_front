@@ -1,5 +1,5 @@
 export enum SensorState{
-    NEUTRAL,
+    NORMAL,
     VALID,
     WARNING,
     INVALID
