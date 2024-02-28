@@ -1,4 +1,4 @@
-import { SweetAlertResult } from "sweetalert2";
+import Swal, { SweetAlertResult } from "sweetalert2";
 import { SweetAlertsService } from "./sweet-alerts.service";
 import { LIVE_TELE_URL } from "../constants";
 import { Injectable } from "@angular/core";
@@ -13,6 +13,11 @@ import { normalizeString } from "../utils/string-utils";
 import { RangeRequirementRos } from "../../components/header/models/ros/range-requirement-ros";
 import { DynamicSensorDto } from "../../components/header/models/dtos/dynamic-sensor.dto";
 import { ParametersConfigService } from "../../components/live-parameters/services/parameters-ranges.service";
+
+export interface parsedSensor{
+    sensorName: string,
+    sensorRequirements: SensorRequirementRos[]
+}
 
 @Injectable({
     providedIn: 'root'
@@ -54,7 +59,9 @@ export class SensorHandlerService{
         await this._sweetAlertsService.multipleInputAlert("Add Dynamic Sensor", [
             {subtitleDescription: "Sensor Name", expand: false},
             {subtitleDescription: "Sensor Description", expand: true}
-        ], this.checkIsSensorDuplicateAsync, {showLoaderOnConfirm: true});
+        ], this.parseSensorRequirementsAsync,
+            {showLoaderOnConfirm: true}
+            );
     }
     
     async removeDynamicSensorAsync(sensorName: string){
@@ -79,51 +86,30 @@ export class SensorHandlerService{
         return await firstValueFrom(reqRes);
     }
 
-    private checkIsSensorDuplicateAsync = async (...inputs: string[]) => {
-        let [sensorName, sensorRequirements] = inputs;
-        let reqRes = this._httpClient.get<boolean>(LIVE_TELE_URL+"/live-sensors/has-sensor", {params: {
-            sensorName: sensorName
-        }});
-
-        let hasSensorDuplicate = await firstValueFrom(reqRes);
-        if(hasSensorDuplicate){
-            this._sweetAlertsService.errorAlert("Sensor with name "+sensorName+" already exists, please enter a different name");
-        }
-        else{
-            await this.parseSensorRequirementsAsync(sensorName, sensorRequirements);
-        }
-    }
-
-    private parseSensorRequirementsAsync = async (sensorName: string, sensorRequirements: string) => {
-       
+    private parseSensorRequirementsAsync = async (clientInputs: string[]) => {
+        let [sensorName, sensorRequirements] = clientInputs;
         let parseSensorRequest = this._httpClient.get<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
+            sensorName: sensorName,
             sensorRequirements: sensorRequirements
         }});
-        let parameterNames = await this._parametersConfigService.getParameterNames();
-        let parsedRequirements = await firstValueFrom(parseSensorRequest);        
-        let unknownParameterNames = parsedRequirements.filter(
-            (parsedRequirement) => !parameterNames.some(
-                (parameterName) => parameterName.toLowerCase() == parsedRequirement.ParameterName
-                ))
-                .map((parsedRequirement) => parsedRequirement.ParameterName);
-        if(!parsedRequirements.length){
-            this._sweetAlertsService.errorAlert("No sensor requirements detected");
+        let parsedRequirements;
+        try{
+            parsedRequirements = await firstValueFrom(parseSensorRequest);        
         }
-        else if(unknownParameterNames.length){
-            if(unknownParameterNames.length === 1)
-                this._sweetAlertsService.errorAlert("Parameter "+unknownParameterNames[0]+" is not recognized");
-            else
-                this._sweetAlertsService.errorAlert("Parameters "+unknownParameterNames.join(', ')+" are not recognized");
+        catch(e){
+            if(e instanceof HttpErrorResponse){
+                Swal.showValidationMessage(e.error);
+                return false;
+            }
         }
-        else{
-            this.showSensorRequirementsAsync(sensorName, parsedRequirements);
-        }
+        this.showSensorRequirementsAsync(sensorName, parsedRequirements as SensorRequirementRos[])
+        return true;
+
     }
     
-    private async showSensorRequirementsAsync(sensorName: string, parsedRequirements: SensorRequirementRos[]){
-        console.log(parsedRequirements);
+    private showSensorRequirementsAsync = async (sensorName: string, sensorRequirements: SensorRequirementRos[]) => {
         let requirementsHtml = this.sensorRequirementAlertCss +
-        parsedRequirements.map((sensorRequirement) => 
+        sensorRequirements.map((sensorRequirement) => 
         `<div class="requirement-card">
         <span class="sensor-name">${sensorRequirement.ParameterName}</span>
         <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${this.requirementToText(sensorRequirement.Requirement)}</span>
@@ -134,7 +120,10 @@ export class SensorHandlerService{
             html: requirementsHtml,
             confirmButtonText: 'Confirm',
             showCancelButton: true,
-        }, {preConfirmAsync: this.sendSensorToAddAsync, preConfirmArgs: [sensorName, parsedRequirements]});
+            preConfirm: async () =>{
+                await this.sendSensorToAddAsync(sensorName, sensorRequirements);
+            }
+        });
         
     }
     

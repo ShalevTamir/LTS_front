@@ -7,6 +7,11 @@ export interface customPreConfirm{
     preConfirmArgs: any[]
 }
 
+export interface mulInputsCallbacks<T>{
+    validationCallback: (...inputs: string[]) => Promise<T | string>,
+    preConfirmCallback: (args: T) => Promise<void>
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -19,13 +24,10 @@ export class SweetAlertsService{
         }
     }
 
-    async customAlert(options: SweetAlertOptions, customPreConfirm: customPreConfirm): Promise<SweetAlertResult<any>>{
+    async customAlert(options: SweetAlertOptions): Promise<SweetAlertResult<any>>{
         
         return await Swal.fire({
             ...this.commonOptions,
-            preConfirm: async () => {
-                await customPreConfirm.preConfirmAsync(...customPreConfirm.preConfirmArgs);
-            },
             showLoaderOnConfirm: true,
             ...options
         } as SweetAlertOptions);
@@ -47,7 +49,7 @@ export class SweetAlertsService{
         });
     }
 
-    async multipleInputAlert(title: string, subtitles: Subtitle[], preConfirmCallback?: (...inputs: string[]) => Promise<void>, options?: SweetAlertOptions): Promise<SweetAlertResult>{
+    async multipleInputAlert(title: string, subtitles: Subtitle[], preConfirmCallback: (inputs: string[]) => Promise<boolean>, options?: SweetAlertOptions): Promise<SweetAlertResult>{
         
         return await Swal.fire({
             ...this.commonOptions,
@@ -61,12 +63,15 @@ export class SweetAlertsService{
                     inputs[i] = document.getElementById("swal-input-"+(i+1)) as HTMLInputElement;
                 }
                 if(inputs.some((input) => input?.value === "")){
-                    Swal.showValidationMessage("All inputs are required!");
+                    Swal.showValidationMessage("All inputs are required");
                     return false;
                 }
                 let inputValues = inputs.filter((input) => input !== null).map((input) => (input as HTMLInputElement).value);
                 if(preConfirmCallback !== undefined){
-                    await preConfirmCallback(...inputValues)
+                    let preConfirmSucceeded: boolean = await preConfirmCallback(inputValues);
+                    if(!preConfirmSucceeded){
+                        return false;
+                    }
                 }
                 return inputValues
               },
