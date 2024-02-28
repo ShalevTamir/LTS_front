@@ -60,6 +60,7 @@ export class ArchiveComponent implements AfterViewInit{
   }  
   
   handleDataTypeSelection(event: MouseEvent, dataTypeValue: DataType){
+    this.paginator.resetPaginator();
     this.dataTypeButtons.forEach((button) => {
       this.removeBtnSelection(button.nativeElement);
     });
