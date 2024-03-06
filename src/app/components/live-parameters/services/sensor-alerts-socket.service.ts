@@ -20,13 +20,18 @@ export class SensorAlertsSocketService{
             callback: alertCallback
         };
         this._connection??= this._socketHandlerService.initWebSocket(LIVE_TELE_URL+"/sensor-alerts-socket",[listener]);
+        if(this._connection.state === HubConnectionState.Disconnecting){
+            await (async () => {
+                while(this._connection?.state === HubConnectionState.Disconnecting){}
+            });
+        }
         if (this._connection.state === HubConnectionState.Disconnected){
-            this._socketHandlerService.restartSocket(this._connection, [listener])
+            await this._socketHandlerService.restartSocket(this._connection, [listener])
         }
     }
 
     public async stopWebSocket(){
-        this._connection?.stop();
+        await this._connection?.stop();
     }
 
 }
