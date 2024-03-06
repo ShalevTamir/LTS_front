@@ -1,6 +1,11 @@
-::ng-deep div.reading-block{
-    overflow: visible;
-    color: #555;
+::ng-deep{
+    div.reading-block, div.reading-label{
+        overflow: visible;
+        color: #555;
+    }
+    div.reading-label{
+        font-size: 18px !important;
+    }
 }
 
 .missing-required-data{

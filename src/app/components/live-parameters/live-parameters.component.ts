@@ -7,7 +7,7 @@ import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.
 import { SensorAlertsService } from './services/sensor-alerts.service';
 import { ActivationEnd, ActivationStart, ChildActivationEnd, ChildActivationStart, GuardsCheckEnd, GuardsCheckStart, NavigationEnd, NavigationStart, ResolveEnd, ResolveStart, Router, RoutesRecognized } from '@angular/router';
 import { ParametersConfigService } from './services/parameters-ranges.service';
-import { ParameterRange } from './models/ros/parameter-range.ros';
+import { ParameterData } from './models/ros/parameter-range.ros';
 import { GaugesDataPersistenceService } from './components/parameter-card/services/gauges-data-persistence.service';
 import { LIVE_TELE_URL } from '../../common/constants';
 import { TELE_PARAMS_ROUTE } from '../../app.routes';
@@ -66,17 +66,18 @@ export class LiveParametersComponent implements OnInit{
   }
 
   configGauges(parametersNames: string[]){
-    this._parametersConfigService.getRanges(parametersNames).then((parametersRanges: ParameterRange[]) =>{
-      parametersRanges.forEach((parameterRange: ParameterRange) => {
-        let card = this.cards.find((card) => card.parameterName == parameterRange.ParameterName);
+    this._parametersConfigService.getParamsData(parametersNames).then((parametersRanges: ParameterData[]) =>{
+      parametersRanges.forEach((parameterData: ParameterData) => {
+        let card = this.cards.find((card) => card.parameterName == parameterData.ParameterName);
         if (card !== undefined){
           this._gaugesDataService.saveGaugeData(
             card.parameterName,
-            {minValue: +parameterRange.MinValue,
-            maxValue: +parameterRange.MaxValue});
+            {minValue: +parameterData.MinValue,
+            maxValue: +parameterData.MaxValue,
+            units: parameterData.Units});
         }
         else{
-          console.error("Couldn't find card for parameter range "+parameterRange.ParameterName);
+          console.error("Couldn't find card for parameter range "+parameterData.ParameterName);
         }
       });
     });
