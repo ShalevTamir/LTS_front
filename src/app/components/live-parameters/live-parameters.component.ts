@@ -11,6 +11,7 @@ import { ParameterData } from './models/ros/parameter-range.ros';
 import { GaugesDataPersistenceService } from './components/parameter-card/services/gauges-data-persistence.service';
 import { LIVE_TELE_URL } from '../../common/constants';
 import { TELE_PARAMS_ROUTE } from '../../app.routes';
+import { SweetAlertsService } from '../../common/services/sweet-alerts.service';
 
 @Component({
   selector: 'app-live-parameters',
@@ -29,7 +30,8 @@ export class LiveParametersComponent implements OnInit{
     private _sensorAlerts: SensorAlertsService,
     private _parametersConfigService: ParametersConfigService,
     private _gaugesDataService: GaugesDataPersistenceService,
-    private _router: Router) {      
+    private _router: Router,
+    private _swalService: SweetAlertsService) {      
       this.parameters = ["Altitude","Longitude","Wind_Speed"];
     }
     
@@ -61,8 +63,13 @@ export class LiveParametersComponent implements OnInit{
   }
 
   handleAddParameter(parameterName: string){
-    this.configGauges([parameterName]);
-    this.parameters.push(parameterName);
+    if(this.parameters.includes(parameterName)){
+      this._swalService.errorAlert("Card " + parameterName + " already exists");
+    }
+    else{
+      this.configGauges([parameterName]);
+      this.parameters.push(parameterName);
+    }
   }
 
   configGauges(parametersNames: string[]){
