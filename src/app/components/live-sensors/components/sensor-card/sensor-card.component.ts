@@ -5,6 +5,8 @@ import { NgClass } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { normalizeString as normalizeStringInstance} from '../../../../common/utils/string-utils';
+import { SensorHandlerService } from '../../../../common/services/sensor-handler.service';
+import { SensorRequirementRos } from '../../../header/models/ros/sensor-requirement-ros';
 
 @Component({
     selector: 'app-sensor-card',
@@ -19,7 +21,10 @@ export class SensorCardComponent{
   // Emits the name of the sensor to delete
   @Output() deleteSensorEvent = new EventEmitter<string>();
   sensorStateEnum: typeof SensorState = SensorState;
-  
+
+  constructor(private _sensorHandlerService: SensorHandlerService){}
+
+
   normalizeString = normalizeStringInstance
 
   readableSensorState(sensorStateValue: SensorState){
@@ -33,5 +38,9 @@ export class SensorCardComponent{
 
   deleteSensor(){
     this.deleteSensorEvent.emit(this.sensorName);
+  }
+
+  displaySensorRequirements(){
+    this._sensorHandlerService.displaySensorRequirements(this.sensorName);
   }
 }

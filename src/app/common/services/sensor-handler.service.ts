@@ -48,13 +48,31 @@ export class SensorHandlerService{
     }
     </style>`;
 
+    private _sensorsRequirements: Map<string, SensorRequirementRos[]> = new Map();
+
     constructor(
         private _sweetAlertsService: SweetAlertsService,
         private _httpClient: HttpClient,
-        private _parametersConfigService: ParametersConfigService
         ){
         
+    }    
+
+    displaySensorRequirements(sensorName: string){
+        let sensorRequirements = this._sensorsRequirements.get(sensorName) as SensorRequirementRos[];
+        let requirementsHtml = this.sensorRequirementAlertCss +
+        sensorRequirements.map((sensorRequirement) => 
+        `<div class="requirement-card">
+        <span class="sensor-name">${sensorRequirement.ParameterName}</span>
+        <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${this.requirementToText(sensorRequirement.Requirement)}</span>
+        <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
+        </div>`).join('\n');
+        this._sweetAlertsService.customAlert({
+            title: sensorName + " Requirements",
+            html: requirementsHtml,
+            confirmButtonText: 'Ok'            
+        });
     }
+
     async addDynamicSensorAsync(){
         await this._sweetAlertsService.multipleInputAlert("Add Dynamic Sensor", [
             {subtitleDescription: "Sensor Name", expand: false},
@@ -102,7 +120,9 @@ export class SensorHandlerService{
                 return false;
             }
         }
-        this.showSensorRequirementsAsync(sensorName, parsedRequirements as SensorRequirementRos[])
+        parsedRequirements = parsedRequirements as SensorRequirementRos[]
+        this._sensorsRequirements.set(sensorName, parsedRequirements);
+        this.showSensorRequirementsAsync(sensorName, parsedRequirements)
         return true;
 
     }
