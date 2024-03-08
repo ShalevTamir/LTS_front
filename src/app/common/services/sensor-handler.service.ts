@@ -67,10 +67,19 @@ export class SensorHandlerService{
         <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
         </div>`).join('\n');
         this._sweetAlertsService.customAlert({
-            title: sensorName + " Requirements",
+            title: normalizeString(sensorName) + " Requirements",
             html: requirementsHtml,
-            confirmButtonText: 'Ok'            
+            confirmButtonText: 'Ok',
         });
+    }
+
+    async fetchSensorRequirements(sensorName: string): Promise<void>{
+        let sensorRequirements = this._sensorsRequirements.get(sensorName);
+        if(sensorRequirements === undefined){
+            let reqRes = this._httpClient.get<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/sensor-requirements",
+            {params: {sensorName: sensorName}});
+            this._sensorsRequirements.set(sensorName, await firstValueFrom(reqRes));
+        }        
     }
 
     async addDynamicSensorAsync(){
@@ -142,7 +151,8 @@ export class SensorHandlerService{
             showCancelButton: true,
             preConfirm: async () =>{
                 await this.sendSensorToAddAsync(sensorName, sensorRequirements);
-            }
+            },
+            showLoaderOnConfirm: true
         });
         
     }

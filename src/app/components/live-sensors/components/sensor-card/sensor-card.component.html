@@ -7,9 +7,12 @@
         <app-indicator-light [sensorState]="currentSensorState"></app-indicator-light>
         <span class="sensorStatus">{{readableSensorState(currentSensorState)}}</span>
     </div>
-    <div class="card-back" (click)="displaySensorRequirements()">
-        <div class="background-dash"></div>
-        <span>Click to view requirements</span>
+    <div class="card-back" (click)="displaySensorRequirements()">  
+        <mat-spinner *ngIf="fetchingRequirements"></mat-spinner>      
+        <div class="requirements-text" *ngIf="!fetchingRequirements">
+            <div class="background-dash"></div>
+            <span>Click to view requirements</span>        
+        </div>
     </div>
     <!-- <span class="sensorStatus" [ngClass]="'--description-'+sensorStateEnum[currentSensorState].toLowerCase()">{{readableSensorState(currentSensorState)}}</span> -->
 </div>

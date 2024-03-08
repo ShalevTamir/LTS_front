@@ -28,7 +28,6 @@ export class SweetAlertsService{
         
         return await Swal.fire({
             ...this.commonOptions,
-            showLoaderOnConfirm: true,
             ...options
         } as SweetAlertOptions);
     }
