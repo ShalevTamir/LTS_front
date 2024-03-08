@@ -1,9 +1,14 @@
 <div class="card">
-    <button class="close-btn" mat-icon-button (click)="deleteSensor()">
-        <mat-icon>close</mat-icon>
-    </button>
-    <span class="title">{{normalizeString(sensorName)}}</span>
-    <app-indicator-light [sensorState]="currentSensorState"></app-indicator-light>
-    <span class="sensorStatus">{{readableSensorState(currentSensorState)}}</span>
+    <div class="card-front">
+        <button class="close-btn" mat-icon-button (click)="deleteSensor()">
+            <mat-icon>close</mat-icon>
+        </button>
+        <span class="title">{{normalizeString(sensorName)}}</span>
+        <app-indicator-light [sensorState]="currentSensorState"></app-indicator-light>
+        <span class="sensorStatus">{{readableSensorState(currentSensorState)}}</span>
+    </div>
+    <div class="card-back">
+        <h1>Hello World</h1>
+    </div>
     <!-- <span class="sensorStatus" [ngClass]="'--description-'+sensorStateEnum[currentSensorState].toLowerCase()">{{readableSensorState(currentSensorState)}}</span> -->
 </div>
