@@ -1,8 +1,6 @@
 <div class="card">
     <div class="card-front">
-        <button class="close-btn" mat-icon-button (click)="deleteSensor()">
-            <mat-icon>close</mat-icon>
-        </button>
+        
         <span class="title">{{normalizeString(sensorName)}}</span>
         <app-indicator-light [sensorState]="currentSensorState"></app-indicator-light>
         <span class="sensorStatus">{{readableSensorState(currentSensorState)}}</span>

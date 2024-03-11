@@ -3,5 +3,11 @@
     <span class="title"> {{title}} </span>
     <div class="buttons">
         <button *ngIf="liveParamsLoaded" id="add-dynamic-sensor" (click)="handleAddDynamicSensor()"></button>
+        <button 
+        #removeSensorBtn 
+        *ngIf="dynamicSensorsPageLoaded" 
+        id="remove-dynamic-sensor" 
+        (click)="handleRemoveSensors();"
+        [ngStyle]="{'background-image':sensorDeletionActive ? 'url(../../../assets/images/trash-can-hover.png)' : 'url(../../../assets/images/trash-can.png)'}"></button>
     </div>
 </div>
