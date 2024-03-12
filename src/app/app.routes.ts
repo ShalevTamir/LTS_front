@@ -3,7 +3,7 @@ import { LiveParametersComponent } from './components/live-parameters/live-param
 import { ArchiveComponent } from './components/archive/archive.component';
 import { LiveSensorsComponent } from './components/live-sensors/live-sensors.component';
 import { LoginComponent } from './components/login/login.component';
-import { UploaderComponent } from './components/uploader/uploader.component';
+import { UploaderComponent } from './components/requirements-uploader/requirements-uploader.component';
 
 export const TELE_PARAMS_ROUTE = 'live-telemetry-parameters';
 export const DYNAMIC_SENSORS_ROUTE = 'live-telemetry-sensors';

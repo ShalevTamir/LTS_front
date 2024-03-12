@@ -6,7 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTableComponent } from "./components/mat-table/mat-table.component";
-import { normalizeString } from '../../../../common/utils/string-utils';
+import { normalizeString } from '../../utils/string-utils';
 
 @Component({
     selector: 'app-expandable-mat-table',

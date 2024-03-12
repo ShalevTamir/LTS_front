@@ -7,7 +7,6 @@ import { forIn } from 'lodash'
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DateTimeComponent } from "./components/date-time/date-time.component";
 import { PaginatorComponent } from './components/paginator/paginator.component';
-import { ExpandableMatTableComponent } from './components/expandable-mat-table/expandable-mat-table.component';
 import { MatButton } from '@angular/material/button';
 import { ArchiveData } from '../../common/models/custom-types';
 import { FilteredFrame } from '../../common/models/ros/filtered-frame.ros';
@@ -16,6 +15,7 @@ import { DataType as ArchiveDataType } from './models/enums/data-type';
 import { MongoSensorAlert } from './models/mongo-sensor-alert';
 import { SensorState } from '../live-parameters/models/enums/sensor-state.enum';
 import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
+import { ExpandableMatTableComponent } from '../../common/components/expandable-mat-table/expandable-mat-table.component';
 
 interface TimestampData{
   date: string,

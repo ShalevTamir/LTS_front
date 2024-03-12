@@ -6,7 +6,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from "@angul
 import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
 import { SensorAlertsRos } from "../../components/live-parameters/models/ros/sensor-alert.ros";
 import { SensorRequirementRos } from "../../components/header/models/ros/sensor-requirement-ros";
-import { BaseRequirementRos, isRangeRequirement } from "../../components/header/models/ros/base-requirement-ros";
+import { BaseRequirementRos, isRangeRequirement, requirementToString } from "../../components/header/models/ros/base-requirement-ros";
 import { DurationRos } from "../../components/header/models/ros/duration-ros";
 import { DurationType } from "../../components/header/models/enums/duration-type";
 import { normalizeString } from "../utils/string-utils";
@@ -63,7 +63,7 @@ export class SensorHandlerService{
         sensorRequirements.map((sensorRequirement) => 
         `<div class="requirement-card">
         <span class="sensor-name">${sensorRequirement.ParameterName}</span>
-        <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${this.requirementToText(sensorRequirement.Requirement)}</span>
+        <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${requirementToString(sensorRequirement.Requirement)}</span>
         <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
         </div>`).join('\n');
         this._sweetAlertsService.customAlert({
@@ -141,7 +141,7 @@ export class SensorHandlerService{
         sensorRequirements.map((sensorRequirement) => 
         `<div class="requirement-card">
         <span class="sensor-name">${sensorRequirement.ParameterName}</span>
-        <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${this.requirementToText(sensorRequirement.Requirement)}</span>
+        <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${requirementToString(sensorRequirement.Requirement)}</span>
         <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
         </div>`).join('\n');
         await this._sweetAlertsService.customAlert({
@@ -174,27 +174,11 @@ export class SensorHandlerService{
         }
         this._sweetAlertsService.successAlert("Sensor " + sensorName + " added successfuly");
     }
-    private requirementToText(requirement: BaseRequirementRos){
-        if(isRangeRequirement(requirement)){
-          let rangeRequirement = requirement as RangeRequirementRos;
-          if(+rangeRequirement.Value == -Infinity){
-            return "Below " + rangeRequirement.EndValue;
-          }
-          else if(+rangeRequirement.EndValue == Infinity){
-            return "Above " + rangeRequirement.Value;
-          }
-          else{
-            return rangeRequirement.Value+" - "+rangeRequirement.EndValue;
-          }
-        }
-        else{
-          return requirement.Value;
-        }
-    }
+    
     
     private durationToText(duration?: DurationRos){
         if(duration != null){
-            return this.requirementToText(duration.Requirement) 
+            return requirementToString(duration.Requirement) 
             + " "
             + normalizeString(DurationType[duration.DurationType]);
         }
