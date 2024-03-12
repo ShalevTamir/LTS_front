@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { seperateString } from '../../common/utils/string-utils';
@@ -17,6 +17,7 @@ import { DeleteSensorsService } from '../../common/services/delete-sensors.servi
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  @ViewChild('removeSensorBtn') removeSensorBtn!: ElementRef<HTMLElement>;
   title: string = ""
   liveParamsLoaded: boolean = false;
   dynamicSensorsPageLoaded: boolean = false;
@@ -26,6 +27,9 @@ export class HeaderComponent {
       if(event instanceof RoutesRecognized){
         this.liveParamsLoaded = event.url === "/" + TELE_PARAMS_ROUTE;
         this.dynamicSensorsPageLoaded = event.url === "/" + DYNAMIC_SENSORS_ROUTE;
+        if(this.dynamicSensorsPageLoaded){
+          this.sensorDeletionActive = false;
+        }
         let eventUrl: string = event.url;
         this.title = seperateString(eventUrl.substring(1), '-');
       }
@@ -34,7 +38,20 @@ export class HeaderComponent {
 
   handleRemoveSensors(){
     this.sensorDeletionActive = !this.sensorDeletionActive;
+    this.removeSensorBtn.nativeElement.classList.add('remove-sensor-click');
+    setTimeout(() => {
+      this.removeSensorBtn.nativeElement.classList.remove('remove-sensor-click');
+    }, 500);
     this._deleteSensorsService.notifyChange();
+  }
+  
+  handleTrashcanMouseLeave(){
+    if(this.sensorDeletionActive){
+      this.removeSensorBtn.nativeElement.classList.add('active');
+    }
+    else{
+      this.removeSensorBtn.nativeElement.classList.remove('active');
+    }
   }
 
   async handleAddDynamicSensor(){

@@ -7,7 +7,8 @@
         #removeSensorBtn 
         *ngIf="dynamicSensorsPageLoaded" 
         id="remove-dynamic-sensor" 
+        (mouseleave)="handleTrashcanMouseLeave()"
         (click)="handleRemoveSensors();"
-        [ngStyle]="{'background-image':sensorDeletionActive ? 'url(../../../assets/images/trash-can-hover.png)' : 'url(../../../assets/images/trash-can.png)'}"></button>
+        ></button>
     </div>
 </div>
