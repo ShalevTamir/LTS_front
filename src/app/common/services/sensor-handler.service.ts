@@ -7,7 +7,7 @@ import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
 import { SensorAlertsRos } from "../../components/live-parameters/models/ros/sensor-alert.ros";
 import { SensorRequirementRos } from "../../components/header/models/ros/sensor-requirement-ros";
 import { BaseRequirementRos, isRangeRequirement, requirementToString } from "../../components/header/models/ros/base-requirement-ros";
-import { DurationRos } from "../../components/header/models/ros/duration-ros";
+import { DurationRos, durationToString } from "../../components/header/models/ros/duration-ros";
 import { DurationType } from "../../components/header/models/enums/duration-type";
 import { normalizeString } from "../utils/string-utils";
 import { RangeRequirementRos } from "../../components/header/models/ros/range-requirement-ros";
@@ -64,7 +64,7 @@ export class SensorHandlerService{
         `<div class="requirement-card">
         <span class="sensor-name">${sensorRequirement.ParameterName}</span>
         <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${requirementToString(sensorRequirement.Requirement)}</span>
-        <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
+        <span class="sensor-duration">Duration: ${durationToString(sensorRequirement.Duration)}</span>
         </div>`).join('\n');
         this._sweetAlertsService.customAlert({
             title: normalizeString(sensorName) + " Requirements",
@@ -142,7 +142,7 @@ export class SensorHandlerService{
         `<div class="requirement-card">
         <span class="sensor-name">${sensorRequirement.ParameterName}</span>
         <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${requirementToString(sensorRequirement.Requirement)}</span>
-        <span class="sensor-duration">Duration: ${this.durationToText(sensorRequirement.Duration)}</span>
+        <span class="sensor-duration">Duration: ${durationToString(sensorRequirement.Duration)}</span>
         </div>`).join('\n');
         await this._sweetAlertsService.customAlert({
             title: "Sensor Requirements",
@@ -173,15 +173,5 @@ export class SensorHandlerService{
             return;
         }
         this._sweetAlertsService.successAlert("Sensor " + sensorName + " added successfuly");
-    }
-    
-    
-    private durationToText(duration?: DurationRos){
-        if(duration != null){
-            return requirementToString(duration.Requirement) 
-            + " "
-            + normalizeString(DurationType[duration.DurationType]);
-        }
-        return "None";
     }
 }

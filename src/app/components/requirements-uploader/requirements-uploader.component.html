@@ -1,4 +1,4 @@
 <app-file-uploader (onFileSelectedEmitter)="handleFileSelectedAsync($event)" *ngIf="!parsedSensors.length; else parsedResults"></app-file-uploader>
 <ng-template id="parsed-results" #parsedResults>
-    <app-expandable-mat-table [dataSource]="parsedSensors" [columnsToDisplay]="expandableColumnsToDisplay"></app-expandable-mat-table>
+    <app-expandable-mat-table [dataSource]="parsedSensors" [columnsToDisplay]="expandableColumnsToDisplay" (rowClickedEmitter)="handleRowClick($event)"></app-expandable-mat-table>
 </ng-template>

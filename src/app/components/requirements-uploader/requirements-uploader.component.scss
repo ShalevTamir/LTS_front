@@ -1,0 +1,8 @@
+::ng-deep{
+    table::before{
+        width: 92% !important;
+        border-radius: 0 0 60px 60px;
+        filter: none !important;
+        background: linear-gradient(to top right, rgb(0 0 0), rgb(34 44 164 / 30%)) !important;
+    }
+}
