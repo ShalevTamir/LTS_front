@@ -19,20 +19,27 @@
     align-items: center;
     padding: 117px 0 40px;
     animation: left 1s var(--delay) both;
-    a {
-     color: #5a5b69;
-    
-     width: 24px;
-     cursor: pointer;
-     & + a {
-      margin-top: 34px;
-     }
-     &:last-child {
-      margin-top: auto;
-     }
-     &.active,
-     &:hover {
-      color: #4255d4;
-     }
+    height: 100%;
+    div{
+        &:last-child {
+           flex-grow: 1;
+           display: flex;
+           align-items: flex-end;
+           margin-bottom: 15px;
+        }
+        margin-top: 34px;
+        &:first-child{
+            margin-top: 0;
+        }
+        a {
+         display: block;
+         color: #5a5b69;
+         width: 24px;
+         cursor: pointer;
+         &.active,
+         &:hover {
+          color: #4255d4;
+         }
+        }
     }
    }
