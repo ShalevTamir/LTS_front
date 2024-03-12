@@ -11,6 +11,11 @@ import { ExpandableMatTableComponent } from './components/expandable-mat-table/e
 import { MatButton } from '@angular/material/button';
 import { ArchiveData } from '../../common/models/custom-types';
 
+interface TimestampData{
+  date: string,
+  time: string
+}
+
 @Component({
     selector: 'app-archive',
     standalone: true,
@@ -31,14 +36,14 @@ export class ArchiveComponent implements AfterViewInit{
   @ViewChild('fromDateTime', {static: true}) fromDatePicker!: DateTimeComponent;
   @ViewChild('toDateTime', {static: true}) toDatePicker!: DateTimeComponent;
   @ViewChild('paginator', {static: true}) paginator!: PaginatorComponent;
-  @ViewChild('expandableTable', {static: true}) expandableTable!: ExpandableMatTableComponent;
+  @ViewChild('expandableTable', {static: true}) expandableTable!: ExpandableMatTableComponent<TimestampData>;
 
   readonly defaultDataType: DataType = DataType.PARAMETERS;
   readonly defaultFromDate;
   readonly defaultToDate = new Date(Date.now());
   dataTypeEnum: [string, number][] = []
   selectedDataType: DataType = this.defaultDataType;
-  expandableTableData: number[] = [];
+  expandableTableData: TimestampData[] = [];
   columnsToDisplay = ['date', 'time'];
   fetchedData: ArchiveData[] = [];
 
@@ -79,9 +84,15 @@ export class ArchiveComponent implements AfterViewInit{
     this.updateTotalPages();
   }
   
+  protected epochToUTC(epochTime: number, isDate: boolean){
+    var date = new Date(0);
+    date.setMilliseconds(epochTime);
+    return isDate ? date.toLocaleDateString() : date.toLocaleTimeString();
+  }
+
   protected updateTabularData(){
-    this.expandableTable.updateData(this.fetchedData, this.selectedDataType);
-    this.expandableTableData = [...new Set(this.fetchedData.map((value) => {return value.TimeStamp}))];
+    // this.expandableTable.updateData(this.fetchedData, this.selectedDataType);
+    this.expandableTableData = [...new Set(this.fetchedData.map((value) => {return {date: this.epochToUTC(value.TimeStamp, true), time: this.epochToUTC(value.TimeStamp, false)}}))];
   }
 
   private async fetchData(){

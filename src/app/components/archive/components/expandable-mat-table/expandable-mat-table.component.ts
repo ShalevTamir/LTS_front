@@ -12,6 +12,7 @@ import { MongoSensorAlertRos, MongoSensorAlertsRos } from '../../models/ros/mong
 import { DataType as ArchiveDataType } from '../../models/enums/data-type';
 import { MongoSensorAlert } from '../../models/mongo-sensor-alert';
 import { SensorState } from '../../../live-parameters/models/enums/sensor-state.enum';
+import { normalizeString } from '../../../../common/utils/string-utils';
 
 @Component({
     selector: 'app-expandable-mat-table',
@@ -25,19 +26,18 @@ import { SensorState } from '../../../live-parameters/models/enums/sensor-state.
             transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),
     ],
-    imports: [MatTableModule, NgFor, MatIcon, NgIf, FilterColumnsPipe, MatButtonModule, MatTableComponent]
+    imports: [NgFor, MatTableModule, MatIcon, NgIf, FilterColumnsPipe, MatButtonModule, MatTableComponent]
 })
-export class ExpandableMatTableComponent implements AfterViewInit{
+export class ExpandableMatTableComponent<ExpandableDataType> implements AfterViewInit{
   @ViewChild('table', {static: true}) matTable!: MatTable<any>;
-  @Input({required: true}) dataSource!: number[];
+  @Input({required: true}) dataSource!: ExpandableDataType[];
   @Input({required: true}) columnsToDisplay!: string[];
-  fetchedData: ArchiveData[] = [];
-  dataType!: ArchiveDataType;
-  expandedElement!: number | null;
+  expandedElement!: ExpandableDataType | null;
   expandColumnDef = 'expand';
   expandedDetailDef = 'expandedDetail'
   expandedDataSource: unknown[] = [];
   expandedColumnsToDisplay: string[] = [];
+  normalizeStringInstance = normalizeString
   
   ngAfterViewInit(){
     setTimeout(() => {
@@ -45,41 +45,35 @@ export class ExpandableMatTableComponent implements AfterViewInit{
     });
   }
 
-  public updateData(fetchedData: ArchiveData[], dataType: ArchiveDataType){
-    this.fetchedData = fetchedData;
-    this.dataType = dataType;
-  }
+  // public updateData(fetchedData: ArchiveData[], dataType: ArchiveDataType){
+  //   this.fetchedData = fetchedData;
+  //   this.dataType = dataType;
+  // }
 
   public renderRows(){
     this.matTable.renderRows();
   }
 
-  protected handleRowClick(clickedTimeStamp: number){
+  protected handleRowClick(clickedTimeStamp: ExpandableDataType){
     this.expandedElement = this.expandedElement === clickedTimeStamp ? null : clickedTimeStamp
-    this.updateSubTable(clickedTimeStamp);
+    // this.updateSubTable(clickedTimeStamp);
   }
 
-  protected epochToUTC(epochTime: number, isDate: boolean){
-    var date = new Date(0);
-    date.setMilliseconds(epochTime);
-    return isDate ? date.toLocaleDateString() : date.toLocaleTimeString();
-  }
-
-  private updateSubTable(clickedTimestamp: number){
-    if (this.dataType === ArchiveDataType.PARAMETERS){
-      this.expandedColumnsToDisplay = ['Name', 'Value', 'Units'];
-      let clickedFrame: FilteredFrame = this.fetchedData.find((value) => value.TimeStamp == clickedTimestamp) as FilteredFrame;
-      this.expandedDataSource = clickedFrame.Parameters;
-    }
-    else if(this.dataType === ArchiveDataType.ALERTS){
-      this.expandedColumnsToDisplay = ['sensorName', 'sensorStatus']
-      let clickedAlerts: MongoSensorAlertsRos = this.fetchedData.find((value) => value.TimeStamp == clickedTimestamp) as MongoSensorAlertsRos;
-      this.expandedDataSource = clickedAlerts.MongoAlerts.map((alert: MongoSensorAlertRos): MongoSensorAlert => {
-        let strSensorStatus = SensorState[alert.SensorStatus];
-        return {
-        sensorName: alert.SensorName,
-        sensorStatus: strSensorStatus.charAt(0).toLocaleUpperCase()+strSensorStatus.slice(1).toLowerCase()
-      }});
-    }
-  }
+  // private updateSubTable(clickedElement: T){
+  //   if (this.dataType === ArchiveDataType.PARAMETERS){
+  //     this.expandedColumnsToDisplay = ['Name', 'Value', 'Units'];
+  //     let clickedFrame: FilteredFrame = this.fetchedData.find((value) => value.TimeStamp == clickedElement) as FilteredFrame;
+  //     this.expandedDataSource = clickedFrame.Parameters;
+  //   }
+  //   else if(this.dataType === ArchiveDataType.ALERTS){
+  //     this.expandedColumnsToDisplay = ['sensorName', 'sensorStatus']
+  //     let clickedAlerts: MongoSensorAlertsRos = this.fetchedData.find((value) => value.TimeStamp == clickedElement) as MongoSensorAlertsRos;
+  //     this.expandedDataSource = clickedAlerts.MongoAlerts.map((alert: MongoSensorAlertRos): MongoSensorAlert => {
+  //       let strSensorStatus = SensorState[alert.SensorStatus];
+  //       return {
+  //       sensorName: alert.SensorName,
+  //       sensorStatus: strSensorStatus.charAt(0).toLocaleUpperCase()+strSensorStatus.slice(1).toLowerCase()
+  //     }});
+  //   }
+  // }
 }
