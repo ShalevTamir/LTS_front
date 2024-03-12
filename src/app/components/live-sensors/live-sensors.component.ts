@@ -7,6 +7,7 @@ import { SensorAlertsSocketService } from '../live-parameters/services/sensor-al
 import { RangeRequirementRos } from '../header/models/ros/range-requirement-ros';
 import { SensorRequirementRos } from '../header/models/ros/sensor-requirement-ros';
 import { DurationType } from '../header/models/enums/duration-type';
+import { DeleteSensorsService } from '../../common/services/delete-sensors.service';
 
 @Component({
     selector: 'app-live-sensors',
@@ -25,7 +26,7 @@ export class LiveSensorsComponent implements OnInit, OnDestroy{
         this._sensorHandlerService.getSensorsStateAsync().then((sensorStates: SensorAlertsRos[]) => {
             this.sensorStates = sensorStates;
         })
-        this._sensorAlertsSocketService.initWebSocket(this.processSensorUpdate)
+        this._sensorAlertsSocketService.initWebSocket(this.processSensorUpdate);
     }
     
     ngOnDestroy(): void {

@@ -4,9 +4,10 @@ import { ArchiveComponent } from './components/archive/archive.component';
 import { LiveSensorsComponent } from './components/live-sensors/live-sensors.component';
 
 export const TELE_PARAMS_ROUTE = 'live-telemetry-parameters';
+export const DYNAMIC_SENSORS_ROUTE = 'live-telemetry-sensors';
 
 export const routes: Routes = [
     { path: TELE_PARAMS_ROUTE, component: LiveParametersComponent },
     { path: 'archive', component: ArchiveComponent },
-    { path: 'live-telemetry-sensors', component: LiveSensorsComponent }
+    { path: DYNAMIC_SENSORS_ROUTE, component: LiveSensorsComponent }
 ];

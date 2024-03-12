@@ -1,13 +1,13 @@
-<div class="card">
-    <div class="card-front">
-        <button class="close-btn" mat-icon-button (click)="deleteSensor()">
-            <mat-icon>close</mat-icon>
-        </button>
+<div class="card" (mouseenter)="handleMouseEnter()" (mouseleave)="handleMouseLeave()">
+    <div *ngIf="deleteSensorsState" class="card-delete" (click)="handleSensorDelete()">
+        <span id="delete-sensor-span">Click to delete</span>
+    </div>
+    <div #cardFront class="card-front">
         <span class="title">{{normalizeString(sensorName)}}</span>
         <app-indicator-light [sensorState]="currentSensorState"></app-indicator-light>
         <span class="sensorStatus">{{readableSensorState(currentSensorState)}}</span>
     </div>
-    <div class="card-back" (click)="displaySensorRequirements()">  
+    <div #cardBack class="card-back" (click)="displaySensorRequirements()">  
         <mat-spinner *ngIf="fetchingRequirements"></mat-spinner>      
         <div class="requirements-text" *ngIf="!fetchingRequirements">
             <div class="background-dash"></div>

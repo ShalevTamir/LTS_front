@@ -4,7 +4,7 @@ $led-size: 30px;
 $indicator-valid:#00d563;
 $indicator-warning:#ffc400;
 $indicator-invalid:#fd2f51;
-$indicator-neutral:#95969b;
+$indicator-normal:#95969b;
 
 
 .indicator{
@@ -15,8 +15,8 @@ $indicator-neutral:#95969b;
   border-radius: 50%;
 }
 
-$indicator-array: valid warning invalid neutral;
-$indicator-colors: $indicator-valid $indicator-warning $indicator-invalid $indicator-neutral;
+$indicator-array: valid warning invalid normal;
+$indicator-colors: $indicator-valid $indicator-warning $indicator-invalid $indicator-normal;
   
 @each $indicator in $indicator-array{
   $i: index($indicator-array, $indicator);

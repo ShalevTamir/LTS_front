@@ -5,6 +5,18 @@
     src: url('../../../assets/fonts/Montserrat-VariableFont_wght.ttf');
 }
 
+@keyframes icon-hover{
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.35);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
 $logo-size: 50px;
 
 .header {
@@ -76,6 +88,33 @@ $logo-size: 50px;
 .logo{
     width: 44px;
     margin: 5px 5px 5px 0;
+}
+
+#remove-dynamic-sensor{
+    // background-image: url('../../../assets/images/trash-can.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: none;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    background-image: url('../../../assets/images/trash-can.png');
+    &:hover{
+        background-image: url('../../../assets/images/trash-can-hover.png');
+        &.active{
+            background-image: url('../../../assets/images/trash-can.png');
+        }
+    }
+    
+    &.remove-sensor-click{
+        animation-name: icon-hover;
+        animation-duration: 0.5s;
+        animation-timing-function: ease;
+    }
+
+    &.active{
+        background-image: url('../../../assets/images/trash-can-hover.png');
+    }
 }
 
 ::ng-deep{

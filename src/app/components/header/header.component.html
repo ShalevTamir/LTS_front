@@ -3,5 +3,12 @@
     <span class="title"> {{title}} </span>
     <div class="buttons">
         <button *ngIf="liveParamsLoaded" id="add-dynamic-sensor" (click)="handleAddDynamicSensor()"></button>
+        <button 
+        #removeSensorBtn 
+        *ngIf="dynamicSensorsPageLoaded" 
+        id="remove-dynamic-sensor" 
+        (mouseleave)="handleTrashcanMouseLeave()"
+        (click)="handleRemoveSensors();"
+        ></button>
     </div>
 </div>
