@@ -1,17 +1,11 @@
 import { NgFor, NgIf } from '@angular/common';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { FilterColumnsPipe } from "./pipes/filter-columns-pipe";
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ArchiveData } from '../../../../common/models/custom-types';
 import { MatTableComponent } from "./components/mat-table/mat-table.component";
-import { FilteredFrame } from '../../../../common/models/ros/filtered-frame.ros';
-import { MongoSensorAlertRos, MongoSensorAlertsRos } from '../../models/ros/mongo-sensor-alert.ros';
-import { DataType as ArchiveDataType } from '../../models/enums/data-type';
-import { MongoSensorAlert } from '../../models/mongo-sensor-alert';
-import { SensorState } from '../../../live-parameters/models/enums/sensor-state.enum';
 import { normalizeString } from '../../../../common/utils/string-utils';
 
 @Component({
@@ -28,15 +22,17 @@ import { normalizeString } from '../../../../common/utils/string-utils';
     ],
     imports: [NgFor, MatTableModule, MatIcon, NgIf, FilterColumnsPipe, MatButtonModule, MatTableComponent]
 })
-export class ExpandableMatTableComponent<ExpandableDataType> implements AfterViewInit{
+export class ExpandableMatTableComponent<ExpandableDataType, ExpandedDataType> implements AfterViewInit{
   @ViewChild('table', {static: true}) matTable!: MatTable<any>;
+  @Output() rowClickedEmitter = new EventEmitter<ExpandableDataType>();
   @Input({required: true}) dataSource!: ExpandableDataType[];
   @Input({required: true}) columnsToDisplay!: string[];
   expandedElement!: ExpandableDataType | null;
   expandColumnDef = 'expand';
   expandedDetailDef = 'expandedDetail'
-  expandedDataSource: unknown[] = [];
+  expandedDataSource: ExpandedDataType[] = [];
   expandedColumnsToDisplay: string[] = [];
+
   normalizeStringInstance = normalizeString
   
   ngAfterViewInit(){
@@ -45,35 +41,17 @@ export class ExpandableMatTableComponent<ExpandableDataType> implements AfterVie
     });
   }
 
-  // public updateData(fetchedData: ArchiveData[], dataType: ArchiveDataType){
-  //   this.fetchedData = fetchedData;
-  //   this.dataType = dataType;
-  // }
-
-  public renderRows(){
-    this.matTable.renderRows();
+  protected handleRowClick(clickedElement: ExpandableDataType){
+    this.expandedElement = this.expandedElement === clickedElement ? null : clickedElement;
+    if(this.expandedElement){
+      this.rowClickedEmitter.emit(this.expandedElement);
+    }
   }
 
-  protected handleRowClick(clickedTimeStamp: ExpandableDataType){
-    this.expandedElement = this.expandedElement === clickedTimeStamp ? null : clickedTimeStamp
-    // this.updateSubTable(clickedTimeStamp);
+  public updateSubTable(expandedColumnsToDisplay: string[], expandedDataSource: ExpandedDataType[]){
+    this.expandedColumnsToDisplay = expandedColumnsToDisplay;
+    this.expandedDataSource = expandedDataSource;
   }
 
-  // private updateSubTable(clickedElement: T){
-  //   if (this.dataType === ArchiveDataType.PARAMETERS){
-  //     this.expandedColumnsToDisplay = ['Name', 'Value', 'Units'];
-  //     let clickedFrame: FilteredFrame = this.fetchedData.find((value) => value.TimeStamp == clickedElement) as FilteredFrame;
-  //     this.expandedDataSource = clickedFrame.Parameters;
-  //   }
-  //   else if(this.dataType === ArchiveDataType.ALERTS){
-  //     this.expandedColumnsToDisplay = ['sensorName', 'sensorStatus']
-  //     let clickedAlerts: MongoSensorAlertsRos = this.fetchedData.find((value) => value.TimeStamp == clickedElement) as MongoSensorAlertsRos;
-  //     this.expandedDataSource = clickedAlerts.MongoAlerts.map((alert: MongoSensorAlertRos): MongoSensorAlert => {
-  //       let strSensorStatus = SensorState[alert.SensorStatus];
-  //       return {
-  //       sensorName: alert.SensorName,
-  //       sensorStatus: strSensorStatus.charAt(0).toLocaleUpperCase()+strSensorStatus.slice(1).toLowerCase()
-  //     }});
-  //   }
-  // }
+  
 }

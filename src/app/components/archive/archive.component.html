@@ -18,7 +18,8 @@
     
     <app-expandable-mat-table #expandableTable
     [dataSource]="expandableTableData" 
-    [columnsToDisplay]="columnsToDisplay">
+    [columnsToDisplay]="columnsToDisplay"
+    (rowClickedEmitter)="handleRowClick($event)">
     </app-expandable-mat-table>
     <app-paginator #paginator (pageEvent)="updatePageData()"></app-paginator>
     
