@@ -8,5 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './uploader.component.scss'
 })
 export class UploaderComponent {
+  onFileSelected(event: Event){
+    console.log(typeof(event));
+  }
 
 }

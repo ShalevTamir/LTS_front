@@ -1,0 +1,90 @@
+$uploader-color: #5a5b69;
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../../../assets/fonts/Montserrat-VariableFont_wght.ttf');
+}
+
+@keyframes jump-animation{
+    30%{
+        transform: translateY(-20%);
+    }
+    50%{
+        transform: translateY(0);
+    }
+    70%{
+        transform: translateY(-10%);
+    }
+    100%{
+        transform: translateY(0);
+    }
+}
+
+@keyframes horizontal-line{
+    0%{
+        clip-path: xywh(-100px 0 100px 100%);
+    }
+    100%{
+        clip-path: xywh(100% 0 10px 100%);
+    }
+}
+
+#file-input{
+    display: none;
+}
+
+#file-upload{
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    border: 6px dashed #7f8194;
+    border-radius: 20px;
+    margin-top: 20px;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover{
+        svg{
+            animation-iteration-count: infinite;
+            animation-name:jump-animation;
+            animation-duration: 1s;
+            animation-timing-function: ease;
+        }
+        #title::before{
+            animation-name: horizontal-line;
+            animation-duration: 1s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+    }
+
+    svg{
+        width: 150px;
+        color: $uploader-color;
+        margin: 2%;
+    }
+    span{
+        font-family: Montserrat;
+        line-height: 30px;
+    }
+    #title{
+        position: relative;
+        &:before{
+            content:'Drag and drop a file or browse';
+            clip-path: xywh(0 0 0 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            color:white;
+        }
+        font-size: 25px;
+    }
+    #sub-title{
+        font-size: 15px;
+    }
+}
