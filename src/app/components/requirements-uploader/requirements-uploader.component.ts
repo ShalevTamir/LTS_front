@@ -37,7 +37,7 @@ export class UploaderComponent {
     {displayName: 'Sensor Name', internalName: 'sensorName'},
     {displayName: 'Valid Requirement', internalName: 'validRequirement'},
     {displayName: 'Warning Requirement', internalName: 'warningRequirement'},
-    {displayName: 'Internal Requirement', internalName: 'invalidRequirement'}
+    {displayName: 'Invalid Requirement', internalName: 'invalidRequirement'}
   ];
   parsedSensors: ExpandableSensor[] = [];
   fetchedData: ParameterSensorRos[] = [];

@@ -10,6 +10,7 @@ $border: 1px solid #5a5b69;
         margin-top: 1.5%;
     
         & > thead > tr > th{
+            text-align: center !important;
             background-color: #14172f;
         }
 
@@ -17,6 +18,7 @@ $border: 1px solid #5a5b69;
             & > td{
                 font-weight: 600;
                 border-bottom: $border;
+                text-align: center !important;
             }
             & > td:first-child{
                 border-left: $border;
