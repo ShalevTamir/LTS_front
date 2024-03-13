@@ -1,8 +1,55 @@
+@font-face {
+    font-family: Inter;
+    src: url('../../../assets/fonts/Inter-VariableFont_slnt_wght.ttf');
+}
+
+$border: 1px solid #5a5b69;
+
 ::ng-deep{
-    table::before{
-        width: 92% !important;
-        border-radius: 0 0 60px 60px;
-        filter: none !important;
-        background: linear-gradient(to top right, rgb(0 0 0), rgb(34 44 164 / 30%)) !important;
+    table.expandable-table{
+        margin-top: 1.5%;
+    
+        & > thead > tr > th{
+            background-color: #14172f;
+        }
+
+        & > tbody > tr{
+            & > td{
+                font-weight: 600;
+                border-bottom: $border;
+            }
+            & > td:first-child{
+                border-left: $border;
+            }
+            & > td:last-child{
+                border-right: $border;
+            }
+        }
+
+        & > thead > tr > th {
+            border-bottom: $border;
+            border-top: $border;
+
+            &:first-child{
+                border-left: $border;
+            }
+            &:last-child{
+                border-right: $border;
+            }
+        }
+
+        &::before{
+            width: 92% !important;
+            border-radius: 0 0 60px 60px;
+            filter: none !important;
+            background: none !important;
+        }
     }
+}
+
+#spinner-container{
+    display: flex;
+    height: 80vh;
+    justify-content: center;
+    align-items: center;
 }

@@ -46,16 +46,24 @@ table::before{
 table{
     // box-shadow: 0 0 20px rgba(0,0,0,0.1);
     background: none;
+    tr,td,th{
+        text-align: center;
+        font-family: OpenSans;
+        // &:not(:last-child):not(:first-child){
+        //     width: 110px;
+        // }
+        &:last-child{
+            text-align: left;
+        }
+    }
     
     tr,td{
         background: none;
         color: beige;
         position: relative;
-        font-family: OpenSans;
     }
     th{
         background-color: #0a0b1b;
-        font-family: OpenSans;
         font-weight: bold;
         font-size: 16px;
     }
