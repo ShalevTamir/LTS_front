@@ -5,7 +5,7 @@ import { SensorAlertsRos } from '../live-parameters/models/ros/sensor-alert.ros'
 import { NgFor, NgIf } from '@angular/common';
 import { SensorAlertsSocketService } from '../live-parameters/services/sensor-alerts-socket.service';
 import { RangeRequirementRos } from '../header/models/ros/range-requirement-ros';
-import { SensorRequirementRos } from '../header/models/ros/sensor-requirement-ros';
+import { AdditionalSensorRequirementRos } from '../../common/models/ros/additional-sensor-requirement-ros';
 import { DurationType } from '../header/models/enums/duration-type';
 import { DeleteSensorsService } from '../../common/services/delete-sensors.service';
 

@@ -1,5 +1,5 @@
-import { TelemetryParameter } from "./telemetry-parameter.ros";
+import { TelemetryParameterRos } from "./telemetry-parameter.ros";
 
-export class FilteredFrame{
-    constructor(public Parameters: TelemetryParameter[], public TimeStamp: number){}
+export class FilteredFrameRos{
+    constructor(public Parameters: TelemetryParameterRos[], public TimeStamp: number){}
 }

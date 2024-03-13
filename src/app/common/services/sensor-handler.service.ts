@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
 import { SensorAlertsRos } from "../../components/live-parameters/models/ros/sensor-alert.ros";
-import { SensorRequirementRos } from "../../components/header/models/ros/sensor-requirement-ros";
+import { AdditionalSensorRequirementRos } from "../models/ros/additional-sensor-requirement-ros";
 import { BaseRequirementRos, isRangeRequirement, requirementToString } from "../../components/header/models/ros/base-requirement-ros";
 import { DurationRos, durationToString } from "../../components/header/models/ros/duration-ros";
 import { DurationType } from "../../components/header/models/enums/duration-type";
@@ -13,10 +13,13 @@ import { normalizeString } from "../utils/string-utils";
 import { RangeRequirementRos } from "../../components/header/models/ros/range-requirement-ros";
 import { DynamicSensorDto } from "../../components/header/models/dtos/dynamic-sensor.dto";
 import { ParametersConfigService } from "../../components/live-parameters/services/parameters-ranges.service";
+import { ParameterSensorRequirementsRos } from "../models/ros/parameter-sensor-requirements.ros";
+import { SensorRequirementRos } from "../models/ros/parameter-sensor-requirement.ros";
+import { RequirementType } from "../../components/requirements-uploader/models/enums/requirement-type";
 
 export interface parsedSensor{
     sensorName: string,
-    sensorRequirements: SensorRequirementRos[]
+    sensorRequirements: AdditionalSensorRequirementRos[]
 }
 
 @Injectable({
@@ -46,9 +49,21 @@ export class SensorHandlerService{
     .requirement-card *{
         margin-bottom: 10px;
     }
+
+    .type-valid{
+        border: 1px solid green;
+    }
+
+    .type-warning{
+        border: 1px solid yellow;
+    }
+
+    .type-invalid{
+        border: 1px solid red;
+    }
     </style>`;
 
-    private _sensorsRequirements: Map<string, SensorRequirementRos[]> = new Map();
+    private _sensorsRequirements: Map<string, ParameterSensorRequirementsRos> = new Map();
 
     constructor(
         private _sweetAlertsService: SweetAlertsService,
@@ -58,14 +73,16 @@ export class SensorHandlerService{
     }    
 
     displaySensorRequirements(sensorName: string){
-        let sensorRequirements = this._sensorsRequirements.get(sensorName) as SensorRequirementRos[];
+        let sensorRequirements = this._sensorsRequirements.get(sensorName) as ParameterSensorRequirementsRos;
+        console.log(sensorRequirements);
         let requirementsHtml = this.sensorRequirementAlertCss +
-        sensorRequirements.map((sensorRequirement) => 
-        `<div class="requirement-card">
-        <span class="sensor-name">${sensorRequirement.ParameterName}</span>
-        <span class="sensor-value">${isRangeRequirement(sensorRequirement.Requirement) ? "Range" : "Value"} : ${requirementToString(sensorRequirement.Requirement)}</span>
-        <span class="sensor-duration">Duration: ${durationToString(sensorRequirement.Duration)}</span>
-        </div>`).join('\n');
+        sensorRequirements.AdditionalRequirements.map((additionalRequirement) =>
+        this.requirementToHtml(additionalRequirement.ParameterName, additionalRequirement.Requirement, undefined, additionalRequirement.Duration)).join('\n');
+        if(sensorRequirements.Requirements){
+            requirementsHtml = sensorRequirements.Requirements.map((parameterRequirement) => 
+            this.requirementToHtml(sensorName, parameterRequirement.RequirementParam, parameterRequirement.Type)
+            ).join('\n') + requirementsHtml;
+        }
         this._sweetAlertsService.customAlert({
             title: normalizeString(sensorName) + " Requirements",
             html: requirementsHtml,
@@ -73,10 +90,20 @@ export class SensorHandlerService{
         });
     }
 
+    requirementToHtml(name: string, requirement: BaseRequirementRos, requirementType?: RequirementType, duration?: DurationRos): string{
+        return (
+            `<div class="requirement-card ${requirementType !== undefined ? "type-" + RequirementType[requirementType].toLowerCase() : ""}">
+            <span class="sensor-name">${name}</span>
+            <span class="sensor-value">${isRangeRequirement(requirement) ? "Range" : "Value"} : ${requirementToString(requirement)}</span>
+            <span class="sensor-duration">Duration: ${durationToString(duration)}</span>
+            </div>
+            `);
+    }
+
     async fetchSensorRequirements(sensorName: string): Promise<void>{
         let sensorRequirements = this._sensorsRequirements.get(sensorName);
         if(sensorRequirements === undefined){
-            let reqRes = this._httpClient.get<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/sensor-requirements",
+            let reqRes = this._httpClient.get<ParameterSensorRequirementsRos>(LIVE_TELE_URL+"/live-sensors/sensor-requirements",
             {params: {sensorName: sensorName}});
             this._sensorsRequirements.set(sensorName, await firstValueFrom(reqRes));
         }        
@@ -115,7 +142,7 @@ export class SensorHandlerService{
 
     private parseSensorRequirementsAsync = async (clientInputs: string[]) => {
         let [sensorName, sensorRequirements] = clientInputs;
-        let parseSensorRequest = this._httpClient.get<SensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
+        let parseSensorRequest = this._httpClient.get<AdditionalSensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
             sensorName: sensorName,
             sensorRequirements: sensorRequirements
         }});
@@ -129,14 +156,14 @@ export class SensorHandlerService{
                 return false;
             }
         }
-        parsedRequirements = parsedRequirements as SensorRequirementRos[]
-        this._sensorsRequirements.set(sensorName, parsedRequirements);
+        parsedRequirements = parsedRequirements as AdditionalSensorRequirementRos[]
+        this._sensorsRequirements.set(sensorName, {Requirements: [], AdditionalRequirements: parsedRequirements});
         this.showSensorRequirementsAsync(sensorName, parsedRequirements)
         return true;
 
     }
     
-    private showSensorRequirementsAsync = async (sensorName: string, sensorRequirements: SensorRequirementRos[]) => {
+    private showSensorRequirementsAsync = async (sensorName: string, sensorRequirements: AdditionalSensorRequirementRos[]) => {
         let requirementsHtml = this.sensorRequirementAlertCss +
         sensorRequirements.map((sensorRequirement) => 
         `<div class="requirement-card">
@@ -157,7 +184,7 @@ export class SensorHandlerService{
         
     }
     
-    private sendSensorToAddAsync = async (sensorName: string, parsedRequirements: SensorRequirementRos[]) => {
+    private sendSensorToAddAsync = async (sensorName: string, parsedRequirements: AdditionalSensorRequirementRos[]) => {
         let dynamicSensor: DynamicSensorDto = {
             SensorName:  sensorName,
             Requirements: parsedRequirements

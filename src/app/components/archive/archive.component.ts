@@ -9,12 +9,12 @@ import { DateTimeComponent } from "./components/date-time/date-time.component";
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { MatButton } from '@angular/material/button';
 import { ArchiveData } from '../../common/models/custom-types';
-import { FilteredFrame } from '../../common/models/ros/filtered-frame.ros';
+import { FilteredFrameRos } from '../../common/models/ros/filtered-frame.ros';
 import { MongoSensorAlertRos, MongoSensorAlertsRos } from './models/ros/mongo-sensor-alert.ros';
 import { DataType as ArchiveDataType } from './models/enums/data-type';
 import { MongoSensorAlert } from './models/mongo-sensor-alert';
 import { SensorState } from '../live-parameters/models/enums/sensor-state.enum';
-import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
+import { TelemetryParameterRos } from '../../common/models/ros/telemetry-parameter.ros';
 import { ExpandableMatTableComponent } from '../../common/components/expandable-mat-table/expandable-mat-table.component';
 import { TableColumn } from '../../common/components/expandable-mat-table/models/tableColumn';
 
@@ -25,7 +25,7 @@ interface TimestampData{
   expandable: boolean
 }
 
-type ExpandedDataType = MongoSensorAlert | TelemetryParameter;
+type ExpandedDataType = MongoSensorAlert | TelemetryParameterRos;
 
 @Component({
     selector: 'app-archive',
@@ -101,7 +101,7 @@ export class ArchiveComponent implements AfterViewInit{
   
   protected handleRowClick(clickedElement: TimestampData){
     if (this.selectedDataType === ArchiveDataType.PARAMETERS){
-      let clickedFrame: FilteredFrame = this.fetchedData.find((value) => value.TimeStamp === clickedElement.timestamp) as FilteredFrame;
+      let clickedFrame: FilteredFrameRos = this.fetchedData.find((value) => value.TimeStamp === clickedElement.timestamp) as FilteredFrameRos;
       this.expandableTable.updateSubTable(
         [
           {displayName: 'Name', internalName: 'Name'},

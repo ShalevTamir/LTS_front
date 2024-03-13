@@ -4,7 +4,7 @@ import { LIVE_DATA_URL, LIVE_TELE_URL } from '../../common/constants';
 import { HttpClient } from '@angular/common/http';
 import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
 import { ExpandableMatTableComponent } from '../../common/components/expandable-mat-table/expandable-mat-table.component';
-import { ParameterSensorRos } from './models/ros/parameter-sensor.ros';
+import { ParameterSensorRos } from '../../common/models/ros/parameter-sensor.ros';
 import { NgIf } from '@angular/common';
 import { requirementToString } from '../header/models/ros/base-requirement-ros';
 import { durationToString } from '../header/models/ros/duration-ros';

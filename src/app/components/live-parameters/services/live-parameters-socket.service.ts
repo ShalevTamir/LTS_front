@@ -4,7 +4,7 @@ import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@micros
 import { firstValueFrom } from 'rxjs';
 import { ParametersListDto } from '../models/dtos/parameters-list.dto';
 import { ClientConnectionId } from '../models/ros/client-connection-id.ros';
-import { FilteredFrame } from '../../../common/models/ros/filtered-frame.ros';
+import { FilteredFrameRos } from '../../../common/models/ros/filtered-frame.ros';
 import { SocketHandlerService } from '../../../common/utils/socket-connection/socket-handler.service';
 import { LIVE_DATA_URL } from '../../../common/constants';
 import { ModifyParametersDto } from '../models/dtos/add-parameter-dto';
@@ -20,7 +20,7 @@ export class LiveParametersSocketService {
   constructor(private _httpClient: HttpClient, private _socketHandler: SocketHandlerService) { 
   }
 
-  public async initWebSocket(parametersToConfig: string[], processParameters: (filteredTeleFrame: FilteredFrame) => void){
+  public async initWebSocket(parametersToConfig: string[], processParameters: (filteredTeleFrame: FilteredFrameRos) => void){
     this._parametersToConfig = parametersToConfig;
     this._clientId ??= await this.retrieveClientId(parametersToConfig)
     this._connection = this._socketHandler.initWebSocket(LIVE_DATA_URL+"/live-parameters-socket", [

@@ -8,7 +8,7 @@ export interface DurationRos{
 }
 
 export function durationToString(duration?: DurationRos){
-    if(duration != null){
+    if(duration){
         return requirementToString(duration.Requirement) 
         + " "
         + normalizeString(DurationType[duration.DurationType]);
