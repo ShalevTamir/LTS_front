@@ -16,6 +16,7 @@ import { MongoSensorAlert } from './models/mongo-sensor-alert';
 import { SensorState } from '../live-parameters/models/enums/sensor-state.enum';
 import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
 import { ExpandableMatTableComponent } from '../../common/components/expandable-mat-table/expandable-mat-table.component';
+import { TableColumn } from '../../common/components/expandable-mat-table/models/tableColumn';
 
 interface TimestampData{
   date: string,
@@ -53,7 +54,10 @@ export class ArchiveComponent implements AfterViewInit{
   dataTypeEnum: [string, number][] = []
   selectedDataType: DataType = this.defaultDataType;
   expandableTableData: TimestampData[] = [];
-  columnsToDisplay = ['date', 'time'];
+  columnsToDisplay: TableColumn[] = [
+    {displayName:'Date', internalName: 'date'},
+    {displayName:'Time', internalName: 'time'}
+  ];
   fetchedData: ArchiveData[] = [];
 
   constructor(private _mongoDBHandler: mongoDBHandlerService){
@@ -97,12 +101,22 @@ export class ArchiveComponent implements AfterViewInit{
   protected handleRowClick(clickedElement: TimestampData){
     if (this.selectedDataType === ArchiveDataType.PARAMETERS){
       let clickedFrame: FilteredFrame = this.fetchedData.find((value) => value.TimeStamp === clickedElement.timestamp) as FilteredFrame;
-      this.expandableTable.updateSubTable(['Name', 'Value', 'Units'], clickedFrame.Parameters)
+      this.expandableTable.updateSubTable(
+        [
+          {displayName: 'Name', internalName: 'Name'},
+          {displayName: 'Value', internalName: 'Value'},
+          {displayName: 'Units', internalName: 'Units'}
+        ],
+        clickedFrame.Parameters)
     }
     else if(this.selectedDataType === ArchiveDataType.ALERTS){
       let clickedAlerts: MongoSensorAlertsRos = this.fetchedData.find((value) => value.TimeStamp === clickedElement.timestamp) as MongoSensorAlertsRos;
       
-      this.expandableTable.updateSubTable(['sensorName', 'sensorStatus'], 
+      this.expandableTable.updateSubTable(
+        [
+          {displayName: 'SensorName', internalName: 'sensorName'},
+          {displayName: 'SensorStatus', internalName: 'sensorStatus'}
+        ], 
       clickedAlerts.MongoAlerts.map((alert: MongoSensorAlertRos): MongoSensorAlert => {
         let strSensorStatus = SensorState[alert.SensorStatus];
         return {

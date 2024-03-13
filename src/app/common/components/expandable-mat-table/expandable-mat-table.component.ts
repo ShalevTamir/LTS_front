@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatTableComponent } from "./components/mat-table/mat-table.component";
 import { normalizeString } from '../../utils/string-utils';
+import { TableColumn } from './models/tableColumn';
 
 @Component({
     selector: 'app-expandable-mat-table',
@@ -26,18 +27,20 @@ export class ExpandableMatTableComponent<ExpandableDataType, ExpandedDataType> i
   @ViewChild('table', {static: true}) matTable!: MatTable<any>;
   @Output() rowClickedEmitter = new EventEmitter<ExpandableDataType>();
   @Input({required: true}) dataSource!: ExpandableDataType[];
-  @Input({required: true}) columnsToDisplay!: string[];
+  @Input({required: true}) columnsToDisplay!: TableColumn[];
+  internalNameColumns!: string[];
   expandedElement!: ExpandableDataType | null;
   expandColumnDef = 'expand';
   expandedDetailDef = 'expandedDetail'
   expandedDataSource: ExpandedDataType[] = [];
-  expandedColumnsToDisplay: string[] = [];
+  expandedColumnsToDisplay: TableColumn[] = [];
 
   normalizeStringInstance = normalizeString
   
   ngAfterViewInit(){
     setTimeout(() => {
-      this.columnsToDisplay.unshift(this.expandColumnDef);
+      this.columnsToDisplay.unshift({displayName: this.expandColumnDef, internalName: this.expandColumnDef});
+      this.internalNameColumns = this.columnsToDisplay.map((tableColumn) => tableColumn.internalName);
     });
   }
 
@@ -48,7 +51,7 @@ export class ExpandableMatTableComponent<ExpandableDataType, ExpandedDataType> i
     }
   }
 
-  public updateSubTable(expandedColumnsToDisplay: string[], expandedDataSource: ExpandedDataType[]){
+  public updateSubTable(expandedColumnsToDisplay: TableColumn[], expandedDataSource: ExpandedDataType[]){
     this.expandedColumnsToDisplay = expandedColumnsToDisplay;
     this.expandedDataSource = expandedDataSource;
   }
