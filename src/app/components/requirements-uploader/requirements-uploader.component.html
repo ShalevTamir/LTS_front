@@ -1,4 +1,9 @@
-<app-file-uploader (onFileSelectedEmitter)="handleFileSelectedAsync($event)" *ngIf="!parsedSensors.length; else parsedResults"></app-file-uploader>
+<ng-template #fileUploader>
+    <app-file-uploader (onFileSelectedEmitter)="handleFileSelectedAsync($event)" *ngIf="!parsedSensors.length; else parsedResults"></app-file-uploader>
+</ng-template>
 <ng-template id="parsed-results" #parsedResults>
     <app-expandable-mat-table [dataSource]="parsedSensors" [columnsToDisplay]="expandableColumnsToDisplay" (rowClickedEmitter)="handleRowClick($event)"></app-expandable-mat-table>
 </ng-template>
+<div id="spinner-container" *ngIf="showProgressSpinner; else fileUploader">
+    <mat-spinner></mat-spinner>
+</div>
