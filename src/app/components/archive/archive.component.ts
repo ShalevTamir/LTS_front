@@ -21,7 +21,8 @@ import { TableColumn } from '../../common/components/expandable-mat-table/models
 interface TimestampData{
   date: string,
   time: string,
-  timestamp: number
+  timestamp: number,
+  expandable: boolean
 }
 
 type ExpandedDataType = MongoSensorAlert | TelemetryParameter;
@@ -135,7 +136,15 @@ export class ArchiveComponent implements AfterViewInit{
 
   protected updateTabularData(){
     // this.expandableTable.updateData(this.fetchedData, this.selectedDataType);
-    this.expandableTableData = [...new Set(this.fetchedData.map((value) => {return {date: this.epochToUTC(value.TimeStamp, true), time: this.epochToUTC(value.TimeStamp, false), timestamp: value.TimeStamp}}))];
+    this.expandableTableData = [...new Set(this.fetchedData.map(
+      (value) => {
+        return {
+          date: this.epochToUTC(value.TimeStamp, true),
+          time: this.epochToUTC(value.TimeStamp, false),
+          timestamp: value.TimeStamp,
+          expandable: true
+        }
+      }))];
   }
 
   private async fetchData(){

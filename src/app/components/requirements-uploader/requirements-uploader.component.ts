@@ -16,6 +16,7 @@ interface ExpandableSensor{
   validRequirement: string;
   warningRequirement: string;
   invalidRequirement: string;
+  expandable: boolean;
 }
 
 interface ExpandedSensorRequirement{
@@ -58,7 +59,8 @@ export class UploaderComponent {
       sensorName: sensorRos.SensedParamName,
       validRequirement: requirementToString(validRequirement),
       warningRequirement: requirementToString(warningRequirement),
-      invalidRequirement: requirementToString(invalidRequirement) 
+      invalidRequirement: requirementToString(invalidRequirement), 
+      expandable: sensorRos.AdditionalRequirements.length > 0
     }}); 
   }
 

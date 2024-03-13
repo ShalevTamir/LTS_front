@@ -9,6 +9,10 @@ import { MatTableComponent } from "./components/mat-table/mat-table.component";
 import { normalizeString } from '../../utils/string-utils';
 import { TableColumn } from './models/tableColumn';
 
+interface Expandable {
+  expandable: boolean;
+}
+
 @Component({
     selector: 'app-expandable-mat-table',
     standalone: true,
@@ -23,7 +27,7 @@ import { TableColumn } from './models/tableColumn';
     ],
     imports: [NgFor, MatTableModule, MatIcon, NgIf, FilterColumnsPipe, MatButtonModule, MatTableComponent]
 })
-export class ExpandableMatTableComponent<ExpandableDataType, ExpandedDataType> implements AfterViewInit{
+export class ExpandableMatTableComponent<ExpandableDataType extends Expandable, ExpandedDataType> implements AfterViewInit{
   @ViewChild('table', {static: true}) matTable!: MatTable<any>;
   @Output() rowClickedEmitter = new EventEmitter<ExpandableDataType>();
   @Input({required: true}) dataSource!: ExpandableDataType[];
@@ -45,9 +49,11 @@ export class ExpandableMatTableComponent<ExpandableDataType, ExpandedDataType> i
   }
 
   protected handleRowClick(clickedElement: ExpandableDataType){
-    this.expandedElement = this.expandedElement === clickedElement ? null : clickedElement;
-    if(this.expandedElement){
-      this.rowClickedEmitter.emit(this.expandedElement);
+    if(clickedElement.expandable){
+      this.expandedElement = this.expandedElement === clickedElement ? null : clickedElement;
+      if(this.expandedElement){
+        this.rowClickedEmitter.emit(this.expandedElement);
+      }
     }
   }
 

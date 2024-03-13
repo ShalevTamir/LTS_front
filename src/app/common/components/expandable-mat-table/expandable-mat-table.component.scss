@@ -9,7 +9,7 @@
 
 .element-row{
     border-bottom-width: 0;
-    &:not(.expanded-row){
+    &:not(.expanded-row).expandable-row{
         height: 0;
         &:hover{
             backdrop-filter: contrast(80%);
