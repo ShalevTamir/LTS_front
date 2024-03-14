@@ -16,6 +16,7 @@ import { ParametersConfigService } from "../../components/live-parameters/servic
 import { ParameterSensorRequirementsRos } from "../models/ros/parameter-sensor-requirements.ros";
 import { SensorRequirementRos } from "../models/ros/parameter-sensor-requirement.ros";
 import { RequirementType } from "../../components/requirements-uploader/models/enums/requirement-type";
+import { ParameterSensorRos } from "../models/ros/parameter-sensor.ros";
 
 export interface parsedSensor{
     sensorName: string,
@@ -140,6 +141,23 @@ export class SensorHandlerService{
         return await firstValueFrom(reqRes);
     }
 
+    async parseParameterSensorsAsync(formData: FormData){
+        return await firstValueFrom(this._httpClient.post<ParameterSensorRos[]>(LIVE_TELE_URL+"/live-sensors/sensors-requirements", formData));
+    }
+
+    async uploadParameterSensorsAsync(parsedSensors: ParameterSensorRos[]){
+        try{
+            await firstValueFrom(this._httpClient.post(LIVE_TELE_URL+"/live-sensors/add-parameter-sensors", parsedSensors));
+        }
+        catch(e){
+            if(e instanceof HttpErrorResponse){
+                this._sweetAlertsService.errorAlert(e.error);            
+                return;
+            }
+        }
+        this._sweetAlertsService.successAlert("Sensors Added Succesfully");
+    }
+
     private parseSensorRequirementsAsync = async (clientInputs: string[]) => {
         let [sensorName, sensorRequirements] = clientInputs;
         let parseSensorRequest = this._httpClient.get<AdditionalSensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
@@ -190,7 +208,7 @@ export class SensorHandlerService{
             Requirements: parsedRequirements
         }
         try{
-            let reqRes = this._httpClient.post(LIVE_TELE_URL+"/live-sensors/add-sensor", dynamicSensor);
+            let reqRes = this._httpClient.post(LIVE_TELE_URL+"/live-sensors/add-dynamic-sensor", dynamicSensor);
             await firstValueFrom(reqRes);
         }
         catch(e){

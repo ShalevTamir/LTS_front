@@ -3,6 +3,10 @@
 </ng-template>
 <ng-template id="parsed-results" #parsedResults>
     <app-expandable-mat-table [dataSource]="parsedSensors" [columnsToDisplay]="expandableColumnsToDisplay" (rowClickedEmitter)="handleRowClick($event)"></app-expandable-mat-table>
+    <div id="btns-container">
+        <button class="btn" (click)="handleConfirmAsync()"><span class="text">Confirm</span></button>
+        <button class="btn" (click)="handleCancel()"><span class="text">Cancel</span></button>
+    </div>
 </ng-template>
 <div id="spinner-container" *ngIf="showProgressSpinner; else fileUploader">
     <mat-spinner></mat-spinner>

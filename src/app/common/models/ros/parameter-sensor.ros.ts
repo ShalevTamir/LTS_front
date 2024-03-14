@@ -4,5 +4,5 @@ import { SensorRequirementRos } from "./parameter-sensor-requirement.ros";
 import { ParameterSensorRequirementsRos } from "./parameter-sensor-requirements.ros";
 
 export interface ParameterSensorRos extends ParameterSensorRequirementsRos{
-    SensedParamName: string;
+    SensorName: string;
 }

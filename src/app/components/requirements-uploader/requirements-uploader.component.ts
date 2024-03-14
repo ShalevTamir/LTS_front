@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { LIVE_DATA_URL, LIVE_TELE_URL } from '../../common/constants';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
 import { ExpandableMatTableComponent } from '../../common/components/expandable-mat-table/expandable-mat-table.component';
 import { ParameterSensorRos } from '../../common/models/ros/parameter-sensor.ros';
@@ -10,6 +10,7 @@ import { requirementToString } from '../header/models/ros/base-requirement-ros';
 import { durationToString } from '../header/models/ros/duration-ros';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TableColumn } from '../../common/components/expandable-mat-table/models/tableColumn';
+import { SensorHandlerService } from '../../common/services/sensor-handler.service';
 
 interface ExpandableSensor{
   sensorName: string;
@@ -44,19 +45,19 @@ export class UploaderComponent {
   showProgressSpinner = false;
   @ViewChild(ExpandableMatTableComponent) expandableTable!: ExpandableMatTableComponent<ExpandableSensor, ExpandedSensorRequirement>
 
-  constructor(private _httpClient: HttpClient, private _changeDetector: ChangeDetectorRef){}
+  constructor(private _sensorHandler: SensorHandlerService, private _changeDetector: ChangeDetectorRef){}
   
   async handleFileSelectedAsync(file: File){
     this.showProgressSpinner = true;
     this._changeDetector.detectChanges();
     const formData = new FormData();
     formData.append("file", file);
-    this.fetchedData = await firstValueFrom(this._httpClient.post<ParameterSensorRos[]>(LIVE_TELE_URL+"/live-sensors/sensors-requirements", formData));
+    this.fetchedData = await this._sensorHandler.parseParameterSensorsAsync(formData);
     this.showProgressSpinner = false;
     this.parsedSensors = this.fetchedData.map((sensorRos): ExpandableSensor => {
       let [validRequirement, warningRequirement, invalidRequirement] = sensorRos.Requirements.map((requirement) => requirement.RequirementParam);
       return {
-      sensorName: sensorRos.SensedParamName,
+      sensorName: sensorRos.SensorName,
       validRequirement: requirementToString(validRequirement),
       warningRequirement: requirementToString(warningRequirement),
       invalidRequirement: requirementToString(invalidRequirement), 
@@ -65,7 +66,7 @@ export class UploaderComponent {
   }
 
   handleRowClick(clickedElement: ExpandableSensor){
-    let clickedSensor = this.fetchedData.find((parameterSensorRos) => parameterSensorRos.SensedParamName === clickedElement.sensorName) as ParameterSensorRos;
+    let clickedSensor = this.fetchedData.find((parameterSensorRos) => parameterSensorRos.SensorName === clickedElement.sensorName) as ParameterSensorRos;
     this.expandableTable.updateSubTable(
       [
         {displayName: 'Parameter Name', internalName: 'parameterName'},
@@ -78,6 +79,15 @@ export class UploaderComponent {
         requirement: requirementToString(sensorRequirementRos.Requirement),
         duration: durationToString(sensorRequirementRos.Duration)
       }}));
+  }
+
+  async handleConfirmAsync(){
+    await this._sensorHandler.uploadParameterSensorsAsync(this.fetchedData);    
+    this.parsedSensors = [];
+  }
+
+  handleCancel(){
+    this.parsedSensors = [];
   }
 
 }
