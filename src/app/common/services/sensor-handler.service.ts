@@ -141,8 +141,16 @@ export class SensorHandlerService{
         return await firstValueFrom(reqRes);
     }
 
-    async parseParameterSensorsAsync(formData: FormData){
-        return await firstValueFrom(this._httpClient.post<ParameterSensorRos[]>(LIVE_TELE_URL+"/live-sensors/sensors-requirements", formData));
+    async parseParameterSensorsAsync(formData: FormData): Promise<ParameterSensorRos[]>{
+        try{
+            return await firstValueFrom(this._httpClient.post<ParameterSensorRos[]>(LIVE_TELE_URL+"/live-sensors/sensors-requirements", formData));
+        }
+        catch(e){
+            if(e instanceof HttpErrorResponse){
+                this._sweetAlertsService.errorAlert(e.error);
+            }
+            return [];
+        }
     }
 
     async uploadParameterSensorsAsync(parsedSensors: ParameterSensorRos[]){

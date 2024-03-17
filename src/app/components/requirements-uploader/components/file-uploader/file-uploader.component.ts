@@ -12,11 +12,20 @@ import { LIVE_TELE_URL } from '../../../../common/constants';
 })
 export class FileUploaderComponent {
   @Output() onFileSelectedEmitter = new EventEmitter<File>();
+  acceptableExtentions = ['pdf', 'docx'];
 
   async onFileSelected(event: any){
     const file: File = event.target.files[0];
     if(file){
       this.onFileSelectedEmitter.emit(file);
     }
+  }
+
+  protected formatedExtentions(){
+    return this.acceptableExtentions.map(extention => '.' + extention);
+  }
+
+  protected uppercaseExtentions(){
+    return this.acceptableExtentions.map(extention => extention.toUpperCase());
   }
 } 
