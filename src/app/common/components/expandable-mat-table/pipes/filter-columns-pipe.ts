@@ -7,7 +7,7 @@ import { TableColumn } from "../models/tableColumn";
 })
 export class FilterColumnsPipe implements PipeTransform{
     transform(columnsToDisplay: TableColumn[], expandColumnDef: string) {
-        return columnsToDisplay.filter((columnName) => columnName.internalName !== expandColumnDef);
+        return columnsToDisplay.filter((columnName) => columnName.internalName !== expandColumnDef);;
     }
     
 }

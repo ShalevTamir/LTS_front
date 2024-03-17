@@ -43,6 +43,8 @@ export class ExpandableMatTableComponent<ExpandableDataType extends Expandable, 
   
   ngAfterViewInit(){
     setTimeout(() => {
+      //Make copy of the given array
+      this.columnsToDisplay = Object.assign([], this.columnsToDisplay);
       this.columnsToDisplay.unshift({displayName: this.expandColumnDef, internalName: this.expandColumnDef});
       this.internalNameColumns = this.columnsToDisplay.map((tableColumn) => tableColumn.internalName);
     });
