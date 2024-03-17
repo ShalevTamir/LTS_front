@@ -1,9 +1,11 @@
 <app-file-uploader (onFileSelectedEmitter)="handleFileSelectedAsync($event)" *ngIf="!showProgressSpinner && !parsedSensors.length"></app-file-uploader>
 <ng-container *ngIf="parsedSensors.length">
-    <app-expandable-mat-table [dataSource]="parsedSensors" [columnsToDisplay]="expandableColumnsToDisplay" (rowClickedEmitter)="handleRowClick($event)"></app-expandable-mat-table>
-    <div id="btns-container">
-        <button class="btn" (click)="handleConfirmAsync()"><span class="text">Confirm</span></button>
-        <button class="btn" (click)="handleCancel()"><span class="text">Cancel</span></button>
+    <div id="sensors-grid">
+        <app-expandable-mat-table [dataSource]="parsedSensors" [columnsToDisplay]="expandableColumnsToDisplay" (rowClickedEmitter)="handleRowClick($event)"></app-expandable-mat-table>
+        <div id="btns-container">
+            <button class="btn" (click)="handleConfirmAsync()"><span class="text">Confirm</span></button>
+            <button class="btn" (click)="handleCancel()"><span class="text">Cancel</span></button>
+        </div>
     </div>
 </ng-container>
 <div id="spinner-container" *ngIf="showProgressSpinner">

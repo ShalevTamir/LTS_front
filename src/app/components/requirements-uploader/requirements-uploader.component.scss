@@ -5,11 +5,20 @@
 
 $border: 1px solid #5a5b69;
 
+app-expandable-mat-table{
+    overflow-y: scroll;
+    max-height: 80vh;
+    max-width: 60vw;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.5%;
+}
+
 ::ng-deep{
     table.expandable-table{
-        margin-top: 1.5%;
-    
+        
         & > thead > tr > th{
+            top: -1px !important;
             text-align: center !important;
             background-color: #14172f;
         }
@@ -26,11 +35,14 @@ $border: 1px solid #5a5b69;
             & > td:last-child{
                 border-right: $border;
             }
+            &:last-child{
+                border-bottom: $border;
+            }
         }
 
         & > thead > tr > th {
-            border-bottom: $border;
-            border-top: $border;
+            // border-bottom: $border;
+            // border-top: $border;
 
             &:first-child{
                 border-left: $border;
@@ -45,9 +57,16 @@ $border: 1px solid #5a5b69;
         }
     }
 }
+#sensors-grid{
+    grid-template-rows: 1fr auto;
+    display: grid;
+    height: 84vh;
+}
+
 #btns-container{
     display: flex;
     margin-top: 1%;
+    padding-bottom: 1%;
     justify-content: center;
     .btn {
         align-items: center;
