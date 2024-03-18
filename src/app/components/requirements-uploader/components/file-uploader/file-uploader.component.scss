@@ -44,7 +44,7 @@ $uploader-color: #5a5b69;
     align-items: center;
     cursor: pointer;
 
-    &:hover{
+    &:hover, &.hover{
         svg{
             animation-iteration-count: infinite;
             animation-name:jump-animation;
