@@ -12,13 +12,19 @@ import { DragAndDropDirective } from './directives/drag-and-drop.directive';
   styleUrl: './file-uploader.component.scss'
 })
 export class FileUploaderComponent {
-  @Output() onFileSelectedEmitter = new EventEmitter<File>();
+  @Output() onFileSelectedEmitter = new EventEmitter<File[]>();
   acceptableExtentions = ['pdf', 'docx'];
 
-  async onFileSelected(files: File[]){
-    
+  async onFileSelected(files: File[] | FileList){
+    if(files instanceof FileList){
+      let arrFiles: File[] = [];
+      for(let i=0; i<files.length; i++){
+        arrFiles.push(files.item(i) as File);
+      }
+      files = arrFiles;
+    }
     if(files.length){
-      this.onFileSelectedEmitter.emit(files[0]);
+      this.onFileSelectedEmitter.emit(files);
     }
   }
 
@@ -28,5 +34,14 @@ export class FileUploaderComponent {
 
   protected uppercaseExtentions(){
     return this.acceptableExtentions.map(extention => extention.toUpperCase());
+  }
+
+  protected preventEventPropagation(event: Event): void{
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  test(){
+    console.log('hi');
   }
 } 

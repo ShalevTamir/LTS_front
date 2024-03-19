@@ -47,11 +47,11 @@ export class UploaderComponent {
 
   constructor(private _sensorHandler: SensorHandlerService, private _changeDetector: ChangeDetectorRef){}
   
-  async handleFileSelectedAsync(file: File){
+  async handleFilesSelectedAsync(files: File[]){
     this.showProgressSpinner = true;
     this._changeDetector.detectChanges();
     const formData = new FormData();
-    formData.append("file", file);
+    files.forEach(file => formData.append('files', file));
     this.fetchedData = await this._sensorHandler.parseParameterSensorsAsync(formData);
     this.showProgressSpinner = false;
     this.parsedSensors = this.fetchedData.map((sensorRos): ExpandableSensor => {

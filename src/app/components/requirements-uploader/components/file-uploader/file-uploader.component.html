@@ -1,6 +1,6 @@
-<input type="file" id="file-input" (change)="onFileSelected($any($event).target?.files)" [accept]="formatedExtentions().join(',')" #fileInput>
+<input type="file" id="file-input" (change)="onFileSelected($any($event).target?.files)" [accept]="formatedExtentions().join(',')" multiple #fileInput>
 <div id="file-upload" (click)="fileInput.click();" appDragAndDrop (filesDropped)="onFileSelected($event)">
-    <svg xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet" (dragover)="preventEventPropagation($event)" (dragleave)="preventEventPropagation($event)">
         <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none">
         <path d="M1395 5105 c-42 -22 -1142 -1123 -1160 -1162 -22 -47 -23 -3825 0 -3879 28 -68 -64 -64 1451 -62 l1366 3 29 33 c43 47 41 102 -5 148 l-34 34 -1301 0 -1301 0 0 1780 0 1779 519 3 c509 3 520 3 548 24 51 38 52 50 52 592 l1 502 1110 0 1110 0 2 -742 c3 -696 4 -745 21 -769 40 -59 125 -63 171 -8 l26 31 0 819 0 819 -29 32 -29 33 -1259 3 c-1118 2 -1261 0 -1288 -13z m-65 -735 l0 -360 -362 0 -363 0 360 360 c198 198 361 360 362 360 2 0 3 -162 3 -360z"/>
         <path d="M980 3113 c-81 -26 -113 -96 -74 -162 35 -59 -39 -56 1185 -59 888 -2 1134 0 1164 10 101 34 104 170 4 205 -26 9 -310 12 -1149 12 -613 0 -1122 -3 -1130 -6z"/>

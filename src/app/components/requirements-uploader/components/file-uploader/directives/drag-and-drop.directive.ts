@@ -7,14 +7,15 @@ import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angu
 export class DragAndDropDirective {
   @Output() filesDropped = new EventEmitter<File[]>();
   private readonly HOVER_CLASS_NAME = 'hover';
-
   constructor(private _elementRef: ElementRef<HTMLElement>) { }
 
   @HostListener('dragover', ['$event'])
   onDragOver(event: Event){
     event.preventDefault();
     event.stopPropagation();
-    this._elementRef.nativeElement.classList.add(this.HOVER_CLASS_NAME);
+   if(!this._elementRef.nativeElement.classList.contains(this.HOVER_CLASS_NAME)){
+      this._elementRef.nativeElement.classList.add(this.HOVER_CLASS_NAME);
+    }
   }
 
   @HostListener('dragleave', ['$event'])
@@ -29,6 +30,7 @@ export class DragAndDropDirective {
     event.preventDefault();
     event.stopPropagation();
     const files = event.dataTransfer.files;
+     
     if(files.length > 0){
       this.filesDropped.emit(files);
     }
