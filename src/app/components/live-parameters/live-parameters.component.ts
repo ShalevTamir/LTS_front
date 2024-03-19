@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ParameterCardComponent } from './components/parameter-card/parameter-card.component';
 import { NgFor } from '@angular/common';
-import { FilteredFrame } from '../../common/models/ros/filtered-frame.ros';
+import { FilteredFrameRos } from '../../common/models/ros/filtered-frame.ros';
 import { LiveParametersSocketService } from './services/live-parameters-socket.service';
-import { TelemetryParameter } from '../../common/models/ros/telemetry-parameter.ros';
+import { TelemetryParameterRos } from '../../common/models/ros/telemetry-parameter.ros';
 import { SensorAlertsService } from './services/sensor-alerts.service';
 import { ActivationEnd, ActivationStart, ChildActivationEnd, ChildActivationStart, GuardsCheckEnd, GuardsCheckStart, NavigationEnd, NavigationStart, ResolveEnd, ResolveStart, Router, RoutesRecognized } from '@angular/router';
 import { ParametersConfigService } from './services/parameters-ranges.service';
@@ -90,9 +90,9 @@ export class LiveParametersComponent implements OnInit{
     });
   }
 
-  updateAllCharts = (filteredTeleFrame: FilteredFrame) => {
+  updateAllCharts = (filteredTeleFrame: FilteredFrameRos) => {
     this.cards.forEach(card => {
-      let cardTeleParameter: TelemetryParameter | undefined = 
+      let cardTeleParameter: TelemetryParameterRos | undefined = 
         filteredTeleFrame.Parameters.find(parameter => parameter.Name == card.parameterName);
       if (cardTeleParameter !== undefined){
         let date = new Date(0);

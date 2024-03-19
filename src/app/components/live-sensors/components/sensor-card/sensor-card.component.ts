@@ -6,7 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { normalizeString as normalizeStringInstance} from '../../../../common/utils/string-utils';
 import { SensorHandlerService } from '../../../../common/services/sensor-handler.service';
-import { SensorRequirementRos } from '../../../header/models/ros/sensor-requirement-ros';
+import { AdditionalSensorRequirementRos } from '../../../../common/models/ros/additional-sensor-requirement-ros';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { DeleteSensorsService } from '../../../../common/services/delete-sensors.service';
 

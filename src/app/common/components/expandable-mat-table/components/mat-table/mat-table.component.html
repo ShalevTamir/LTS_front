@@ -1,0 +1,8 @@
+<table mat-table [dataSource]="dataSource" class="expanded-table">
+    <ng-container *ngFor="let column of columnsToDisplay" [matColumnDef]="column.internalName">
+        <th mat-header-cell  *matHeaderCellDef>{{column.displayName}}</th>
+        <td mat-cell *matCellDef="let element">{{element[column.internalName]}}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="internalColumnNames"></tr>
+    <tr mat-row *matRowDef="let rowElement; columns: internalColumnNames"></tr>
+</table>
