@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+//TODO: move text up, letter spacing, fonts
 @Component({
   selector: 'app-login',
   standalone: true,

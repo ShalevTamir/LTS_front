@@ -40,8 +40,4 @@ export class FileUploaderComponent {
     event.preventDefault();
     event.stopPropagation();
   }
-
-  test(){
-    console.log('hi');
-  }
 } 

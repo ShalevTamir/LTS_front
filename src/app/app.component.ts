@@ -1,6 +1,6 @@
 import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NavigationStart, Router, RouterOutlet } from '@angular/router';
+import { CommonModule, NgIf } from '@angular/common';
+import { NavigationStart, Router, RouterOutlet, RoutesRecognized } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LiveParametersComponent } from './components/live-parameters/live-parameters.component';
@@ -12,6 +12,7 @@ import { GaugesDataPersistenceService } from './components/live-parameters/compo
 import { SweetAlertsService } from './common/services/sweet-alerts.service';
 import { SensorHandlerService } from './common/services/sensor-handler.service';
 import { mongoDBHandlerService } from './components/archive/services/mongoDB-handler.service';
+import { LOGIN_ROUTE } from './app.routes';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,8 @@ import { mongoDBHandlerService } from './components/archive/services/mongoDB-han
     HeaderComponent,
     LiveParametersComponent,
     RouterOutlet,
-    HttpClientModule
+    HttpClientModule,
+    NgIf
   ],
   providers:[
     LiveParametersSocketService,
@@ -39,4 +41,18 @@ import { mongoDBHandlerService } from './components/archive/services/mongoDB-han
 })
 export class AppComponent{
   title = 'LTS_front';
+  hideUI = false;
+
+  constructor(router: Router){
+    router.events.subscribe(event => {
+      if(event instanceof RoutesRecognized){
+        if(event.url === "/" + LOGIN_ROUTE){
+          this.hideUI = true;
+        }
+        else{
+          this.hideUI = false;
+        }
+      }
+    })
+  }
 }

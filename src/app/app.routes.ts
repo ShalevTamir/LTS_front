@@ -7,11 +7,12 @@ import { UploaderComponent } from './components/requirements-uploader/requiremen
 
 export const TELE_PARAMS_ROUTE = 'live-telemetry-parameters';
 export const DYNAMIC_SENSORS_ROUTE = 'live-telemetry-sensors';
+export const LOGIN_ROUTE = 'login';
 
 export const routes: Routes = [
     { path: TELE_PARAMS_ROUTE, component: LiveParametersComponent },
     { path: 'archive', component: ArchiveComponent },
     { path: DYNAMIC_SENSORS_ROUTE, component: LiveSensorsComponent },
-    { path: 'login', component: LoginComponent },
+    { path: LOGIN_ROUTE, component: LoginComponent },
     { path: 'upload-sensors-requirements', component: UploaderComponent}
 ];
