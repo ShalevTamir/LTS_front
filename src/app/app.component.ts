@@ -12,7 +12,7 @@ import { GaugesDataPersistenceService } from './components/live-parameters/compo
 import { SweetAlertsService } from './common/services/sweet-alerts.service';
 import { SensorHandlerService } from './common/services/sensor-handler.service';
 import { mongoDBHandlerService } from './components/archive/services/mongoDB-handler.service';
-import { LOGIN_ROUTE } from './app.routes';
+import { LOGIN_ROUTE, SIGNUP_ROUTE } from './app.routes';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +46,7 @@ export class AppComponent{
   constructor(router: Router){
     router.events.subscribe(event => {
       if(event instanceof RoutesRecognized){
-        if(event.url === "/" + LOGIN_ROUTE){
+        if(event.url === "/" + LOGIN_ROUTE || event.url === "/" + SIGNUP_ROUTE){
           this.hideUI = true;
         }
         else{

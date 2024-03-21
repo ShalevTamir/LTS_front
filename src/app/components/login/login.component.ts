@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { SIGNUP_ROUTE } from '../../app.routes';
 //TODO: move text up, letter spacing, fonts
 @Component({
   selector: 'app-login',
@@ -9,4 +11,9 @@ import { Component } from '@angular/core';
 })
 export class LoginComponent {
 
+  constructor(private _router: Router){}
+
+  handleRedirect(){
+    this._router.navigateByUrl(SIGNUP_ROUTE);
+  }
 }
