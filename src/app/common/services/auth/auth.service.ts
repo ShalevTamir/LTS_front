@@ -15,8 +15,8 @@ export class AuthService{
 
     public async authenticateUserAsync(username: string, password: string){
         const userDto: UserModel = {
-            Username : username,
-            Password : password
+            Username: username,
+            Password: password
         }
         let reqRes = firstValueFrom(this._httpClient.post<string>(AUTH_URL+"/authorization/login", userDto));
         let jwtToken: string = "";
@@ -30,6 +30,24 @@ export class AuthService{
             }
         }
         localStorage.setItem('token', jwtToken);
+    }
+
+    public async signUpAsync(username: string, password: string){
+        const userDto: UserModel = {
+            Username: username,
+            Password: password
+        }
+        let reqRes = firstValueFrom(this._httpClient.post<string>(AUTH_URL+"/authorization/signup", userDto));
+        try{
+            await reqRes;
+        }
+        catch(e){
+            if (e instanceof HttpErrorResponse){
+                this._swalService.errorAlert(e.error);
+                return;
+            }
+        }
+        await this.authenticateUserAsync(username, password);
     }
     
     
