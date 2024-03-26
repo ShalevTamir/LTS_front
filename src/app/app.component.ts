@@ -14,6 +14,7 @@ import { SensorHandlerService } from './common/services/sensor-handler.service';
 import { mongoDBHandlerService } from './components/archive/services/mongoDB-handler.service';
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from './app.routes';
 import { AuthService } from './common/services/auth/auth.service';
+import { AuthDataFactory as AuthDataFactoryService } from './components/auth/services/auth-data-factory';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,8 @@ import { AuthService } from './common/services/auth/auth.service';
     SweetAlertsService,
     SensorHandlerService,
     mongoDBHandlerService,
-    AuthService
+    AuthService,
+    AuthDataFactoryService
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

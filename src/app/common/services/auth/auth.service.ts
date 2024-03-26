@@ -13,7 +13,7 @@ export class AuthService{
 
     }
 
-    public async authenticateUserAsync(username: string, password: string){
+    public async loginAsync(username: string, password: string){
         const userDto: UserModel = {
             Username: username,
             Password: password
@@ -47,7 +47,7 @@ export class AuthService{
                 return;
             }
         }
-        await this.authenticateUserAsync(username, password);
+        await this.loginAsync(username, password);
     }
     
     
