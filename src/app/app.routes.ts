@@ -6,6 +6,7 @@ import { UploaderComponent } from './components/requirements-uploader/requiremen
 import { AuthComponent } from './components/auth/auth.component';
 
 export const TELE_PARAMS_ROUTE = 'live-telemetry-parameters';
+export const HOME_ROUTE = TELE_PARAMS_ROUTE;
 export const DYNAMIC_SENSORS_ROUTE = 'live-telemetry-sensors';
 export const LOGIN_ROUTE = 'login';
 export const SIGNUP_ROUTE = 'signup';

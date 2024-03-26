@@ -4,6 +4,7 @@ import { UserModel } from "../../models/dtos/userModel";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { SweetAlertsService } from "../sweet-alerts.service";
+import { TOKEN_STORAGE_KEY } from "../../models/constants";
 
 @Injectable({
     'providedIn': 'root'
@@ -13,7 +14,7 @@ export class AuthService{
 
     }
 
-    public async loginAsync(username: string, password: string){
+    public async loginAsync(username: string, password: string): Promise<boolean>{
         const userDto: UserModel = {
             Username: username,
             Password: password
@@ -26,13 +27,14 @@ export class AuthService{
         catch(e){
             if (e instanceof HttpErrorResponse){
                 this._swalService.errorAlert(e.error);
-                return;
+                return false;
             }
         }
-        localStorage.setItem('token', jwtToken);
+        localStorage.setItem(TOKEN_STORAGE_KEY, jwtToken);
+        return true;
     }
 
-    public async signUpAsync(username: string, password: string){
+    public async signUpAsync(username: string, password: string): Promise<boolean>{
         const userDto: UserModel = {
             Username: username,
             Password: password
@@ -44,10 +46,11 @@ export class AuthService{
         catch(e){
             if (e instanceof HttpErrorResponse){
                 this._swalService.errorAlert(e.error);
-                return;
+                return false;
             }
         }
         await this.loginAsync(username, password);
+        return true;
     }
     
     

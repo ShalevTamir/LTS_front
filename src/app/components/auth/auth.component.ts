@@ -1,12 +1,13 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../common/services/auth/auth.service';
-import { SIGNUP_ROUTE } from '../../app.routes';
+import { HOME_ROUTE, SIGNUP_ROUTE } from '../../app.routes';
 import { AuthMode } from './models/enums/auth-mode';
 import { AuthData } from './models/auth-data';
 import { AuthDataFactory } from './services/auth-data-factory';
+import { TOKEN_STORAGE_KEY } from '../../common/models/constants';
 
 @Component({
   selector: 'app-auth',
@@ -15,7 +16,7 @@ import { AuthDataFactory } from './services/auth-data-factory';
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss'
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit{
   protected authFormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -25,6 +26,10 @@ export class AuthComponent {
 
   constructor(private _router: Router, private _authService: AuthService, private _authDataFactory: AuthDataFactory){
     this._authData = _authDataFactory.createAuthData((AuthMode as any)[this._router.url.substring(1).toUpperCase()]) as AuthData;
+  }
+
+  ngOnInit(): void {
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
   }
 
   get usernameControl(): FormControl{
@@ -56,13 +61,17 @@ export class AuthComponent {
     this.submitted = true;
     if(!this.authFormGroup.invalid){
       const userInput: [string, string] = [this.usernameControl.value, this.passwordControl.value];
+      let successful: boolean = false;
       switch (this._authData.getAuthMode()){
         case AuthMode.LOGIN:
-          await this._authService.loginAsync(...userInput);
-            return;
+          successful = await this._authService.loginAsync(...userInput);
+            break;
         case AuthMode.SIGNUP:
-          await this._authService.signUpAsync(...userInput);
-          return;
+          successful = await this._authService.signUpAsync(...userInput);
+          break;
+      }
+      if(successful){
+        this._router.navigateByUrl(HOME_ROUTE);
       }
     }
   }

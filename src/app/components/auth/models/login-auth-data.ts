@@ -17,7 +17,7 @@ export class LoginAuthData extends AuthData{
     }
 
     public override getRedirectText(): string {
-        return "Already have a user?";
+        return "Doesn't have a user?";
     }
 
     public override getRedirectButtonText(): string {
