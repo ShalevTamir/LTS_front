@@ -1,6 +1,6 @@
 import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
-import { NavigationStart, Router, RouterOutlet, RoutesRecognized } from '@angular/router';
+import { NavigationStart, Router, RouterEvent, RouterOutlet, RoutesRecognized } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LiveParametersComponent } from './components/live-parameters/live-parameters.component';
@@ -15,6 +15,7 @@ import { mongoDBHandlerService } from './components/archive/services/mongoDB-han
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from './app.routes';
 import { AuthService } from './common/services/auth/auth.service';
 import { AuthDataFactory as AuthDataFactoryService } from './components/auth/services/auth-data-factory';
+import { RouterService } from './common/services/router-service';
 
 @Component({
   selector: 'app-root',
@@ -43,20 +44,16 @@ import { AuthDataFactory as AuthDataFactoryService } from './components/auth/ser
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent{
+export class AppComponent implements OnInit{
   title = 'LTS_front';
   hideUI = false;
+  isPageNotFound: boolean = false;
 
-  constructor(router: Router){
-    router.events.subscribe(event => {
-      if(event instanceof RoutesRecognized){
-        if(event.url === "/" + LOGIN_ROUTE || event.url === "/" + SIGNUP_ROUTE){
-          this.hideUI = true;
-        }
-        else{
-          this.hideUI = false;
-        }
-      }
-    })
+  constructor(private _router: RouterService){
+  }
+  ngOnInit(): void {
+    this._router.detectRouterEvents(RoutesRecognized).subscribe(event => {
+      this.hideUI = this._router.isCurrentUrl(event.url, LOGIN_ROUTE, SIGNUP_ROUTE) || !this._router.isRouteRecognized(event.url);
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { seperateString } from '../../common/utils/string-utils';
@@ -8,6 +8,7 @@ import { SensorHandlerService } from '../../common/services/sensor-handler.servi
 import { NgIf, NgStyle } from '@angular/common';
 import { DYNAMIC_SENSORS_ROUTE, TELE_PARAMS_ROUTE } from '../../app.routes';
 import { DeleteSensorsService } from '../../common/services/delete-sensors.service';
+import { RouterService } from '../../common/services/router-service';
 
 @Component({
   selector: 'app-header',
@@ -16,23 +17,25 @@ import { DeleteSensorsService } from '../../common/services/delete-sensors.servi
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit{
   @ViewChild('removeSensorBtn') removeSensorBtn!: ElementRef<HTMLElement>;
   title: string = ""
   liveParamsLoaded: boolean = false;
   dynamicSensorsPageLoaded: boolean = false;
   sensorDeletionActive: boolean = false;
-  constructor(protected router: Router, private _dynamicSensorService: SensorHandlerService, private _deleteSensorsService: DeleteSensorsService){
-    this.router.events.subscribe((event: any) =>{
-      if(event instanceof RoutesRecognized){
-        this.liveParamsLoaded = event.url === "/" + TELE_PARAMS_ROUTE;
-        this.dynamicSensorsPageLoaded = event.url === "/" + DYNAMIC_SENSORS_ROUTE;
-        if(this.dynamicSensorsPageLoaded){
-          this.sensorDeletionActive = false;
-        }
-        let eventUrl: string = event.url;
-        this.title = seperateString(eventUrl.substring(1), '-');
+  constructor(private _router: RouterService, private _dynamicSensorService: SensorHandlerService, private _deleteSensorsService: DeleteSensorsService){
+  }
+  
+  ngOnInit(): void {
+    this._router.detectRouterEvents(RoutesRecognized).subscribe(event => {
+      this.liveParamsLoaded = this._router.isCurrentUrl(event.url, TELE_PARAMS_ROUTE);
+      this.dynamicSensorsPageLoaded = this._router.isCurrentUrl(event.url, DYNAMIC_SENSORS_ROUTE);
+
+      if(this.dynamicSensorsPageLoaded){
+        this.sensorDeletionActive = false;
       }
+      let eventUrl: string = event.url;
+      this.title = seperateString(eventUrl.substring(1), '-');
     });
   }
 

@@ -5,6 +5,7 @@ import { LiveSensorsComponent } from './components/live-sensors/live-sensors.com
 import { UploaderComponent } from './components/requirements-uploader/requirements-uploader.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { tokenGaurd } from './common/gaurds/TokenGaurd';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 export const TELE_PARAMS_ROUTE = 'live-telemetry-parameters';
 export const HOME_ROUTE = TELE_PARAMS_ROUTE;
@@ -18,5 +19,7 @@ export const routes: Routes = [
     { path: DYNAMIC_SENSORS_ROUTE, component: LiveSensorsComponent, canActivate: [tokenGaurd] },
     { path: LOGIN_ROUTE, component: AuthComponent },
     { path: SIGNUP_ROUTE, component: AuthComponent },
-    { path: 'upload-sensors-requirements', component: UploaderComponent, canActivate: [tokenGaurd]}
+    { path: '', redirectTo: TELE_PARAMS_ROUTE, pathMatch: 'full'},
+    { path: 'upload-sensors-requirements', component: UploaderComponent, canActivate: [tokenGaurd]},
+    { path: '**', component: PageNotFoundComponent}
 ];
