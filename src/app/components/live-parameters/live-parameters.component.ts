@@ -12,6 +12,7 @@ import { GaugesDataPersistenceService } from './components/parameter-card/servic
 import { LIVE_TELE_URL } from '../../common/constants';
 import { TELE_PARAMS_ROUTE } from '../../app.routes';
 import { SweetAlertsService } from '../../common/services/sweet-alerts.service';
+import { RouterService } from '../../common/services/router-service';
 
 @Component({
   selector: 'app-live-parameters',
@@ -30,22 +31,19 @@ export class LiveParametersComponent implements OnInit{
     private _sensorAlerts: SensorAlertsService,
     private _parametersConfigService: ParametersConfigService,
     private _gaugesDataService: GaugesDataPersistenceService,
-    private _router: Router,
+    private _router: RouterService,
     private _swalService: SweetAlertsService) {      
       this.parameters = ["Altitude","Longitude","Wind_Speed"];
     }
     
     ngOnInit(): void {
-      this._router.events.subscribe((event: any) =>{
-        if(event instanceof NavigationEnd){
-          if(event.urlAfterRedirects === "/" +TELE_PARAMS_ROUTE){
-            this.startSockets();
-          }
-          else{
-            this.stopSockets();
-          }
+      this._router.detectRouterEvents(NavigationEnd).subscribe(event => {
+        if (this._router.isCurrentUrl(event.url, TELE_PARAMS_ROUTE)){
+          this.startSockets();
         }
-        
+        else{
+          this.stopSockets();
+        }
       })
       this._parametersConfigService.getParameterNames().then((parameterNames: string[]) => this.parametersNamesOptions = parameterNames);
       this.startSockets();

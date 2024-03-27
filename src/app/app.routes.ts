@@ -21,5 +21,5 @@ export const routes: Routes = [
     { path: SIGNUP_ROUTE, component: AuthComponent },
     { path: '', redirectTo: TELE_PARAMS_ROUTE, pathMatch: 'full'},
     { path: 'upload-sensors-requirements', component: UploaderComponent, canActivate: [tokenGaurd]},
-    { path: '**', component: PageNotFoundComponent }
+    { path: '**', component: PageNotFoundComponent}
 ];
