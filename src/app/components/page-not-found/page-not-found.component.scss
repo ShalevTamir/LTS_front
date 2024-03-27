@@ -1,0 +1,21 @@
+#container{
+    width: 92vw;
+    height: 80vh;
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 200px;
+    flex-direction: column;
+    span{
+        font-family: Montserrat;
+        line-height: 1.3;
+        &#title{
+            font-size: 120px;
+        }
+        &#subtitle{
+            font-size: 40px;
+        }
+    }
+}
