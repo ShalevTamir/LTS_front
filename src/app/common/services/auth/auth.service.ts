@@ -5,12 +5,15 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { SweetAlertsService } from "../sweet-alerts.service";
 import { TOKEN_STORAGE_KEY } from "../../models/constants";
+import { LOGIN_ROUTE } from "../../../app.routes";
+import { Router } from "@angular/router";
+import { RouterService } from "../router-service";
 
 @Injectable({
     'providedIn': 'root'
 })
 export class AuthService{
-    constructor(private _httpClient: HttpClient, private _swalService: SweetAlertsService){
+    constructor(private _httpClient: HttpClient, private _swalService: SweetAlertsService, private _router: Router, private _routerService: RouterService){
 
     }
 
@@ -53,5 +56,11 @@ export class AuthService{
         return true;
     }
     
+    public handleInvalidToken(errorMessage: string){
+        if (!this._routerService.isCurrentUrl(this._router.url, LOGIN_ROUTE)){
+            this._swalService.errorAlert(errorMessage);
+            this._router.navigateByUrl(LOGIN_ROUTE);
+        }
+    }
     
 }

@@ -23,7 +23,7 @@ export class LiveParametersSocketService {
   public async initWebSocket(parametersToConfig: string[], processParameters: (filteredTeleFrame: FilteredFrameRos) => void){
     this._parametersToConfig = parametersToConfig;
     this._clientId ??= await this.retrieveClientId(parametersToConfig)
-    this._connection = this._socketHandler.initWebSocket(LIVE_DATA_URL+"/live-parameters-socket", [
+    this._connection = await this._socketHandler.initWebSocketAsync(LIVE_DATA_URL+"/live-parameters-socket", [
       {
         listenerName: 'receiveParameters',
         callback: processParameters
@@ -33,10 +33,7 @@ export class LiveParametersSocketService {
         callback: this.handleConnectionStatus
       }
     ]);
-       
-    if(this._connection.state == HubConnectionState.Disconnected){
-      await this._connection.start();
-    }
+        
     await this.startParametersTransfer();
   }
 

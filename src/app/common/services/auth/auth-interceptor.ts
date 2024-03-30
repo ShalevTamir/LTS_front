@@ -4,9 +4,10 @@ import { TOKEN_STORAGE_KEY } from "../../models/constants";
 import { SweetAlertsService } from "../sweet-alerts.service";
 import { Router } from "@angular/router";
 import { LOGIN_ROUTE } from "../../../app.routes";
+import { AuthService } from "./auth.service";
 
 export class AuthInterceptor implements HttpInterceptor{
-    constructor(private _swalService: SweetAlertsService, private _router: Router){}
+    constructor(private _authService: AuthService){}
     
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const token = localStorage.getItem(TOKEN_STORAGE_KEY);
@@ -18,8 +19,7 @@ export class AuthInterceptor implements HttpInterceptor{
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
                 if (error.status === HttpStatusCode.Forbidden || error.status === HttpStatusCode.Unauthorized){
-                    this._swalService.errorAlert(error.error);
-                    this._router.navigateByUrl(LOGIN_ROUTE);
+                    this._authService.handleInvalidToken(error.error);
                 }
                 throw error;
             })
