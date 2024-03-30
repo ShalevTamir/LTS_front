@@ -27,7 +27,6 @@ import { RouterService } from './common/services/router-service';
     HeaderComponent,
     LiveParametersComponent,
     RouterOutlet,
-    HttpClientModule,
     NgIf
   ],
   providers:[
@@ -39,7 +38,8 @@ import { RouterService } from './common/services/router-service';
     SensorHandlerService,
     mongoDBHandlerService,
     AuthService,
-    AuthDataFactoryService
+    AuthDataFactoryService,
+    RouterService
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

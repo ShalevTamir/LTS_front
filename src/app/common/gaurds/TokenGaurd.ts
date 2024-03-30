@@ -13,7 +13,5 @@ export const tokenGaurd: CanActivateFn = () => {
         router.navigateByUrl(LOGIN_ROUTE);
         return false;
     }
-    else{
-        return true;
-    }
+    return true;
 }
