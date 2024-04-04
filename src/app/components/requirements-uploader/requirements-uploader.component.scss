@@ -5,6 +5,15 @@
 
 $border: 1px solid #5a5b69;
 
+:host{
+    height: 100%;
+}
+
+app-file-uploader{
+    height: 100%;
+    display: block;
+}
+
 app-expandable-mat-table{
     overflow-y: scroll;
     max-height: 80vh;
@@ -60,7 +69,7 @@ app-expandable-mat-table{
 #sensors-grid{
     grid-template-rows: 1fr auto;
     display: grid;
-    height: 84vh;
+    height: 100%;
 }
 
 #btns-container{
@@ -114,7 +123,7 @@ app-expandable-mat-table{
 
 #spinner-container{
     display: flex;
-    height: 80vh;
+    height: 100%;
     justify-content: center;
     align-items: center;
 }

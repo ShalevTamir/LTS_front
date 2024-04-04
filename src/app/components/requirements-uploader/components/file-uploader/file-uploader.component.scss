@@ -34,12 +34,11 @@ $uploader-color: #5a5b69;
 }
 
 #file-upload{
-    height: 80vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     border: 6px dashed #7f8194;
     border-radius: 20px;
-    margin-top: 20px;
     flex-direction: column;
     align-items: center;
     cursor: pointer;

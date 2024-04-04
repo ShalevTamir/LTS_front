@@ -1,0 +1,5 @@
+<div id="page-container" *ngIf="appear" [@containerOpenClose]="'open'" (click)="handleExit()">
+    <div id="popup-container" *ngIf="appear" [@cardOpenClose]="'open'" (click)="handlePopupClick($event)" [style.width.vw]="width" [style.height.vh]="height">
+        <ng-content></ng-content>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+@keyframes popup-animation{
+    0%{
+        transform: scale(0.9);
+    }
+    50%{
+        transform: scale(1.1);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+@keyframes blur-animation{
+    0%{
+        backdrop-filter: blur(0);        
+    }
+    100%{
+        backdrop-filter: blur(5px);
+    }
+}
+
+@keyframes remove{
+    0%{
+        transform: scale(1);
+    }
+    100%{
+        transform: scale(0.5);
+    }
+}
+
+#page-container{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    animation-name: blur-animation;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    #popup-container{
+        animation-name: popup-animation;
+        animation-duration: 0.3s;
+        animation-fill-mode: forwards;
+        background: radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%);
+        box-shadow: 0 0 14px 1px black;
+        border-radius: 15px;
+        padding: 12px;
+    }
+}

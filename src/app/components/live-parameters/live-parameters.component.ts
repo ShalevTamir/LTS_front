@@ -15,11 +15,11 @@ import { SweetAlertsService } from '../../common/services/sweet-alerts.service';
 import { RouterService } from '../../common/services/router-service';
 
 @Component({
-  selector: 'app-live-parameters',
-  standalone: true,
-  imports: [ParameterCardComponent, NgFor],
-  templateUrl: './live-parameters.component.html',
-  styleUrl: './live-parameters.component.scss',
+    selector: 'app-live-parameters',
+    standalone: true,
+    templateUrl: './live-parameters.component.html',
+    styleUrl: './live-parameters.component.scss',
+    imports: [ParameterCardComponent, NgFor]
 })
 export class LiveParametersComponent implements OnInit{
   parameters: string[];  
