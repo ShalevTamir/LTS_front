@@ -17,6 +17,8 @@ import { ParameterSensorRequirementsRos } from "../models/ros/parameter-sensor-r
 import { SensorRequirementRos } from "../models/ros/parameter-sensor-requirement.ros";
 import { RequirementType } from "../../components/requirements-uploader/models/enums/requirement-type";
 import { ParameterSensorRos } from "../models/ros/parameter-sensor.ros";
+import { RequestsService } from "./network/requests.service";
+import { isNullOrUndef } from "../utils/helper";
 
 export interface parsedSensor{
     sensorName: string,
@@ -68,7 +70,7 @@ export class SensorHandlerService{
 
     constructor(
         private _sweetAlertsService: SweetAlertsService,
-        private _httpClient: HttpClient,
+        private _requestsService: RequestsService,
         ){
         
     }    
@@ -104,9 +106,10 @@ export class SensorHandlerService{
     async fetchSensorRequirements(sensorName: string): Promise<void>{
         let sensorRequirements = this._sensorsRequirements.get(sensorName);
         if(sensorRequirements === undefined){
-            let reqRes = this._httpClient.get<ParameterSensorRequirementsRos>(LIVE_TELE_URL+"/live-sensors/sensor-requirements",
-            {params: {sensorName: sensorName}});
-            this._sensorsRequirements.set(sensorName, await firstValueFrom(reqRes));
+            let responseResult = await this._requestsService.get<ParameterSensorRequirementsRos>(
+                LIVE_TELE_URL+"/live-sensors/sensor-requirements",
+                {params: {sensorName: sensorName}});
+            this._sensorsRequirements.set(sensorName, responseResult.result as ParameterSensorRequirementsRos);
         }        
     }
 
@@ -120,69 +123,47 @@ export class SensorHandlerService{
     }
     
     async removeDynamicSensorAsync(sensorName: string){
-        try{
-            const headers = new HttpHeaders({
-            'Content-Type': 'application/json'
-            });
-            let reqRes = this._httpClient.post(LIVE_TELE_URL+"/live-sensors/remove-sensor", JSON.stringify(sensorName), {headers: headers});
-            await firstValueFrom(reqRes);
-        }
-        catch(e){
-            if(e instanceof HttpErrorResponse){
-                console.log(e);
-                this._sweetAlertsService.errorAlert(e.error);
-            }
-            return;
-        }
+        const headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+        });
+        await this._requestsService.post(LIVE_TELE_URL+"/live-sensors/remove-sensor", JSON.stringify(sensorName), {headers: headers});
     }
 
     async getSensorsStateAsync(): Promise<SensorAlertsRos[]>{
-        let reqRes = this._httpClient.get<SensorAlertsRos[]>(LIVE_TELE_URL+"/live-sensor-alerts");
-        return await firstValueFrom(reqRes);
+        return (await this._requestsService.get<SensorAlertsRos[]>(LIVE_TELE_URL+"/live-sensor-alerts")).result as SensorAlertsRos[];
     }
 
     async parseParameterSensorsAsync(formData: FormData): Promise<ParameterSensorRos[]>{
-        try{
-            return await firstValueFrom(this._httpClient.post<ParameterSensorRos[]>(LIVE_TELE_URL+"/live-sensors/sensors-requirements", formData));
-        }
-        catch(e){
-            if(e instanceof HttpErrorResponse){
-                this._sweetAlertsService.errorAlert(e.error);
-            }
-            return [];
-        }
+        return (await this._requestsService.post<ParameterSensorRos[]>(LIVE_TELE_URL+"/live-sensors/sensors-requirements", formData)).result as ParameterSensorRos[];
     }
 
     async uploadParameterSensorsAsync(parsedSensors: ParameterSensorRos[]){
-        try{
-            await firstValueFrom(this._httpClient.post(LIVE_TELE_URL+"/live-sensors/add-parameter-sensors", parsedSensors));
+        let parseResult = await this._requestsService.post(
+            LIVE_TELE_URL+"/live-sensors/add-parameter-sensors",
+            parsedSensors, {},
+            (error: HttpErrorResponse) => {
+                this._sweetAlertsService.errorAlert(error.error);
+            },
+            );
+        if (parseResult.success){
+            this._sweetAlertsService.successAlert("Sensors Added Succesfully");
+            return parseResult.result;
         }
-        catch(e){
-            if(e instanceof HttpErrorResponse){
-                this._sweetAlertsService.errorAlert(e.error);            
-                return;
-            }
-        }
-        this._sweetAlertsService.successAlert("Sensors Added Succesfully");
+        return [];
     }
 
     private parseSensorRequirementsAsync = async (clientInputs: string[]) => {
         let [sensorName, sensorRequirements] = clientInputs;
-        let parseSensorRequest = this._httpClient.get<AdditionalSensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
+        let parseResult = await this._requestsService.get<AdditionalSensorRequirementRos[]>(LIVE_TELE_URL+"/live-sensors/parse-sensor",{params: {
             sensorName: sensorName,
             sensorRequirements: sensorRequirements
-        }});
-        let parsedRequirements;
-        try{
-            parsedRequirements = await firstValueFrom(parseSensorRequest);        
+        }}, (e: HttpErrorResponse) => {
+            Swal.showValidationMessage(e.error);
+        });        
+        if (!parseResult.success){
+            return false;
         }
-        catch(e){
-            if(e instanceof HttpErrorResponse){
-                Swal.showValidationMessage(e.error);
-                return false;
-            }
-        }
-        parsedRequirements = parsedRequirements as AdditionalSensorRequirementRos[]
+        let parsedRequirements = parseResult.result as AdditionalSensorRequirementRos[];
         this._sensorsRequirements.set(sensorName, {Requirements: [], AdditionalRequirements: parsedRequirements});
         this.showSensorRequirementsAsync(sensorName, parsedRequirements)
         return true;
@@ -215,16 +196,7 @@ export class SensorHandlerService{
             SensorName:  sensorName,
             Requirements: parsedRequirements
         }
-        try{
-            let reqRes = this._httpClient.post(LIVE_TELE_URL+"/live-sensors/add-dynamic-sensor", dynamicSensor);
-            await firstValueFrom(reqRes);
-        }
-        catch(e){
-            if(e instanceof HttpErrorResponse){
-                this._sweetAlertsService.errorAlert(e.error);
-            }
-            return;
-        }
+        await this._requestsService.post(LIVE_TELE_URL+"/live-sensors/add-dynamic-sensor", dynamicSensor);
         this._sweetAlertsService.successAlert("Sensor " + sensorName + " added successfuly");
     }
 }

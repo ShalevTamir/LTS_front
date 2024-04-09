@@ -7,12 +7,13 @@ import { FilteredFrameRos } from "../../../common/models/ros/filtered-frame.ros"
 import { MongoSensorAlertsRos } from "../models/ros/mongo-sensor-alert.ros";
 import { CountDataRos } from "../models/ros/count-data.ros";
 import { ArchiveData } from "../../../common/models/custom-types";
+import { RequestsService } from "../../../common/services/network/requests.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class mongoDBHandlerService{
-    constructor(private _httpClient: HttpClient){}
+    constructor(private _requestsService: RequestsService){}
 
     async fetchFrames(minTimeStamp: number, maxTimeStamp: number, maxSamplesInPage: number, pageNumber: number): Promise<FilteredFrameRos[]>{
         return await this.fetchData(DataType.PARAMETERS, minTimeStamp, maxTimeStamp, maxSamplesInPage, pageNumber) as FilteredFrameRos[];
@@ -23,19 +24,19 @@ export class mongoDBHandlerService{
     }
 
     async fetchData(dataType: DataType, minTimeStamp: number, maxTimeStamp: number, maxSamplesInPage: number, pageNumber: number): Promise<ArchiveData[]>{
-        return await firstValueFrom(this._httpClient.get<(FilteredFrameRos | MongoSensorAlertsRos)[]>(this.dataTypeToUrl(dataType), {params: {
+        return (await this._requestsService.get<(FilteredFrameRos | MongoSensorAlertsRos)[]>(this.dataTypeToUrl(dataType), {params: {
             MinTimeStamp: minTimeStamp,
             MaxTimeStamp: maxTimeStamp,
             MaxSamplesInPage: maxSamplesInPage,
             PageNumber: pageNumber
-        }}));
+        }})).result as ArchiveData[];
     }    
 
     async countData(dataType: DataType, minTimeStamp: number, maxTimeStamp: number){
-        return (await firstValueFrom(this._httpClient.get<CountDataRos>(this.dataTypeToUrl(dataType)+"/count", {params: {
+        return ((await this._requestsService.get<CountDataRos>(this.dataTypeToUrl(dataType)+"/count", {params: {
             MinTimeStamp: minTimeStamp,
             MaxTimeStamp: maxTimeStamp
-        }}))).Count;
+        }})).result as CountDataRos).Count;
     }
 
     private dataTypeToUrl(dataType: DataType){
