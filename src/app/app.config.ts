@@ -9,6 +9,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './common/services/auth/auth-interceptor';
 import { SweetAlertsService } from './common/services/sweet-alerts.service';
 import { AuthService } from './common/services/auth/auth.service';
+import { TokensHandlerService } from './common/services/auth/tokens-handler.service';
+import { ITOKEN_HANDLER_TOKEN } from './common/interfaces/ITokenHandler.interface';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +23,7 @@ export const appConfig: ApplicationConfig = {
       useClass: ReuseStrategy
     },
     {
-      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true, deps: [AuthService]
+      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true, deps: [AuthService, TokensHandlerService]
     }
   ]
 };

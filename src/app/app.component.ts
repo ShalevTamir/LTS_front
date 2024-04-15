@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Host, HostListener, InjectionToken, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { NavigationStart, Router, RouterEvent, RouterOutlet, RoutesRecognized } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
@@ -12,10 +12,13 @@ import { GaugesDataPersistenceService } from './components/live-parameters/compo
 import { SweetAlertsService } from './common/services/sweet-alerts.service';
 import { SensorHandlerService } from './common/services/sensor-handler.service';
 import { mongoDBHandlerService } from './components/archive/services/mongoDB-handler.service';
-import { LOGIN_ROUTE, SIGNUP_ROUTE } from './app.routes';
+import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from './app.routes';
 import { AuthService } from './common/services/auth/auth.service';
 import { AuthDataFactory as AuthDataFactoryService } from './components/auth/services/auth-data-factory';
 import { RouterService } from './common/services/router-service';
+import { TokensHandlerService } from './common/services/auth/tokens-handler.service';
+import { RequestsService } from './common/services/network/requests.service';
+import { ITOKEN_HANDLER_TOKEN } from './common/interfaces/ITokenHandler.interface';
 
 @Component({
   selector: 'app-root',
@@ -39,7 +42,9 @@ import { RouterService } from './common/services/router-service';
     mongoDBHandlerService,
     AuthService,
     AuthDataFactoryService,
-    RouterService
+    RouterService,
+    RequestsService,
+    { provide: ITOKEN_HANDLER_TOKEN, useClass: TokensHandlerService }
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -49,8 +54,24 @@ export class AppComponent implements OnInit{
   hideUI = false;
   isPageNotFound: boolean = false;
 
-  constructor(private _router: RouterService){
+  constructor(private _router: RouterService, private _authService: AuthService, private _rout: Router){
   }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(e: MouseEvent){
+    this._authService.movementDetected();
+  }
+
+  @HostListener('document:keypress', ['$event'])
+  onKeyPress(e: KeyboardEvent){
+    this._authService.movementDetected();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onMouseClick(e: MouseEvent){
+    this._authService.movementDetected();
+  }
+
   ngOnInit(): void {
     this._router.detectRouterEvents(RoutesRecognized).subscribe(event => {
       this.hideUI = this._router.isCurrentUrl(event.url, LOGIN_ROUTE, SIGNUP_ROUTE) || !this._router.isRouteRecognized(event.url);

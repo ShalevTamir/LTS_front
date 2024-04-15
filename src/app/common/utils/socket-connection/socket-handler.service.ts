@@ -1,15 +1,18 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { HubListener } from "../../models/hub-listener";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { TOKEN_STORAGE_KEY } from "../../models/constants";
 import { isNullOrUndef } from "../helper";
 import { AuthService } from "../../services/auth/auth.service";
+import { Tokens } from "../../models/dtos/tokens";
+import { TokensHandlerService } from "../../services/auth/tokens-handler.service";
+import { ITOKEN_HANDLER_TOKEN, ITokensHandler } from "../../interfaces/ITokenHandler.interface";
 
 @Injectable({
     providedIn: 'root'
   })
 export class SocketHandlerService{
-    constructor(private _authService: AuthService) { }
+    constructor(private _authService: AuthService, @Inject(ITOKEN_HANDLER_TOKEN) private _tokensHandler: ITokensHandler) { }
 
     public async initWebSocketAsync(server_url : string, listeners: HubListener[]): Promise<HubConnection>{
       let hubConnection = new HubConnectionBuilder()
@@ -31,9 +34,11 @@ export class SocketHandlerService{
     }
     
     private buildConnectionUrl(server_url: string): string{
-      return isNullOrUndef(localStorage.getItem(TOKEN_STORAGE_KEY)) ?
+      const tokens: Tokens = this._tokensHandler.getTokens();
+      const access_token = tokens.accessToken;
+      return isNullOrUndef(access_token) ?
       server_url :
-      server_url + `?access_token=${localStorage.getItem(TOKEN_STORAGE_KEY)}`;
+      server_url + `?access_token=${access_token}`;
     }
 
 
