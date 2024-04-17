@@ -166,17 +166,26 @@ app-gauge-chart{
     }
 }
 
+@keyframes text-hover{
+    50%{
+        transform: scale(1.35);
+    }
+    100%{
+        transform: scale(1.15);
+    }
+}
+
 .add-card{
     display: flex;
     justify-content: center;
     padding-bottom: 15px;
     img{
         color:white;
-        width:30%;
+        width:25%;
         &:hover{
             content:url('../../../../../assets/images/solid-plus.png');
             cursor:pointer;
-            animation-name: plus-hover;
+            animation-name: text-hover;
             animation-duration: 0.3s;
             width: 34%;
         }

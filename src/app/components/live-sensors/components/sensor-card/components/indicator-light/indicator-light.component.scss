@@ -1,5 +1,4 @@
 
-$led-size: 30px;
 
 $indicator-valid:#00d563;
 $indicator-warning:#ffc400;
@@ -8,8 +7,8 @@ $indicator-normal:#95969b;
 
 
 .indicator{
+  $led-size: 20px;
   display: inline-block;
-
   width: $led-size;
   height: $led-size;
   border-radius: 50%;
