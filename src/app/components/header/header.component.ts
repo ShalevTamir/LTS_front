@@ -5,20 +5,20 @@ import { seperateString } from '../../common/utils/string-utils';
 import { SweetAlertsService } from '../../common/services/sweet-alerts.service';
 import { SweetAlertResult } from 'sweetalert2';
 import { SensorHandlerService } from '../../common/services/sensor-handler.service';
-import { NgIf, NgStyle } from '@angular/common';
+import { AsyncPipe, NgIf, NgStyle } from '@angular/common';
 import { DYNAMIC_SENSORS_ROUTE, TELE_PARAMS_ROUTE } from '../../app.routes';
 import { DeleteSensorsService } from '../../common/services/delete-sensors.service';
 import { RouterService } from '../../common/services/router-service';
 import { PopupComponent } from '../../common/components/popup/popup.component';
 import { UploaderComponent } from "../requirements-uploader/requirements-uploader.component";
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-header',
     standalone: true,
     templateUrl: './header.component.html',
     styleUrl: './header.component.scss',
-    imports: [NgbModule, NgIf, NgStyle, PopupComponent, UploaderComponent]
+    imports: [NgbModule, NgIf, NgStyle, PopupComponent, UploaderComponent, AsyncPipe]
 })
 export class HeaderComponent implements OnInit, OnDestroy{
 handleAppearChange(event: boolean) {
@@ -28,12 +28,14 @@ handleAppearChange(event: boolean) {
   @ViewChild('removeSensorBtn') removeSensorBtn!: ElementRef<HTMLElement>;
   @ViewChild(PopupComponent) popup!: PopupComponent;
   title: string = ""
-  liveParamsLoaded: boolean = false;
-  dynamicSensorsPageLoaded: boolean = false;
+  isLiveParamsLoaded!: Observable<boolean>;
+  isDynamicSensorsPageLoaded: Observable<boolean>;
   sensorDeletionActive: boolean = false;
   showRequirementsPopup: boolean = false;
   routerSubscripton!: Subscription
   constructor(private _router: RouterService, private _dynamicSensorService: SensorHandlerService, private _deleteSensorsService: DeleteSensorsService){
+    this.isLiveParamsLoaded = _router.isPageLoaded(TELE_PARAMS_ROUTE);
+    this.isDynamicSensorsPageLoaded = _router.isPageLoaded(DYNAMIC_SENSORS_ROUTE);
   }
   
   ngOnDestroy(): void {
@@ -41,21 +43,15 @@ handleAppearChange(event: boolean) {
   }
 
   ngOnInit(): void {
-    this.updateCurrentRoute(this._router.currentUrl);
+    this.updateTitle(this._router.currentUrl);
     this.routerSubscripton = this._router.detectRouterEvents(RoutesRecognized).subscribe(event => {
-      this.updateCurrentRoute(event.url);
+      this.updateTitle(event.url);
     });
-  }
-  
-  private updateCurrentRoute(url: string){
-    this.liveParamsLoaded = this._router.isCurrentUrl(url, TELE_PARAMS_ROUTE);
-    this.dynamicSensorsPageLoaded = this._router.isCurrentUrl(url, DYNAMIC_SENSORS_ROUTE);
-    
-    if(this.dynamicSensorsPageLoaded){
-      this.sensorDeletionActive = false;
-    }
-
-    this.updateTitle(url)
+    this.isDynamicSensorsPageLoaded.subscribe(value => {
+      if (value){
+        this.sensorDeletionActive = false;
+      }
+    })
   }
   
   private updateTitle(url: string){
