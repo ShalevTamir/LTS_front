@@ -39,4 +39,8 @@ export class RouterService{
     public isRouteRecognized(currentUrl: string){
         return routes.some(route => '/' + route.path === currentUrl);
     }
+
+    public get currentUrl(){
+        return this._router.url;
+    }
 }

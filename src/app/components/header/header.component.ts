@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, Input, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { seperateString } from '../../common/utils/string-utils';
@@ -11,6 +11,7 @@ import { DeleteSensorsService } from '../../common/services/delete-sensors.servi
 import { RouterService } from '../../common/services/router-service';
 import { PopupComponent } from '../../common/components/popup/popup.component';
 import { UploaderComponent } from "../requirements-uploader/requirements-uploader.component";
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-header',
@@ -19,7 +20,7 @@ import { UploaderComponent } from "../requirements-uploader/requirements-uploade
     styleUrl: './header.component.scss',
     imports: [NgbModule, NgIf, NgStyle, PopupComponent, UploaderComponent]
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit, OnDestroy{
 handleAppearChange(event: boolean) {
   console.log('got event ' + event);
   this.showRequirementsPopup = event;
@@ -31,20 +32,34 @@ handleAppearChange(event: boolean) {
   dynamicSensorsPageLoaded: boolean = false;
   sensorDeletionActive: boolean = false;
   showRequirementsPopup: boolean = false;
+  routerSubscripton!: Subscription
   constructor(private _router: RouterService, private _dynamicSensorService: SensorHandlerService, private _deleteSensorsService: DeleteSensorsService){
   }
   
+  ngOnDestroy(): void {
+    this.routerSubscripton.unsubscribe();
+  }
+
   ngOnInit(): void {
-    this._router.detectRouterEvents(RoutesRecognized).subscribe(event => {
-      this.liveParamsLoaded = this._router.isCurrentUrl(event.url, TELE_PARAMS_ROUTE);
-      this.dynamicSensorsPageLoaded = this._router.isCurrentUrl(event.url, DYNAMIC_SENSORS_ROUTE);
-      
-      if(this.dynamicSensorsPageLoaded){
-        this.sensorDeletionActive = false;
-      }
-      let eventUrl: string = event.url;
-      this.title = seperateString(eventUrl.substring(1), '-');
+    this.updateCurrentRoute(this._router.currentUrl);
+    this.routerSubscripton = this._router.detectRouterEvents(RoutesRecognized).subscribe(event => {
+      this.updateCurrentRoute(event.url);
     });
+  }
+  
+  private updateCurrentRoute(url: string){
+    this.liveParamsLoaded = this._router.isCurrentUrl(url, TELE_PARAMS_ROUTE);
+    this.dynamicSensorsPageLoaded = this._router.isCurrentUrl(url, DYNAMIC_SENSORS_ROUTE);
+    
+    if(this.dynamicSensorsPageLoaded){
+      this.sensorDeletionActive = false;
+    }
+
+    this.updateTitle(url)
+  }
+  
+  private updateTitle(url: string){
+    this.title = seperateString(url.substring(1), '-');
   }
   
   handleRemoveSensors(){
