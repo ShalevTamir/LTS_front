@@ -19,10 +19,11 @@ import { ToastrService } from "ngx-toastr";
     'providedIn': 'root'
 })
 export class AuthService{
+    public readonly LOGOUT_MESSAGE = "You have been disconnected due to inactivity";
     readonly REFRESH_DURATION_IN_MILLIS = 60_000;
     readonly MARGIN_TIME_IN_MILLIS = 10_000;
     readonly REFRESH_INTERVAL_TIME = this.REFRESH_DURATION_IN_MILLIS - this.MARGIN_TIME_IN_MILLIS;
-    readonly LOGOUT_TIME = 90_000;
+    readonly LOGOUT_TIME = 50_000;
     private _logoutTimeout: NodeJS.Timeout | undefined;
     private _refreshTimeout: NodeJS.Timeout | undefined;
     constructor(
@@ -30,6 +31,7 @@ export class AuthService{
         private _router: Router,
         private _routerService: RouterService,
         private _toastrService: ToastrService,
+        private _swalService: SweetAlertsService,
         @Inject(ITOKEN_HANDLER_TOKEN) private _tokensHandler: ITokensHandler){
     }
 
@@ -70,7 +72,6 @@ export class AuthService{
     public logoutAsync = async () => {
         this.cancelTimeout(this._refreshTimeout);
         await this._requestsService.post(AUTH_URL+"/tokens/revoke", {});
-        this.handleInvalidToken("You have been disconnected due to inactivity");
     }
 
     public async signUpAsync(username: string, password: string): Promise<boolean>{
@@ -113,7 +114,10 @@ export class AuthService{
     
     private startLogoutInterval(){
         this.cancelTimeout(this._logoutTimeout);
-        this._logoutTimeout = setTimeout(() => this.logoutAsync(), this.LOGOUT_TIME);
+        this._logoutTimeout = setTimeout(() => {
+            this.logoutAsync();
+            this.handleInvalidToken(this.LOGOUT_MESSAGE);
+        }, this.LOGOUT_TIME);
     }
 
     private cancelTimeout(timeout: NodeJS.Timeout | undefined){

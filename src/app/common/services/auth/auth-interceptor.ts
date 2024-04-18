@@ -26,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor{
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
                 if (error.status === HttpStatusCode.Forbidden || error.status === HttpStatusCode.Unauthorized){
-                    this._authService.handleInvalidToken(error.error);
+                    this._authService.handleInvalidToken(this._authService.LOGOUT_MESSAGE);
                 }
                 throw error;
             })
