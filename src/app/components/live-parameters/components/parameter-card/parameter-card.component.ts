@@ -27,7 +27,6 @@ export class ParameterCardComponent implements OnInit{
   static readonly maxChartSamples: number = 60;
   @Input() parameterName: string = "Parameter Name";
   @Input() cardType: string = "chart";
-  @Output() addCardEmitter: EventEmitter<string> = new EventEmitter();
   @Output() removeParameterEmitter = new EventEmitter<string>();
   @ViewChild(ChartjsChartComponent) chartjs: ChartjsChartComponent | undefined;
   @ViewChild(GaugeChartComponent) gauge: GaugeChartComponent | undefined;
@@ -36,10 +35,11 @@ export class ParameterCardComponent implements OnInit{
   chartMode: ChartMode = ChartMode.NO_DATA;
   xAxisData: string[] = [];
   yAxisData: string[] = [];
-
+  
   // add card
   formControl = new FormControl('');
   @Input() parametersNamesOptions: string[] = [];
+  @Output() addCardEmitter: EventEmitter<string> = new EventEmitter();
   filteredOptions!: Observable<string[]>;
   displayAddCardButton: boolean = true;
 
@@ -54,7 +54,7 @@ export class ParameterCardComponent implements OnInit{
   }
 
   protected async handleAddCard(selectEvent: MatAutocompleteSelectedEvent){
-    let parameterName = selectEvent.option.value;
+    let parameterName = selectEvent.option.value.replace(' ','_');
     await this._liveParametersSocketService.addParameter(parameterName);
     this.addCardEmitter.emit(parameterName);
     this.formControl.reset();

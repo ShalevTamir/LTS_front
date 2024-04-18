@@ -13,6 +13,7 @@ import { LIVE_TELE_URL } from '../../common/constants';
 import { TELE_PARAMS_ROUTE } from '../../app.routes';
 import { SweetAlertsService } from '../../common/services/sweet-alerts.service';
 import { RouterService } from '../../common/services/router-service';
+import { seperateString } from '../../common/utils/string-utils';
 
 @Component({
     selector: 'app-live-parameters',
@@ -45,7 +46,8 @@ export class LiveParametersComponent implements OnInit{
           this.stopSockets();
         }
       })
-      this._parametersConfigService.getParameterNames().then((parameterNames: string[]) => this.parametersNamesOptions = parameterNames);
+      this._parametersConfigService.getParameterNames().then((parameterNames: string[]) =>
+        this.parametersNamesOptions = parameterNames.map(parameterName => parameterName.replace('_',' ')));
       this.startSockets();
       this.configGauges(this.parameters);
   }
@@ -62,7 +64,7 @@ export class LiveParametersComponent implements OnInit{
 
   handleAddParameter(parameterName: string){
     if(this.parameters.includes(parameterName)){
-      this._swalService.errorAlert("Card " + parameterName + " already exists");
+      this._swalService.errorAlert("Card " + parameterName.replace('_',' ') + " already exists");
     }
     else{
       this.configGauges([parameterName]);

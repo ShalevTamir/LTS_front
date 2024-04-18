@@ -4,7 +4,7 @@
             <button class="close-btn" mat-icon-button (click)="removeParameter()">
                 <mat-icon>close</mat-icon>
             </button>
-            <span>{{parameterName}}</span>
+            <span>{{parameterName.replace('_',' ')}}</span>
             
             <div id="btn-menu-container">
                 <button id="btn-menu" mat-icon-button color="primary" [matMenuTriggerFor]="menu">
