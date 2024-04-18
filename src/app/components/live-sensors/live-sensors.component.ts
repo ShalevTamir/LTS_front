@@ -8,6 +8,7 @@ import { RangeRequirementRos } from '../header/models/ros/range-requirement-ros'
 import { AdditionalSensorRequirementRos } from '../../common/models/ros/additional-sensor-requirement-ros';
 import { DurationType } from '../header/models/enums/duration-type';
 import { DeleteSensorsService } from '../../common/services/delete-sensors.service';
+import { HubConnection } from '@microsoft/signalr';
 
 @Component({
     selector: 'app-live-sensors',
@@ -19,18 +20,20 @@ import { DeleteSensorsService } from '../../common/services/delete-sensors.servi
 export class LiveSensorsComponent implements OnInit, OnDestroy{
     @ViewChildren(SensorCardComponent) sensors!: QueryList<SensorCardComponent>;
     sensorStates: SensorAlertsRos[] = [];
+    private _socketConnection: HubConnection | undefined;
 
     constructor(private _sensorHandlerService: SensorHandlerService, private _sensorAlertsSocketService: SensorAlertsSocketService){}
     
     ngOnInit(): void {
+        console.log("init");
         this._sensorHandlerService.getSensorsStateAsync().then((sensorStates: SensorAlertsRos[]) => {
             this.sensorStates = sensorStates;
         })
-        this._sensorAlertsSocketService.initWebSocket(this.processSensorUpdate);
+        this._sensorAlertsSocketService.initWebSocketAsync(this.processSensorUpdate).then(res => this._socketConnection = res);
     }
     
     ngOnDestroy(): void {
-        this._sensorAlertsSocketService.stopWebSocket();
+        this._sensorAlertsSocketService.stopWebSocketAsync(this._socketConnection);
     }
 
     processSensorUpdate = (alert: SensorAlertsRos) => {

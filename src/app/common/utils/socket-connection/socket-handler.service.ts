@@ -24,7 +24,7 @@ export class SocketHandlerService{
       await hubConnection
       .start()
       .catch((error: Error) =>{
-        this._authService.handleInvalidToken(this.extractSignalRErrorMessage(error));
+        this._authService.handleInvalidToken(this._authService.LOGOUT_MESSAGE);
       });
       return hubConnection;
     }

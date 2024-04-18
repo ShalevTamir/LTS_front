@@ -5,25 +5,26 @@ import { SensorAlertsRos } from "../models/ros/sensor-alert.ros";
 import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 import { LIVE_TELE_URL } from "../../../common/constants";
 import { HubListener } from "../../../common/models/hub-listener";
+import { isNullOrUndef } from "../../../common/utils/helper";
 
 @Injectable({
     providedIn: 'root'
 })
 export class SensorAlertsSocketService{
     constructor(private _socketHandlerService: SocketHandlerService) { }
-    private _connection: HubConnection | undefined;
 
 
-    public async initWebSocket(alertCallback: (alert: SensorAlertsRos, sensorState: SensorState) => void){
+    public async initWebSocketAsync(alertCallback: (alert: SensorAlertsRos, sensorState: SensorState) => void): Promise<HubConnection>{
         let listener: HubListener = {
             listenerName: 'receiveAlerts',
             callback: alertCallback
         };
-        this._connection = await this._socketHandlerService.initWebSocketAsync(LIVE_TELE_URL+"/sensor-alerts-socket",[listener]);        
+        return await this._socketHandlerService.initWebSocketAsync(LIVE_TELE_URL+"/sensor-alerts-socket",[listener]);        
     }
 
-    public async stopWebSocket(){
-        await this._connection?.stop();
+    public async stopWebSocketAsync(connection: HubConnection | undefined){
+        if (!isNullOrUndef(connection))
+            await (connection as HubConnection).stop();
     }
 
 }

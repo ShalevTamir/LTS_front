@@ -72,6 +72,6 @@
 <app-popup [(appear)]="showRequirementsPopup">
     <app-uploader></app-uploader>
 </app-popup>
-<app-popup [(appear)]="showSensorsStatesPopup">
+<app-popup [(appear)]="showSensorsStatesPopup" *ngIf="showSensorsStatesPopup">
     <app-live-sensors></app-live-sensors>
 </app-popup>

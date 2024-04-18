@@ -4,6 +4,7 @@ import { SensorState } from '../models/enums/sensor-state.enum';
 import { SensorAlertsRos } from '../models/ros/sensor-alert.ros';
 import { IndividualConfig, ToastrService } from 'ngx-toastr';
 import { seperateString } from '../../../common/utils/string-utils';
+import { HubConnection } from '@microsoft/signalr';
 
 
 @Injectable({
@@ -11,17 +12,18 @@ import { seperateString } from '../../../common/utils/string-utils';
 })
 export class SensorAlertsService{
     private readonly statusMessage: string = "Status:"
-    
+    private _connection!: HubConnection;
+
     constructor(
         private _sensorAlertsSocket: SensorAlertsSocketService,
         private _notificationsService: ToastrService
         ){}
 
     public async init(){
-        await this._sensorAlertsSocket.initWebSocket(this.processAlert);
+        this._connection = await this._sensorAlertsSocket.initWebSocketAsync(this.processAlert);
     }
     public async stopWebSocket(){
-        await this._sensorAlertsSocket.stopWebSocket();
+        await this._sensorAlertsSocket.stopWebSocketAsync(this._connection);
     }
 
     private processAlert = ({SensorName, CurrentStatus}: SensorAlertsRos) => {

@@ -18,6 +18,9 @@
 ::ng-deep{
     .ngx-toastr{
         box-shadow: none !important;
+    }
+
+    #toast-container{
         z-index: 1 !important;
     }
     
