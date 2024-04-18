@@ -13,6 +13,7 @@ import { RequestsService } from "../network/requests.service";
 import { TokensHandlerService } from "./tokens-handler.service";
 import { ITOKEN_HANDLER_TOKEN, ITokensHandler } from "../../interfaces/ITokenHandler.interface";
 import { isNullOrUndef } from "../../utils/helper";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
     'providedIn': 'root'
@@ -24,17 +25,16 @@ export class AuthService{
     readonly LOGOUT_TIME = 90_000;
     private _logoutTimeout: NodeJS.Timeout | undefined;
     private _refreshTimeout: NodeJS.Timeout | undefined;
-    private _isLoggedIn = false;
     constructor(
         private _requestsService: RequestsService,
-        private _swalService: SweetAlertsService,
         private _router: Router,
         private _routerService: RouterService,
+        private _toastrService: ToastrService,
         @Inject(ITOKEN_HANDLER_TOKEN) private _tokensHandler: ITokensHandler){
     }
 
     public movementDetected(){
-        if (this._isLoggedIn){
+        if (this.isLoggedIn){
             this.startLogoutInterval();
         }
     }
@@ -58,16 +58,14 @@ export class AuthService{
             userDto);
 
         if (responseResult.success){
-            this._isLoggedIn = true;
             this._tokensHandler.saveTokens(responseResult.result as Tokens);
-            this.startRefreshTokenInterval();
-            this.startLogoutInterval();
+            this.startTokenIntervals();
+            this._toastrService.clear();
         }
         return responseResult.success;
     }
     
     public logoutAsync = async () => {
-        this._isLoggedIn = false;
         this.cancelTimeout(this._refreshTimeout);
         await this._requestsService.post(AUTH_URL+"/tokens/revoke", {});
         this.handleInvalidToken("You have been disconnected due to inactivity");
@@ -88,11 +86,29 @@ export class AuthService{
     
     public handleInvalidToken(errorMessage: string){
         if (!this._routerService.isCurrentUrl(this._router.url, LOGIN_ROUTE)){
-            this._swalService.errorAlert(errorMessage);
+            // this._swalService.errorAlert(errorMessage);
+            this._toastrService.error(errorMessage, undefined, {disableTimeOut: true, positionClass: 'toast-bottom-right'});
             this._router.navigateByUrl(LOGIN_ROUTE);
         }
     }
+    
+    public async restrartTokenIntervalsAsync(){
+        if (this.isLoggedIn){
+            await this.refreshTokenAsync();
+            this.startRefreshTokenInterval();
+            this.startLogoutInterval();
+        }
+    }
 
+    public get isLoggedIn(): boolean{
+        return this._tokensHandler.hasTokens();
+    }
+    
+    private startTokenIntervals(){
+        this.startRefreshTokenInterval();
+        this.startLogoutInterval();
+    }
+    
     private startLogoutInterval(){
         this.cancelTimeout(this._logoutTimeout);
         this._logoutTimeout = setTimeout(() => this.logoutAsync(), this.LOGOUT_TIME);

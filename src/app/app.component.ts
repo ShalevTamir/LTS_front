@@ -54,7 +54,8 @@ export class AppComponent implements OnInit{
   hideUI = false;
   isPageNotFound: boolean = false;
 
-  constructor(private _router: RouterService, private _authService: AuthService, private _rout: Router){
+  constructor(private _router: RouterService, private _authService: AuthService){
+    this._authService.restrartTokenIntervalsAsync();
   }
 
   @HostListener('document:mousemove', ['$event'])

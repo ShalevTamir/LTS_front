@@ -16,6 +16,11 @@
    }
 
 ::ng-deep{
+    .ngx-toastr{
+        box-shadow: none !important;
+        z-index: 1 !important;
+    }
+    
     ::-webkit-scrollbar {
         width: 12px;
     }

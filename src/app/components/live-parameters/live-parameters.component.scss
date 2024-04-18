@@ -5,10 +5,6 @@
 }
 
 ::ng-deep{
-    .toast-container{
-        box-shadow: none !important;
-        z-index: 1 !important;
-    }
     .mdc-text-field--filled:not(.mdc-text-field--disabled){
         background-color: transparent !important;
         background: none;
