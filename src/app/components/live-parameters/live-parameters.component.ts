@@ -40,16 +40,20 @@ export class LiveParametersComponent implements OnInit{
     ngOnInit(): void {
       this._router.detectRouterEvents(NavigationEnd).subscribe(event => {
         if (this._router.isCurrentUrl(event.url, TELE_PARAMS_ROUTE)){
-          this.startSockets();
+          this.initComponent();
         }
         else{
           this.stopSockets();
         }
       })
-      this._parametersConfigService.getParameterNames().then((parameterNames: string[]) =>
-        this.parametersNamesOptions = parameterNames.map(parameterName => parameterName.replace('_',' ')));
-      this.startSockets();
-      this.configGauges(this.parameters);
+      this.initComponent();
+  }
+
+  initComponent(){
+    this._parametersConfigService.getParameterNames().then((parameterNames: string[]) =>
+      this.parametersNamesOptions = parameterNames.map(parameterName => parameterName.replace('_',' ')));
+    this.startSockets();
+    this.configGauges(this.parameters);
   }
   
   startSockets(){
