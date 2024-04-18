@@ -49,9 +49,6 @@ export class RequestsService{
                 if (!isNullOrUndef(errorCallback)){
                     (errorCallback as HttpErrorCallback)(e);
                 }
-                else{
-                    this._swalService.errorAlert(e.error);
-                }
             }
             return {
                 success: false

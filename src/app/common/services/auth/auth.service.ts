@@ -55,7 +55,9 @@ export class AuthService{
         }
         let responseResult = await this._requestsService.post<Tokens>(
             AUTH_URL+"/authorization/login",
-            userDto);
+            userDto,
+            {},
+            (error) => this._swalService.errorAlert(error.error));
 
         if (responseResult.success){
             this._tokensHandler.saveTokens(responseResult.result as Tokens);
