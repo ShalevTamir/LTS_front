@@ -97,7 +97,7 @@ $logo-size: 50px;
                 background-image: url('../../../assets/images/trash-can-hover.png');
             }
         }
-        a#upload-sensors-requirements{
+        a{
             color: white;
             width: 33px;
             height: 33px;
@@ -106,6 +106,7 @@ $logo-size: 50px;
                 cursor: pointer;
             }
         }
+    
     }
 }
 

@@ -12,19 +12,16 @@ import { RouterService } from '../../common/services/router-service';
 import { PopupComponent } from '../../common/components/popup/popup.component';
 import { UploaderComponent } from "../requirements-uploader/requirements-uploader.component";
 import { Observable, Subscription } from 'rxjs';
+import { LiveSensorsComponent } from "../live-sensors/live-sensors.component";
 
 @Component({
     selector: 'app-header',
     standalone: true,
     templateUrl: './header.component.html',
     styleUrl: './header.component.scss',
-    imports: [NgbModule, NgIf, NgStyle, PopupComponent, UploaderComponent, AsyncPipe]
+    imports: [NgbModule, NgIf, NgStyle, PopupComponent, UploaderComponent, AsyncPipe, LiveSensorsComponent]
 })
 export class HeaderComponent implements OnInit, OnDestroy{
-handleAppearChange(event: boolean) {
-  console.log('got event ' + event);
-  this.showRequirementsPopup = event;
-}
   @ViewChild('removeSensorBtn') removeSensorBtn!: ElementRef<HTMLElement>;
   @ViewChild(PopupComponent) popup!: PopupComponent;
   title: string = ""
@@ -32,6 +29,7 @@ handleAppearChange(event: boolean) {
   isDynamicSensorsPageLoaded: Observable<boolean>;
   sensorDeletionActive: boolean = false;
   showRequirementsPopup: boolean = false;
+  showSensorsStatesPopup: boolean = false;
   routerSubscripton!: Subscription
   constructor(private _router: RouterService, private _dynamicSensorService: SensorHandlerService, private _deleteSensorsService: DeleteSensorsService){
     this.isLiveParamsLoaded = _router.isPageLoaded(TELE_PARAMS_ROUTE);
@@ -41,7 +39,7 @@ handleAppearChange(event: boolean) {
   ngOnDestroy(): void {
     this.routerSubscripton.unsubscribe();
   }
-
+  
   ngOnInit(): void {
     this.updateTitle(this._router.currentUrl);
     this.routerSubscripton = this._router.detectRouterEvents(RoutesRecognized).subscribe(event => {
@@ -54,8 +52,8 @@ handleAppearChange(event: boolean) {
     })
   }
   
-  private updateTitle(url: string){
-    this.title = seperateString(url.substring(1), '-');
+  handleAppearChange(event: boolean) {
+    this.showRequirementsPopup = event;
   }
   
   handleRemoveSensors(){
@@ -82,5 +80,13 @@ handleAppearChange(event: boolean) {
   
   handleAddSensorRequirements() {
     this.showRequirementsPopup = true;
+  }
+  
+  handleShowSensorsStates() {
+    this.showSensorsStatesPopup = true;
+  }
+
+  private updateTitle(url: string){
+    this.title = seperateString(url.substring(1), '-');
   }
 }
