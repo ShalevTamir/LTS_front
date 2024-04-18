@@ -120,8 +120,7 @@ mat-icon{
     background: linear-gradient(
         to bottom right,
         rgb(88, 160, 229), 
-        rgb(63, 94, 252),
-         rgb(140 0 254));
+        rgb(63, 94, 252));
 }
 
 span.chart-description{
@@ -154,17 +153,6 @@ app-gauge-chart{
 .card-chart{
     align-self: center;
 }
-@keyframes plus-hover{
-    0%{
-        width:30%;
-    }
-    50%{
-        width: 44%;
-    }
-    100%{
-        width:34%;
-    }
-}
 
 @keyframes text-hover{
     50%{
@@ -187,7 +175,7 @@ app-gauge-chart{
             cursor:pointer;
             animation-name: text-hover;
             animation-duration: 0.3s;
-            width: 34%;
+            animation-fill-mode: forwards;
         }
     }
 }
