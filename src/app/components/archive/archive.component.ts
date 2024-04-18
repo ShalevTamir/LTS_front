@@ -17,6 +17,7 @@ import { SensorState } from '../live-parameters/models/enums/sensor-state.enum';
 import { TelemetryParameterRos } from '../../common/models/ros/telemetry-parameter.ros';
 import { ExpandableMatTableComponent } from '../../common/components/expandable-mat-table/expandable-mat-table.component';
 import { TableColumn } from '../../common/components/expandable-mat-table/models/tableColumn';
+import { MatInputModule } from '@angular/material/input';
 
 interface TimestampData{
   date: string,
@@ -40,7 +41,7 @@ type ExpandedDataType = MongoSensorAlert | TelemetryParameterRos;
     templateUrl: './archive.component.html',
     styleUrl: './archive.component.scss',
     providers: [provideNativeDateAdapter()],
-    imports: [NgFor, ExpandableMatTableComponent, DateTimeComponent, PaginatorComponent, MatButton]
+    imports: [NgFor, ExpandableMatTableComponent, DateTimeComponent, PaginatorComponent, MatButton, MatInputModule]
 })
 export class ArchiveComponent implements AfterViewInit{
   @ViewChildren('btnDataType', { read: ElementRef }) dataTypeButtons!: QueryList<ElementRef>
@@ -145,6 +146,10 @@ export class ArchiveComponent implements AfterViewInit{
           expandable: true
         }
       }))];
+  }
+
+  protected handleFilterQuery(query: string){
+    console.log(query);
   }
 
   private async fetchData(){
