@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, Input, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { seperateString } from '../../common/utils/string-utils';
+import { extractNumbers, seperateString } from '../../common/utils/string-utils';
 import { SweetAlertsService } from '../../common/services/sweet-alerts.service';
 import { SweetAlertResult } from 'sweetalert2';
 import { SensorHandlerService } from '../../common/services/sensor-handler.service';
@@ -22,7 +22,10 @@ import { LiveSensorsComponent } from "../live-sensors/live-sensors.component";
     imports: [NgbModule, NgIf, NgStyle, PopupComponent, UploaderComponent, AsyncPipe, LiveSensorsComponent]
 })
 export class HeaderComponent implements OnInit, OnDestroy{
+  @Input() menuOpen: boolean = false;
+  @Output() menuOpenChange = new EventEmitter<boolean>();
   @ViewChild('removeSensorBtn') removeSensorBtn!: ElementRef<HTMLElement>;
+  @ViewChild('container') container!: ElementRef<HTMLElement>;
   @ViewChild(PopupComponent) popup!: PopupComponent;
   title: string = ""
   isLiveParamsLoaded!: Observable<boolean>;
@@ -36,6 +39,11 @@ export class HeaderComponent implements OnInit, OnDestroy{
     this.isDynamicSensorsPageLoaded = _router.isPageLoaded(DYNAMIC_SENSORS_ROUTE);
   }
   
+  handleSensorsMenu() {
+    this.menuOpen = !this.menuOpen;
+    this.menuOpenChange.emit(this.menuOpen);
+  }
+
   ngOnDestroy(): void {
     this.routerSubscripton.unsubscribe();
   }
@@ -88,5 +96,15 @@ export class HeaderComponent implements OnInit, OnDestroy{
 
   private updateTitle(url: string){
     this.title = seperateString(url.substring(1), '-');
+  }
+
+  get height(): number{
+    return this.container.nativeElement.offsetHeight;
+  }  
+
+  get marginBottom(): number{
+    let containerStyle = window.getComputedStyle(this.container.nativeElement);
+    
+    return extractNumbers(containerStyle.marginBottom) as number;
   }
 }

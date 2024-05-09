@@ -1,6 +1,10 @@
+
+
 .wrapper {
     background-color: #0e0e23;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
     height: 100vh;
     overflow: hidden;
     margin: 0 auto;
@@ -8,14 +12,76 @@
 
 
 .main-container {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: auto;
-    padding-left: 0;
-   }
+    display: grid;
+    overflow: hidden;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr auto;
 
+    
+    #menu{
+        grid-row: 1 / span all;
+        grid-column: 2;
+        white-space: nowrap;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        justify-items: center;
+        background: radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%);
+        border-radius: 15px;
+        span{
+            font-size: 30px;
+            height: 84px;
+            display: flex;
+            align-items: center;
+        }
+    }
+
+}
 ::ng-deep{
+    app-live-parameters{
+        grid-row: 2;
+    }
+  
+    app-live-sensors.menuStyle{
+        $cardWidth: 13vw;
+        width: calc($cardWidth + 3vw);
+        margin: 0 20px;
+        padding: 13px 0;
+        overflow-y: scroll;
+
+        #no-sensors-span{
+            padding: 0 0 170px 13px !important;
+            white-space: break-spaces;
+            font-size: 35px;
+        }
+
+        .card{
+            width: $cardWidth !important;
+            height: 134px !important;
+            .card-front,.card-back{
+                box-shadow: 3px -3px 20px 2px rgb(4 3 37);
+            }
+            .card-back .requirements-text span{
+                white-space: break-spaces;
+            }
+            .card-front span{
+                font-size: 17px !important;
+
+                &.sensorStatus{
+                    font-size: 26px !important;
+                }
+            }
+
+            .indicator{
+                $size: 17px;
+                width: $size;
+                height: $size;
+            }
+        }
+        #cards-container{
+            row-gap: 25px !important;
+            justify-content: center;
+        }
+    }
     .ngx-toastr{
         box-shadow: none !important;
     }

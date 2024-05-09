@@ -23,7 +23,7 @@ export class AuthService{
     readonly REFRESH_DURATION_IN_MILLIS = 60_000;
     readonly MARGIN_TIME_IN_MILLIS = 10_000;
     readonly REFRESH_INTERVAL_TIME = this.REFRESH_DURATION_IN_MILLIS - this.MARGIN_TIME_IN_MILLIS;
-    readonly LOGOUT_TIME = 50_000;
+    readonly LOGOUT_TIME = 1000_000;
     private _logoutTimeout: NodeJS.Timeout | undefined;
     private _refreshTimeout: NodeJS.Timeout | undefined;
     constructor(

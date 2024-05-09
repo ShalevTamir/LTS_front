@@ -19,11 +19,12 @@ export class ChartFactoryService {
   }
 
   generateChartConfig(chartType: ConfigChartType, xAxisData: string[], yAxisData: string[]){
-    let options = {      
+    let options = {
       interaction: {
         intersect: false,
       },
       responsive: true,
+      maintainAspectRatio: true,
       aspectRatio:2.5,
       height: 1500,
       plugins:{
@@ -38,6 +39,7 @@ export class ChartFactoryService {
           }
         }
       }
+      
     } as ChartOptions
 
     switch(chartType){

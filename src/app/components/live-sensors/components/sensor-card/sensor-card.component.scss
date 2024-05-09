@@ -207,19 +207,19 @@
 
 }
 
-$description-valid:#00d563;
-$description-warning:#ffc400;
-$description-invalid:#fd2f51;
-$description-neutral:#95969b;
+// $description-valid:#00d563;
+// $description-warning:#ffc400;
+// $description-invalid:#fd2f51;
+// $description-neutral:#95969b;
 
-$indicator-array: valid warning invalid neutral;
-$description-colors: $description-valid $description-warning $description-invalid $description-neutral;
+// $indicator-array: valid warning invalid neutral;
+// $description-colors: $description-valid $description-warning $description-invalid $description-neutral;
 
-@each $indicator in $indicator-array{
-    $i: index($indicator-array, $indicator);
-    $color: nth($description-colors, $i);
+// @each $indicator in $indicator-array{
+//     $i: index($indicator-array, $indicator);
+//     $color: nth($description-colors, $i);
 
-    .--description-#{$indicator}{
-        color: $color;
-    }
-}
+//     .--description-#{$indicator}{
+//         color: $color;
+//     }
+// }

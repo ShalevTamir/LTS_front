@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { SensorCardComponent } from "./components/sensor-card/sensor-card.component";
 import { SensorHandlerService } from '../../common/services/sensor-handler.service';
 import { SensorAlertsRos } from '../live-parameters/models/ros/sensor-alert.ros';
@@ -9,6 +9,7 @@ import { AdditionalSensorRequirementRos } from '../../common/models/ros/addition
 import { DurationType } from '../header/models/enums/duration-type';
 import { DeleteSensorsService } from '../../common/services/delete-sensors.service';
 import { HubConnection } from '@microsoft/signalr';
+import detectElementOverflow from 'detect-element-overflow';
 
 @Component({
     selector: 'app-live-sensors',
@@ -20,14 +21,15 @@ import { HubConnection } from '@microsoft/signalr';
 export class LiveSensorsComponent implements OnInit, OnDestroy{
     @ViewChildren(SensorCardComponent) sensors!: QueryList<SensorCardComponent>;
     sensorStates: SensorAlertsRos[] = [];
+    hasSensors: boolean = true;
     private _socketConnection: HubConnection | undefined;
 
-    constructor(private _sensorHandlerService: SensorHandlerService, private _sensorAlertsSocketService: SensorAlertsSocketService){}
+    constructor(private _sensorHandlerService: SensorHandlerService, private _sensorAlertsSocketService: SensorAlertsSocketService, private _elementRef: ElementRef){}
     
     ngOnInit(): void {
-        console.log("init");
         this._sensorHandlerService.getSensorsStateAsync().then((sensorStates: SensorAlertsRos[]) => {
             this.sensorStates = sensorStates;
+            this.updateHasSesnors();
         })
         this._sensorAlertsSocketService.initWebSocketAsync(this.processSensorUpdate).then(res => this._socketConnection = res);
     }
@@ -43,6 +45,11 @@ export class LiveSensorsComponent implements OnInit, OnDestroy{
     async deleteSensorAsync(sensorName: string){
         await this._sensorHandlerService.removeDynamicSensorAsync(sensorName);
         this.sensorStates = this.sensorStates.filter((sensorState) => sensorState.SensorName != sensorName)
+        this.updateHasSesnors();
+    }
+
+    updateHasSesnors(){
+        this.hasSensors = this.sensorStates.length !== 0;
     }
 
 }
