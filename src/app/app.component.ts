@@ -24,6 +24,7 @@ import { animate, animateChild, group, query, state, style, transition, trigger 
 import { transform } from 'lodash';
 import { Observable, filter } from 'rxjs';
 import { isNullOrUndef } from './common/utils/helper';
+import { MenuStateHandler } from './common/services/menu-state-handler.service';
 
 @Component({
     selector: 'app-root',
@@ -40,6 +41,7 @@ import { isNullOrUndef } from './common/utils/helper';
         AuthDataFactoryService,
         RouterService,
         RequestsService,
+        MenuStateHandler,
         { provide: ITOKEN_HANDLER_TOKEN, useClass: TokensHandlerService }
     ],
     templateUrl: './app.component.html',
@@ -90,7 +92,7 @@ export class AppComponent implements OnInit{
   title = 'LTS_front';
   hideUI = false;
   isPageNotFound: boolean = false;
-  menuOpen: boolean = false;
+  isMenuOpen: boolean = false;
   isLiveParamsLoaded: Observable<boolean>;
 
   constructor(private _router: RouterService, private _authService: AuthService){

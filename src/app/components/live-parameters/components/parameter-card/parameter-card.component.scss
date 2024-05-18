@@ -18,21 +18,22 @@ $chart-logo-size: $menu-size;
     }
 }
 
-.chart-container{
-    justify-content: center;
-    height: 264px;
-    width: 100%;
-    grid-template-rows: 30px 1fr;
-    grid-template-columns: 1fr;
-    display: grid;
-}
 
 .card {
     height: 279.8px;
+    // width: 450px;
     background: radial-gradient(circle, rgb(26, 32, 73) 0%, rgb(19, 22, 47) 100%);
     padding: 0 15px 0 15px;
     border-radius: 6px;
     justify-content: center;
+    .chart-container{
+        justify-content: center;
+        height: 264px;
+        width: 100%;
+        grid-template-rows: 30px 1fr;
+        grid-template-columns: 1fr;
+        display: grid;
+    }
     &:has(> .add-card){
         padding: 15px 15px 0 15px;
     }

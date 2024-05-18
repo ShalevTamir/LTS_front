@@ -13,6 +13,7 @@ import { PopupComponent } from '../../common/components/popup/popup.component';
 import { UploaderComponent } from "../requirements-uploader/requirements-uploader.component";
 import { Observable, Subscription } from 'rxjs';
 import { LiveSensorsComponent } from "../live-sensors/live-sensors.component";
+import { MenuStateHandler } from '../../common/services/menu-state-handler.service';
 
 @Component({
     selector: 'app-header',
@@ -34,7 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   showRequirementsPopup: boolean = false;
   showSensorsStatesPopup: boolean = false;
   routerSubscripton!: Subscription
-  constructor(private _router: RouterService, private _dynamicSensorService: SensorHandlerService, private _deleteSensorsService: DeleteSensorsService){
+  constructor(private _router: RouterService, private _dynamicSensorService: SensorHandlerService, private _deleteSensorsService: DeleteSensorsService, private _menuStateHandler: MenuStateHandler){
     this.isLiveParamsLoaded = _router.isPageLoaded(TELE_PARAMS_ROUTE);
     this.isDynamicSensorsPageLoaded = _router.isPageLoaded(DYNAMIC_SENSORS_ROUTE);
   }
@@ -42,6 +43,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   handleSensorsMenu() {
     this.menuOpen = !this.menuOpen;
     this.menuOpenChange.emit(this.menuOpen);
+    this._menuStateHandler.updateMenuState(this.menuOpen); 
   }
 
   ngOnDestroy(): void {

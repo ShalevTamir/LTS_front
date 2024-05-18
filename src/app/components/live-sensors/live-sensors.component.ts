@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { SensorCardComponent } from "./components/sensor-card/sensor-card.component";
 import { SensorHandlerService } from '../../common/services/sensor-handler.service';
 import { SensorAlertsRos } from '../live-parameters/models/ros/sensor-alert.ros';

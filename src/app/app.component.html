@@ -1,10 +1,10 @@
 
 <div class="wrapper">
   <app-sidebar *ngIf="!hideUI"></app-sidebar>
-  <div class="main-container" [style.padding]="hideUI ? '0px' : '25px'" [@mainContainerMenu]="menuOpen ? 'open' : 'closed'">
-    <app-header [(menuOpen)]="menuOpen" *ngIf="!hideUI"></app-header>
+  <div class="main-container" [style.padding]="hideUI ? '0px' : '25px'" [@mainContainerMenu]="isMenuOpen ? 'open' : 'closed'">
+    <app-header [(menuOpen)]="isMenuOpen" *ngIf="!hideUI"></app-header>
     <router-outlet></router-outlet>
-    <div *ngIf="isLiveParamsLoaded | async" id="menu" [@menuOpenClose]="menuOpen ? 'open' : 'closed'">
+    <div *ngIf="isLiveParamsLoaded | async" id="menu" [@menuOpenClose]="isMenuOpen ? 'open' : 'closed'">
       <span #menuTitle>Sensors States</span>
       <app-live-sensors class="menuStyle"></app-live-sensors>
     </div>

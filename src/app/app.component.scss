@@ -40,13 +40,14 @@
     app-live-parameters{
         grid-row: 2;
     }
-  
+
     app-live-sensors.menuStyle{
         $cardWidth: 13vw;
         width: calc($cardWidth + 3vw);
         margin: 0 20px;
         padding: 13px 0;
         overflow-y: scroll;
+        overflow-x: hidden;
 
         #no-sensors-span{
             padding: 0 0 170px 13px !important;
