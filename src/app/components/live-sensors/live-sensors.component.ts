@@ -10,6 +10,7 @@ import { DurationType } from '../header/models/enums/duration-type';
 import { DeleteSensorsService } from '../../common/services/delete-sensors.service';
 import { HubConnection } from '@microsoft/signalr';
 import detectElementOverflow from 'detect-element-overflow';
+import { SensorState } from '../live-parameters/models/enums/sensor-state.enum';
 
 @Component({
     selector: 'app-live-sensors',
@@ -27,11 +28,16 @@ export class LiveSensorsComponent implements OnInit, OnDestroy{
     constructor(private _sensorHandlerService: SensorHandlerService, private _sensorAlertsSocketService: SensorAlertsSocketService, private _elementRef: ElementRef){}
     
     ngOnInit(): void {
-        this._sensorHandlerService.getSensorsStateAsync().then((sensorStates: SensorAlertsRos[]) => {
-            this.sensorStates = sensorStates;
-            this.updateHasSesnors();
-        })
+        this._sensorHandlerService.getSensorsStateAsync().then(this.updateSensorsStates);
+        this._sensorHandlerService.detectNewSensors().subscribe((sensorName: string) => {
+            this.sensorStates.push(new SensorAlertsRos(sensorName, SensorState.NORMAL))
+        });
         this._sensorAlertsSocketService.initWebSocketAsync(this.processSensorUpdate).then(res => this._socketConnection = res);
+    }
+
+    updateSensorsStates = (sensorStates: SensorAlertsRos[]) => {
+        this.sensorStates = sensorStates;
+        this.updateHasSesnors();
     }
     
     ngOnDestroy(): void {

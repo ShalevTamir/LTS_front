@@ -3,7 +3,7 @@ import { SweetAlertsService } from "./sweet-alerts.service";
 import { LIVE_TELE_URL } from "../constants";
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from "@angular/common/http";
-import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
+import { Observable, Subject, catchError, firstValueFrom, throwError } from "rxjs";
 import { SensorAlertsRos } from "../../components/live-parameters/models/ros/sensor-alert.ros";
 import { AdditionalSensorRequirementRos } from "../models/ros/additional-sensor-requirement-ros";
 import { BaseRequirementRos, isRangeRequirement, requirementToString } from "../../components/header/models/ros/base-requirement-ros";
@@ -67,6 +67,7 @@ export class SensorHandlerService{
     </style>`;
 
     private _sensorsRequirements: Map<string, ParameterSensorRequirementsRos> = new Map();
+    private _detectNewSensorsSubject: Subject<string> = new Subject<string>();
 
     constructor(
         private _sweetAlertsService: SweetAlertsService,
@@ -74,6 +75,10 @@ export class SensorHandlerService{
         ){
         
     }    
+
+    detectNewSensors(): Observable<string> {
+        return this._detectNewSensorsSubject.asObservable();
+    }
 
     displaySensorRequirements(sensorName: string){
         let sensorRequirements = this._sensorsRequirements.get(sensorName) as ParameterSensorRequirementsRos;
@@ -196,6 +201,7 @@ export class SensorHandlerService{
             SensorName:  sensorName,
             Requirements: parsedRequirements
         }
+        this._detectNewSensorsSubject.next(sensorName);
         await this._requestsService.post(LIVE_TELE_URL+"/live-sensors/add-dynamic-sensor", dynamicSensor);
         this._sweetAlertsService.successAlert("Sensor " + sensorName + " added successfuly");
     }
