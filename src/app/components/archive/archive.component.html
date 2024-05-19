@@ -3,12 +3,6 @@
         <app-date-time [startAtDate]="defaultFromDate" #fromDateTime></app-date-time>
         <img src="../../../assets/images/minus.png" alt="" id="range-img">
         <app-date-time [startAtDate]="defaultToDate" #toDateTime></app-date-time>
-        
-        <input type="text"
-        placeholder="Enter filter query"
-        #queryInput
-        (keyup.enter)="handleFilterQuery(queryInput.value)">
-        
         <button id="search-button" (click)="handleRangeSubmit()"></button>
         
         <div id="btns-data-type-container">
