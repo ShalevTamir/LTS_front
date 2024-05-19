@@ -82,7 +82,6 @@ export class SensorHandlerService{
 
     displaySensorRequirements(sensorName: string){
         let sensorRequirements = this._sensorsRequirements.get(sensorName) as ParameterSensorRequirementsRos;
-        console.log(sensorRequirements);
         let requirementsHtml = this.sensorRequirementAlertCss +
         sensorRequirements.AdditionalRequirements.map((additionalRequirement) =>
         this.requirementToHtml(additionalRequirement.ParameterName, additionalRequirement.Requirement, undefined, additionalRequirement.Duration)).join('\n');

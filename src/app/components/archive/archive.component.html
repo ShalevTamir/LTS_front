@@ -16,11 +16,13 @@
 
     </div>
     
-    <app-expandable-mat-table #expandableTable
+    <app-expandable-mat-table 
+    [style.display]="fetchedData.length? 'block' : 'none'"
+    #expandableTable
     [dataSource]="expandableTableData" 
     [columnsToDisplay]="columnsToDisplay"
     (rowClickedEmitter)="handleRowClick($event)">
     </app-expandable-mat-table>
-    <app-paginator #paginator (pageEvent)="updatePageData()"></app-paginator>
-    
+    <app-paginator [style.display]="fetchedData.length? 'block' : 'none'" #paginator (pageEvent)="updatePageData()"></app-paginator>
+    <span id="no-data" *ngIf="!fetchedData.length  && !waitingForData ">No data in the given timeframe</span>
 </div>

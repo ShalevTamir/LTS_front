@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { mongoDBHandlerService } from './services/mongoDB-handler.service';
 import {provideNativeDateAdapter} from '@angular/material/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { DataType } from './models/enums/data-type';
 import { forIn } from 'lodash'
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -40,7 +40,7 @@ type ExpandedDataType = MongoSensorAlert | TelemetryParameterRos;
     templateUrl: './archive.component.html',
     styleUrl: './archive.component.scss',
     providers: [provideNativeDateAdapter()],
-    imports: [NgFor, ExpandableMatTableComponent, DateTimeComponent, PaginatorComponent, MatButton]
+    imports: [NgFor, NgIf, ExpandableMatTableComponent, DateTimeComponent, PaginatorComponent, MatButton]
 })
 export class ArchiveComponent implements AfterViewInit{
   @ViewChildren('btnDataType', { read: ElementRef }) dataTypeButtons!: QueryList<ElementRef>
@@ -49,6 +49,7 @@ export class ArchiveComponent implements AfterViewInit{
   @ViewChild('paginator', {static: true}) paginator!: PaginatorComponent;
   @ViewChild('expandableTable', {static: true}) expandableTable!: ExpandableMatTableComponent<TimestampData, ExpandedDataType>;
 
+  waitingForData: boolean = true;
   readonly defaultDataType: DataType = DataType.PARAMETERS;
   readonly defaultFromDate;
   readonly defaultToDate = new Date(Date.now());
@@ -94,7 +95,9 @@ export class ArchiveComponent implements AfterViewInit{
   }  
   
   protected async updatePageData(){
+    this.waitingForData = true;
     await this.fetchData();
+    this.waitingForData = false;
     this.updateTabularData();
     this.updateTotalPages();
   }

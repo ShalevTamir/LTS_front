@@ -30,7 +30,8 @@ export class LiveSensorsComponent implements OnInit, OnDestroy{
     ngOnInit(): void {
         this._sensorHandlerService.getSensorsStateAsync().then(this.updateSensorsStates);
         this._sensorHandlerService.detectNewSensors().subscribe((sensorName: string) => {
-            this.sensorStates.push(new SensorAlertsRos(sensorName, SensorState.NORMAL))
+            this.sensorStates.push(new SensorAlertsRos(sensorName, SensorState.NORMAL));
+            this.updateHasSesnors();
         });
         this._sensorAlertsSocketService.initWebSocketAsync(this.processSensorUpdate).then(res => this._socketConnection = res);
     }

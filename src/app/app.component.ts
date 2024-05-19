@@ -55,7 +55,7 @@ import { MenuStateHandler } from './common/services/menu-state-handler.service';
         })),
         state('closed', style({
           marginRight: '0',
-          marginLEft: '0',
+          marginLeft: '0',
           width: '0',
           transform: 'translateX(300px)'
         })),
@@ -109,7 +109,6 @@ export class AppComponent implements OnInit{
   }
 
   matchHeight() {
-    console.log(this.menuTitle);
     if (this.menuTitle){
       const sourceHeight = this.header.height;
       const sourceMarginBottom = this.header.marginBottom;
