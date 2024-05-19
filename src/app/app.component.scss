@@ -6,13 +6,12 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: 1fr;
     height: 100vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
+    overflow: hidden;
     margin: 0 auto;
     
     .main-container {
         // display: grid;
-        overflow: hidden;
+        overflow-x: hidden;
         grid-template-rows: auto 1fr auto;
         grid-template-columns: 1fr auto;
     
