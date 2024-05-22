@@ -17,6 +17,7 @@ import { SensorState } from '../live-parameters/models/enums/sensor-state.enum';
 import { TelemetryParameterRos } from '../../common/models/ros/telemetry-parameter.ros';
 import { ExpandableMatTableComponent } from '../../common/components/expandable-mat-table/expandable-mat-table.component';
 import { TableColumn } from '../../common/components/expandable-mat-table/models/tableColumn';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface TimestampData{
   date: string,
@@ -40,7 +41,7 @@ type ExpandedDataType = MongoSensorAlert | TelemetryParameterRos;
     templateUrl: './archive.component.html',
     styleUrl: './archive.component.scss',
     providers: [provideNativeDateAdapter()],
-    imports: [NgFor, NgIf, ExpandableMatTableComponent, DateTimeComponent, PaginatorComponent, MatButton]
+    imports: [NgFor, NgIf, ExpandableMatTableComponent, DateTimeComponent, PaginatorComponent, MatButton, MatProgressSpinnerModule]
 })
 export class ArchiveComponent implements AfterViewInit{
   @ViewChildren('btnDataType', { read: ElementRef }) dataTypeButtons!: QueryList<ElementRef>
@@ -100,6 +101,9 @@ export class ArchiveComponent implements AfterViewInit{
     this.waitingForData = false;
     this.updateTabularData();
     this.updateTotalPages();
+  }
+  sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
   
   protected handleRowClick(clickedElement: TimestampData){
